@@ -4,44 +4,59 @@ import com.soskate.api.enums.ServiceType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
-@Data
 @Table(name = "services")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ServiceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", length = 150, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", length = 10, nullable = false)
-    private ServiceType type;
-
-    @Lob
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "duration_min")
-    private Integer durationMin;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "service_type", nullable = false)
+    private ServiceType type;
 
     @Column(name = "base_price_cents", nullable = false)
     private Integer basePriceCents;
 
+    @Column(name = "duration_minutes")
+    private Integer durationMinutes;
+
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    public ServiceEntity(String name, ServiceType type, String description, Integer durationMin, Integer basePriceCents, Boolean isActive) {
-        this.name = name;
-        this.type = type;
-        this.description = description;
-        this.durationMin = durationMin;
-        this.basePriceCents = basePriceCents;
-        this.isActive = isActive;
+//    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<BookingEntity> bookings = new ArrayList<>();
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }

@@ -7,34 +7,33 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
 @Data
 @Table(name = "spots")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SpotEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", length = 150, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "address_line_1", length = 200)
-    private String addressLine1;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-    @Column(name = "address_line_2", length = 200)
-    private String addressLine2;
+    private String address;
 
-    @Column(name = "city", length = 100)
     private String city;
 
-    @Column(name = "postal_code", length = 20)
-    private String postalCode;
-
-    @Column(name = "country", length = 2)
-    private String country;
+    private String zipCode;
 
     @Column(name = "latitude", precision = 9, scale = 6)
     private BigDecimal latitude;
@@ -56,13 +55,32 @@ public class SpotEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public SpotEntity(String name, String addressLine1, String addressLine2, String city, String postalCode, String country, BigDecimal latitude, BigDecimal longitude, Boolean isIndoor, Boolean isActive) {
+    @ElementCollection
+    @CollectionTable(name = "spot_photos",
+            joinColumns = @JoinColumn(name = "spot_id"))
+    @Column(name = "photo_url")
+    private List<String> photos = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<EventEntity> events = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    public SpotEntity(String name, String description, String address, String city, String zipCode, BigDecimal latitude, BigDecimal longitude, Boolean isIndoor, Boolean isActive) {
         this.name = name;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
+        this.description = description;
+        this.address = address;
         this.city = city;
-        this.postalCode = postalCode;
-        this.country = country;
+        this.zipCode = zipCode;
         this.latitude = latitude;
         this.longitude = longitude;
         this.isIndoor = isIndoor;

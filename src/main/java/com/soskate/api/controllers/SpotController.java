@@ -1,44 +1,210 @@
 package com.soskate.api.controllers;
 
-import com.soskate.api.dtos.spot.SpotToCreateDto;
-import com.soskate.api.dtos.spot.SpotDto;
-import com.soskate.api.dtos.spot.SpotToUpdateDto;
+import com.soskate.api.dtos.spot.SpotListDTO;
+import com.soskate.api.dtos.spot.SpotRequestDTO;
+import com.soskate.api.dtos.spot.SpotResponseDTO;
 import com.soskate.api.services.spot.SpotService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Contrôleur REST pour la gestion des spots de skateboard.
+ *
+ * @author SoSkate Team
+ * @version 1.0
+ */
 @RestController
-@RequestMapping("/skateparks")
+@RequestMapping("/spots")
+@RequiredArgsConstructor
+@Slf4j
+@CrossOrigin(origins = "*")
 public class SpotController {
 
-    @Autowired
-    private SpotService spotService;
+    private final SpotService spotService;
 
-    @GetMapping
-    public List<SpotDto> getAllSkateparks() {
-        return spotService.getAllSpots();
-    }
-
-    @GetMapping("/{id}")
-    public SpotDto getSkateparkById(@PathVariable("id") Long id) {
-        return spotService.getSpotById(id);
-    }
-
+    /**
+     * Crée un nouveau spot.
+     *
+     * @param requestDTO les données du spot
+     * @return le spot créé avec statut 201 CREATED
+     */
     @PostMapping
-    public SpotDto createSkatepark(@Valid @RequestBody SpotToCreateDto skateparkToCreate) {
-        return spotService.createSkatepark(skateparkToCreate);
+    public ResponseEntity<SpotResponseDTO> createSpot(
+            @Valid @RequestBody SpotRequestDTO requestDTO) {
+
+        log.info("Requête POST /api/spots - Création d'un spot : {}", requestDTO.name());
+
+        SpotResponseDTO spot = spotService.createSpot(requestDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(spot);
     }
 
-    @PutMapping
-    public SpotDto updateSkatepark(@Valid @RequestBody SpotToUpdateDto skateparkToUpdate) {
-        return spotService.updateSkatepark(skateparkToUpdate);
+    /**
+     * Récupère tous les spots.
+     *
+     * @return liste de tous les spots
+     */
+    @GetMapping
+    public ResponseEntity<List<SpotResponseDTO>> getAllSpots() {
+        log.info("Requête GET /api/spots - Récupération de tous les spots");
+
+        List<SpotResponseDTO> spots = spotService.getAllSpots();
+
+        log.info("{} spot(s) trouvé(s)", spots.size());
+
+        return ResponseEntity.ok(spots);
     }
 
+    /**
+     * Récupère uniquement les spots actifs.
+     *
+     * @return liste des spots actifs
+     */
+    @GetMapping("/active")
+    public ResponseEntity<List<SpotResponseDTO>> getActiveSpots() {
+        log.info("Requête GET /api/spots/active - Récupération des spots actifs");
+
+        List<SpotResponseDTO> spots = spotService.getActiveSpots();
+
+        return ResponseEntity.ok(spots);
+    }
+
+    /**
+     * Récupère les spots actifs pour la carte mobile (version simplifiée).
+     *
+     * @return liste simplifiée des spots actifs
+     */
+    @GetMapping("/map")
+    public ResponseEntity<List<SpotListDTO>> getActiveSpotsForMap() {
+        log.info("Requête GET /api/spots/map - Récupération des spots pour la carte");
+
+        List<SpotListDTO> spots = spotService.getActiveSpotsForMap();
+
+        return ResponseEntity.ok(spots);
+    }
+
+    /**
+     * Récupère un spot par son ID.
+     *
+     * @param id l'identifiant du spot
+     * @return le spot trouvé
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<SpotResponseDTO> getSpotById(@PathVariable Long id) {
+        log.info("Requête GET /api/spots/{} - Récupération du spot", id);
+
+        SpotResponseDTO spot = spotService.getSpotById(id);
+
+        return ResponseEntity.ok(spot);
+    }
+
+    /**
+     * Récupère les spots par ville.
+     *
+     * @param city le nom de la ville
+     * @return liste des spots dans cette ville
+     */
+    @GetMapping("/city/{city}")
+    public ResponseEntity<List<SpotResponseDTO>> getSpotsByCity(@PathVariable String city) {
+        log.info("Requête GET /api/spots/city/{} - Récupération par ville", city);
+
+        List<SpotResponseDTO> spots = spotService.getSpotsByCity(city);
+
+        return ResponseEntity.ok(spots);
+    }
+
+    /**
+     * Récupère les spots indoor ou outdoor.
+     *
+     * @param isIndoor true pour indoor, false pour outdoor
+     * @return liste des spots correspondants
+     */
+    @GetMapping("/type")
+    public ResponseEntity<List<SpotResponseDTO>> getSpotsByType(
+            @RequestParam(name = "indoor") Boolean isIndoor) {
+
+        log.info("Requête GET /api/spots/type?indoor={} - Récupération par type", isIndoor);
+
+        List<SpotResponseDTO> spots = spotService.getSpotsByType(isIndoor);
+
+        return ResponseEntity.ok(spots);
+    }
+
+    /**
+     * Récupère les spots à proximité d'une position GPS.
+     * Endpoint essentiel pour l'application mobile (affichage carte).
+     *
+     * @param lat latitude du point de référence
+     * @param lng longitude du point de référence
+     * @param radius rayon de recherche en kilomètres (défaut: 10 km)
+     * @return liste des spots dans le rayon
+     */
+    @GetMapping("/nearby")
+    public ResponseEntity<List<SpotListDTO>> getSpotsNearby(
+            @RequestParam(name = "lat") BigDecimal lat,
+            @RequestParam(name = "lng") BigDecimal lng,
+            @RequestParam(name = "radius", defaultValue = "10") double radius) {
+
+        log.info("Requête GET /api/spots/nearby?lat={}&lng={}&radius={}", lat, lng, radius);
+
+        List<SpotListDTO> spots = spotService.getSpotsNearby(lat, lng, radius);
+
+        return ResponseEntity.ok(spots);
+    }
+
+    /**
+     * Met à jour un spot existant.
+     *
+     * @param id l'identifiant du spot
+     * @param requestDTO les nouvelles données
+     * @return le spot mis à jour
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<SpotResponseDTO> updateSpot(
+            @PathVariable Long id,
+            @Valid @RequestBody SpotRequestDTO requestDTO) {
+
+        log.info("Requête PUT /api/spots/{} - Mise à jour du spot", id);
+
+        SpotResponseDTO spot = spotService.updateSpot(id, requestDTO);
+
+        return ResponseEntity.ok(spot);
+    }
+
+    /**
+     * Désactive un spot (soft delete).
+     *
+     * @param id l'identifiant du spot
+     * @return statut 204 NO CONTENT
+     */
+    @PatchMapping("/{id}/deactivate")
+    public ResponseEntity<Void> deactivateSpot(@PathVariable Long id) {
+        log.info("Requête PATCH /api/spots/{}/deactivate - Désactivation", id);
+
+        spotService.deactivateSpot(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Supprime définitivement un spot.
+     *
+     * @param id l'identifiant du spot
+     * @return statut 204 NO CONTENT
+     */
     @DeleteMapping("/{id}")
-    public void deleteSkatepark(@PathVariable("id") Long id) {
-        spotService.deleteSkatepark(id);
+    public ResponseEntity<Void> deleteSpot(@PathVariable Long id) {
+        log.info("Requête DELETE /api/spots/{} - Suppression", id);
+
+        spotService.deleteSpot(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

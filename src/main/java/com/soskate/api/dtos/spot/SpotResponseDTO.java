@@ -2,20 +2,26 @@ package com.soskate.api.dtos.spot;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
-public record SpotDto(
+/**
+ * DTO de réponse pour un spot.
+ *
+ * @author SoSkate Team
+ * @version 1.0
+ */
+public record SpotResponseDTO(
         Long id,
         String name,
-        String addressLine1,
-        String addressLine2,
+        String description,
+        String address,
         String city,
-        String postalCode,
-        String country,        // ex: "FR"
+        String zipCode,
         BigDecimal latitude,
         BigDecimal longitude,
         Boolean isIndoor,
         Boolean isActive,
+        List<String> photos,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-) {
-}
+) {}

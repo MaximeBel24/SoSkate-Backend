@@ -4,29 +4,19 @@ import com.soskate.api.enums.ServiceType;
 import lombok.Getter;
 
 /**
- * Exception lancée quand on tente de créer/modifier un service qui existe déjà
- * Basée sur l'unicité nom + type de service
+ * Exception levée lorsqu'un service avec le même nom existe déjà.
+ *
+ * @author SoSkate Team
+ * @version 1.0
  */
 @Getter
 public class ServiceAlreadyExistsException extends RuntimeException {
 
-    /**
-     * -- GETTER --
-     *
-     * @return le nom du service en conflit
-     */
-    private final String serviceName;
-    /**
-     * -- GETTER --
-     *
-     * @return le type du service en conflit
-     */
-    private final ServiceType serviceType;
-
-    public ServiceAlreadyExistsException(String name, ServiceType type) {
-        super("Service with name : " + name + " and service type : " + type + " already exists.");
-        this.serviceName = name;
-        this.serviceType = type;
+    public ServiceAlreadyExistsException(String name) {
+        super(String.format("Un service avec le nom '%s' existe déjà", name));
+    }
+    public ServiceAlreadyExistsException(String name, boolean withSuggestion) {
+        super(String.format("Un service avec le nom '%s' existe déjà. Veuillez choisir un autre nom.", name));
     }
 
 }

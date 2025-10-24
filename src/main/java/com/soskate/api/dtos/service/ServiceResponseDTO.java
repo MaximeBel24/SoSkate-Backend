@@ -2,7 +2,7 @@ package com.soskate.api.dtos.service;
 
 import com.soskate.api.enums.ServiceType;
 
-public record ServiceResponseDto(
+public record ServiceResponseDTO(
         Long id,
         String name,
         ServiceType type,
