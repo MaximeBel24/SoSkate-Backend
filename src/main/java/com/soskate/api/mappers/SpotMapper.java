@@ -78,7 +78,6 @@ public class SpotMapper {
             return null;
         }
 
-        // Compte les événements à venir (non passés)
         int eventCount = entity.getEvents() != null ?
                 (int) entity.getEvents().stream()
                         .filter(event -> event.getStartTime().isAfter(java.time.LocalDateTime.now()))

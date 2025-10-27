@@ -61,8 +61,8 @@ public class SpotEntity {
     @Column(name = "photo_url")
     private List<String> photos = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<EventEntity> events = new ArrayList<>();
+    @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<EventEntity> events = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
