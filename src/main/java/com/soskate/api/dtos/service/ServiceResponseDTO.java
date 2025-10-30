@@ -7,7 +7,7 @@ public record ServiceResponseDTO(
         String name,
         ServiceType type,
         String description,
-        Integer durationMin,
+        Integer durationMinutes,
         Integer basePriceCents,
         Boolean isActive
 ) {

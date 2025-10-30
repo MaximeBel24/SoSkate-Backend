@@ -29,7 +29,7 @@ public class ServiceMapper {
                 .name(serviceRequestDTO.name())
                 .type(serviceRequestDTO.type())
                 .description(serviceRequestDTO.description())
-                .durationMinutes(serviceRequestDTO.durationMin())
+                .durationMinutes(serviceRequestDTO.durationMinutes())
                 .basePriceCents(serviceRequestDTO.basePriceCents())
                 .isActive(serviceRequestDTO.isActive())
                 .build();
@@ -71,7 +71,7 @@ public class ServiceMapper {
         serviceToUpdate.setName(serviceRequestDTO.name());
         serviceToUpdate.setType(serviceRequestDTO.type());
         serviceToUpdate.setDescription(serviceRequestDTO.description());
-        serviceToUpdate.setDurationMinutes(serviceRequestDTO.durationMin());
+        serviceToUpdate.setDurationMinutes(serviceRequestDTO.durationMinutes());
         serviceToUpdate.setBasePriceCents(serviceRequestDTO.basePriceCents());
         serviceToUpdate.setIsActive(serviceRequestDTO.isActive());
     }
