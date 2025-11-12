@@ -1,6 +1,5 @@
 package com.soskate.api.controllers;
 
-import com.soskate.api.dtos.spot.SpotListDTO;
 import com.soskate.api.dtos.spot.SpotRequestDTO;
 import com.soskate.api.dtos.spot.SpotResponseDTO;
 import com.soskate.api.services.spot.SpotService;
@@ -77,20 +76,6 @@ public class SpotController {
     }
 
     /**
-     * Récupère les spots actifs pour la carte mobile (version simplifiée).
-     *
-     * @return liste simplifiée des spots actifs
-     */
-    @GetMapping("/map")
-    public ResponseEntity<List<SpotListDTO>> getActiveSpotsForMap() {
-        log.info("Requête GET /api/spots/map - Récupération des spots pour la carte");
-
-        List<SpotListDTO> spots = spotService.getActiveSpotsForMap();
-
-        return ResponseEntity.ok(spots);
-    }
-
-    /**
      * Récupère un spot par son ID.
      *
      * @param id l'identifiant du spot
@@ -147,14 +132,14 @@ public class SpotController {
      * @return liste des spots dans le rayon
      */
     @GetMapping("/nearby")
-    public ResponseEntity<List<SpotListDTO>> getSpotsNearby(
+    public ResponseEntity<List<SpotResponseDTO>> getSpotsNearby(
             @RequestParam(name = "lat") BigDecimal lat,
             @RequestParam(name = "lng") BigDecimal lng,
             @RequestParam(name = "radius", defaultValue = "10") double radius) {
 
         log.info("Requête GET /api/spots/nearby?lat={}&lng={}&radius={}", lat, lng, radius);
 
-        List<SpotListDTO> spots = spotService.getSpotsNearby(lat, lng, radius);
+        List<SpotResponseDTO> spots = spotService.getSpotsNearby(lat, lng, radius);
 
         return ResponseEntity.ok(spots);
     }

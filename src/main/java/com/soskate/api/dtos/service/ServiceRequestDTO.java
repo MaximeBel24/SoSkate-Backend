@@ -25,7 +25,6 @@ public record ServiceRequestDTO(
         @NotNull(message = "Le statut actif/inactif est obligatoire.")
         Boolean isActive
 
-
 ) {
 
 }

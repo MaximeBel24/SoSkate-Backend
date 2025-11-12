@@ -53,7 +53,9 @@ public class ServiceMapper {
                 serviceEntity.getDescription(),
                 serviceEntity.getDurationMinutes(),
                 serviceEntity.getBasePriceCents(),
-                serviceEntity.getIsActive()
+                serviceEntity.getIsActive(),
+                serviceEntity.getCreatedAt(),
+                serviceEntity.getUpdatedAt()
         );
     }
 

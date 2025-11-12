@@ -2,6 +2,8 @@ package com.soskate.api.dtos.service;
 
 import com.soskate.api.enums.ServiceType;
 
+import java.time.LocalDateTime;
+
 public record ServiceResponseDTO(
         Long id,
         String name,
@@ -9,6 +11,8 @@ public record ServiceResponseDTO(
         String description,
         Integer durationMinutes,
         Integer basePriceCents,
-        Boolean isActive
+        Boolean isActive,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
 }

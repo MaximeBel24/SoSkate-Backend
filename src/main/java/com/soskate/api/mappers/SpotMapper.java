@@ -1,6 +1,5 @@
 package com.soskate.api.mappers;
 
-import com.soskate.api.dtos.spot.SpotListDTO;
 import com.soskate.api.dtos.spot.SpotRequestDTO;
 import com.soskate.api.dtos.spot.SpotResponseDTO;
 import com.soskate.api.entities.SpotEntity;
@@ -68,51 +67,24 @@ public class SpotMapper {
     }
 
     /**
-     * Convertit une SpotEntity en SpotListDTO (version simplifiée pour la carte).
-     *
-     * @param entity l'entité à convertir
-     * @return le DTO simplifié pour la liste/carte
-     */
-    public static SpotListDTO spotEntityToSpotListDTO(SpotEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        int eventCount = entity.getEvents() != null ?
-                (int) entity.getEvents().stream()
-                        .filter(event -> event.getStartTime().isAfter(java.time.LocalDateTime.now()))
-                        .count() : 0;
-
-        return new SpotListDTO(
-                entity.getId(),
-                entity.getName(),
-                entity.getCity(),
-                entity.getLatitude(),
-                entity.getLongitude(),
-                entity.getIsIndoor(),
-                eventCount
-        );
-    }
-
-    /**
      * Met à jour une entité existante avec les données d'un DTO.
      *
-     * @param entity l'entité à mettre à jour
-     * @param dto le DTO contenant les nouvelles valeurs
+     * @param spotEntity l'entité à mettre à jour
+     * @param spotRequest le DTO contenant les nouvelles valeurs
      */
-    public static void updateEntityFromDTO(SpotEntity entity, SpotRequestDTO dto) {
-        if (entity == null || dto == null) {
+    public static void updateSpotEntityFromSpotRequestDTO(SpotEntity spotEntity, SpotRequestDTO spotRequest) {
+        if (spotEntity == null || spotRequest == null) {
             return;
         }
 
-        entity.setName(dto.name());
-        entity.setDescription(dto.description());
-        entity.setAddress(dto.address());
-        entity.setCity(dto.city());
-        entity.setZipCode(dto.zipCode());
-        entity.setLatitude(dto.latitude());
-        entity.setLongitude(dto.longitude());
-        entity.setIsIndoor(dto.isIndoor());
-        entity.setIsActive(dto.isActive());
+        spotEntity.setName(spotRequest.name());
+        spotEntity.setDescription(spotRequest.description());
+        spotEntity.setAddress(spotRequest.address());
+        spotEntity.setCity(spotRequest.city());
+        spotEntity.setZipCode(spotRequest.zipCode());
+        spotEntity.setLatitude(spotRequest.latitude());
+        spotEntity.setLongitude(spotRequest.longitude());
+        spotEntity.setIsIndoor(spotRequest.isIndoor());
+        spotEntity.setIsActive(spotRequest.isActive());
     }
 }

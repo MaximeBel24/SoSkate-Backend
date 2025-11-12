@@ -53,8 +53,8 @@ public class EventEntity {
     )
     private List<CustomerEntity> participants = new ArrayList<>();
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<BookingEntity> bookings = new ArrayList<>();
+//    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<BookingEntity> bookings = new ArrayList<>();
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CustomerEventEntity> customerEvents = new ArrayList<>();

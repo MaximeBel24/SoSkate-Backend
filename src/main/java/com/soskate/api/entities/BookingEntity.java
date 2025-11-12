@@ -48,10 +48,23 @@ public class BookingEntity {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private EventEntity event;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "event_id")
+//    private EventEntity event;
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CustomerBookingEntity> customerBookings = new ArrayList<>();
+
+    // Méthode utilitaire
+//    public int getAvailablePlaces() {
+//        int maxPlaces = service.getMaxParticipants();
+//        long reservedPlaces = customerBookings.stream()
+//                .filter(cb -> cb.getStatus() == CustomerBookingStatus.CONFIRMED)
+//                .count();
+//        return maxPlaces - (int) reservedPlaces;
+//    }
+//
+//    public boolean isFull() {
+//        return getAvailablePlaces() <= 0;
+//    }
 }

@@ -1,6 +1,5 @@
 package com.soskate.api.services.spot;
 
-import com.soskate.api.dtos.spot.SpotListDTO;
 import com.soskate.api.dtos.spot.SpotRequestDTO;
 import com.soskate.api.dtos.spot.SpotResponseDTO;
 
@@ -38,13 +37,6 @@ public interface SpotService {
     List<SpotResponseDTO> getActiveSpots();
 
     /**
-     * Récupère les spots actifs (version simplifiée pour la carte mobile).
-     *
-     * @return liste simplifiée des spots actifs
-     */
-    List<SpotListDTO> getActiveSpotsForMap();
-
-    /**
      * Récupère un spot par son ID.
      *
      * @param id l'identifiant du spot
@@ -76,7 +68,7 @@ public interface SpotService {
      * @param radiusKm rayon de recherche en kilomètres
      * @return liste des spots dans le rayon
      */
-    List<SpotListDTO> getSpotsNearby(BigDecimal latitude, BigDecimal longitude, double radiusKm);
+    List<SpotResponseDTO> getSpotsNearby(BigDecimal latitude, BigDecimal longitude, double radiusKm);
 
     /**
      * Met à jour un spot existant.
