@@ -1,4 +1,4 @@
-package com.soskate.api.dtos.auth.login;
+package com.soskate.api.dto.auth.login;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

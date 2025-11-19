@@ -1,6 +1,6 @@
-package com.soskate.api.dtos.auth.login;
+package com.soskate.api.dto.auth.login;
 
-import com.soskate.api.dtos.customer.CustomerResponseDTO;
+import com.soskate.api.dto.customer.CustomerResponseDTO;
 
 /**
  * DTO de réponse après connexion réussie.

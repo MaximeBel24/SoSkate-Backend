@@ -1,6 +1,6 @@
 package com.soskate.api.mappers;
-import com.soskate.api.dtos.auth.register.CustomerRegisterRequestDTO;
-import com.soskate.api.dtos.customer.CustomerResponseDTO;
+import com.soskate.api.dto.auth.register.CustomerRegisterRequestDTO;
+import com.soskate.api.dto.customer.CustomerResponseDTO;
 import com.soskate.api.entities.CustomerEntity;
 import org.springframework.stereotype.Component;
 

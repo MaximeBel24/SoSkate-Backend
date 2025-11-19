@@ -1,7 +1,7 @@
 package com.soskate.api.services.spot;
 
-import com.soskate.api.dtos.spot.SpotRequestDTO;
-import com.soskate.api.dtos.spot.SpotResponseDTO;
+import com.soskate.api.dto.spot.SpotRequestDTO;
+import com.soskate.api.dto.spot.SpotResponseDTO;
 
 import java.math.BigDecimal;
 import java.util.List;

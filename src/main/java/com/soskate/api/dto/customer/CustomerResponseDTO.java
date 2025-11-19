@@ -1,4 +1,4 @@
-package com.soskate.api.dtos.customer;
+package com.soskate.api.dto.customer;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

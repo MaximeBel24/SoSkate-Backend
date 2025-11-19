@@ -1,4 +1,4 @@
-package com.soskate.api.dtos.spot;
+package com.soskate.api.dto.spot;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

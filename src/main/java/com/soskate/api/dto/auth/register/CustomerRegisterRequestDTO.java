@@ -1,4 +1,4 @@
-package com.soskate.api.dtos.auth.register;
+package com.soskate.api.dto.auth.register;
 
 import jakarta.validation.constraints.*;
 

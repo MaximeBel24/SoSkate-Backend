@@ -1,7 +1,7 @@
 package com.soskate.api.controllers;
 
-import com.soskate.api.dtos.service.ServiceRequestDTO;
-import com.soskate.api.dtos.service.ServiceResponseDTO;
+import com.soskate.api.dto.service.ServiceRequestDTO;
+import com.soskate.api.dto.service.ServiceResponseDTO;
 import com.soskate.api.enums.ServiceType;
 import com.soskate.api.services.service.ServiceService;
 import jakarta.validation.Valid;

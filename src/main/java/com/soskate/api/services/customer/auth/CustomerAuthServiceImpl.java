@@ -1,9 +1,9 @@
 package com.soskate.api.services.customer.auth;
 
-import com.soskate.api.dtos.auth.login.LoginRequestDTO;
-import com.soskate.api.dtos.auth.login.LoginResponseDTO;
-import com.soskate.api.dtos.auth.register.CustomerRegisterRequestDTO;
-import com.soskate.api.dtos.customer.CustomerResponseDTO;
+import com.soskate.api.dto.auth.login.LoginRequestDTO;
+import com.soskate.api.dto.auth.login.LoginResponseDTO;
+import com.soskate.api.dto.auth.register.CustomerRegisterRequestDTO;
+import com.soskate.api.dto.customer.CustomerResponseDTO;
 import com.soskate.api.entities.CustomerEntity;
 import com.soskate.api.exceptions.auth.BadCredentialsException;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;

@@ -1,4 +1,4 @@
-package com.soskate.api.dtos.service;
+package com.soskate.api.dto.service;
 
 import com.soskate.api.enums.ServiceType;
 import jakarta.validation.constraints.*;
