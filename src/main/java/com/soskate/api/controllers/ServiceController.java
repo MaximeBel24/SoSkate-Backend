@@ -1,9 +1,9 @@
-package com.soskate.api.controllers;
+package com.soskate.api.controller;
 
 import com.soskate.api.dto.service.ServiceRequestDTO;
 import com.soskate.api.dto.service.ServiceResponseDTO;
 import com.soskate.api.enums.ServiceType;
-import com.soskate.api.services.service.ServiceService;
+import com.soskate.api.service.service.ServiceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.soskate.api.services.customer.auth;
+package com.soskate.api.service.customer.auth;
 
 import com.soskate.api.dto.auth.login.LoginRequestDTO;
 import com.soskate.api.dto.auth.login.LoginResponseDTO;

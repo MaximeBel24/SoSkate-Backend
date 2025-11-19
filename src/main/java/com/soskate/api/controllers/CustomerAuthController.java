@@ -1,10 +1,10 @@
-package com.soskate.api.controllers;
+package com.soskate.api.controller;
 
 import com.soskate.api.dto.auth.login.LoginRequestDTO;
 import com.soskate.api.dto.auth.login.LoginResponseDTO;
 import com.soskate.api.dto.auth.register.CustomerRegisterRequestDTO;
 import com.soskate.api.dto.customer.CustomerResponseDTO;
-import com.soskate.api.services.customer.auth.CustomerAuthService;
+import com.soskate.api.service.customer.auth.CustomerAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

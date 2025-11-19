@@ -1,4 +1,4 @@
-package com.soskate.api.entities;
+package com.soskate.api.entity;
 
 import com.soskate.api.enums.InstructorStatus;
 import jakarta.persistence.*;

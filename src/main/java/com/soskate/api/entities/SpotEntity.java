@@ -1,4 +1,4 @@
-package com.soskate.api.entities;
+package com.soskate.api.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

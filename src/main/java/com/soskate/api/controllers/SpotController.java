@@ -1,8 +1,8 @@
-package com.soskate.api.controllers;
+package com.soskate.api.controller;
 
 import com.soskate.api.dto.spot.SpotRequestDTO;
 import com.soskate.api.dto.spot.SpotResponseDTO;
-import com.soskate.api.services.spot.SpotService;
+import com.soskate.api.service.spot.SpotService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,13 +1,13 @@
-package com.soskate.api.services.service;
+package com.soskate.api.service.service;
 
 import com.soskate.api.dto.service.ServiceRequestDTO;
 import com.soskate.api.dto.service.ServiceResponseDTO;
-import com.soskate.api.entities.ServiceEntity;
+import com.soskate.api.entity.ServiceEntity;
 import com.soskate.api.enums.ServiceType;
 import com.soskate.api.exceptions.service.ServiceAlreadyExistsException;
 import com.soskate.api.exceptions.service.ServiceNotFoundException;
 import com.soskate.api.mappers.ServiceMapper;
-import com.soskate.api.repositories.ServiceRepository;
+import com.soskate.api.repository.ServiceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

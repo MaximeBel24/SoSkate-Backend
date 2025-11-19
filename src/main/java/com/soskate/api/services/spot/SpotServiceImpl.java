@@ -1,13 +1,13 @@
-package com.soskate.api.services.spot;
+package com.soskate.api.service.spot;
 
 import com.soskate.api.dto.spot.SpotRequestDTO;
 import com.soskate.api.dto.spot.SpotResponseDTO;
-import com.soskate.api.entities.SpotEntity;
+import com.soskate.api.entity.SpotEntity;
 import com.soskate.api.exceptions.spot.DuplicateSpotException;
 import com.soskate.api.exceptions.spot.InvalidCoordinatesException;
 import com.soskate.api.exceptions.spot.SpotNotFoundException;
 import com.soskate.api.mappers.SpotMapper;
-import com.soskate.api.repositories.SpotRepository;
+import com.soskate.api.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

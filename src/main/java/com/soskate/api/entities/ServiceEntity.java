@@ -1,12 +1,10 @@
-package com.soskate.api.entities;
+package com.soskate.api.entity;
 
 import com.soskate.api.enums.ServiceType;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Entity
