@@ -1,4 +1,4 @@
-package com.soskate.api.service.spot;
+package com.soskate.api.services.spot;
 
 import com.soskate.api.dto.spot.SpotRequestDTO;
 import com.soskate.api.dto.spot.SpotResponseDTO;

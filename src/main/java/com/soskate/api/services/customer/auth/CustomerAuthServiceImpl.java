@@ -1,14 +1,14 @@
-package com.soskate.api.service.customer.auth;
+package com.soskate.api.services.customer.auth;
 
 import com.soskate.api.dto.auth.login.LoginRequestDTO;
 import com.soskate.api.dto.auth.login.LoginResponseDTO;
 import com.soskate.api.dto.auth.register.CustomerRegisterRequestDTO;
 import com.soskate.api.dto.customer.CustomerResponseDTO;
-import com.soskate.api.entity.CustomerEntity;
+import com.soskate.api.entities.CustomerEntity;
 import com.soskate.api.exceptions.auth.BadCredentialsException;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 import com.soskate.api.mappers.CustomerMapper;
-import com.soskate.api.repository.CustomerRepository;
+import com.soskate.api.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.soskate.api.service.service;
+package com.soskate.api.services.service;
 
 import com.soskate.api.dto.service.ServiceRequestDTO;
 import com.soskate.api.dto.service.ServiceResponseDTO;

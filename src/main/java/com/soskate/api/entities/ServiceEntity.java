@@ -1,4 +1,4 @@
-package com.soskate.api.entity;
+package com.soskate.api.entities;
 
 import com.soskate.api.enums.ServiceType;
 import jakarta.persistence.*;
