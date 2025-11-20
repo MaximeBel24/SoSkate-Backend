@@ -1,9 +1,16 @@
 # =================================
 # Fichiers de configuration sensibles
 # =================================
-.env
+
 application-local.properties
 **/application-local.properties
+
+# Environment variables
+.env
+*.env
+
+# AWS credentials
+aws-credentials.txt
 
 # =================================
 # IDE
