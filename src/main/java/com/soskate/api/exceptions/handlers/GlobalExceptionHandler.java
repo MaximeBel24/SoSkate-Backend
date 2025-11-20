@@ -4,6 +4,9 @@ import com.soskate.api.exceptions.auth.BadCredentialsException;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 import com.soskate.api.exceptions.common.ErrorResponse;
 import com.soskate.api.exceptions.common.ValidationErrorResponse;
+import com.soskate.api.exceptions.photo.InvalidPhotoFormatException;
+import com.soskate.api.exceptions.photo.PhotoNotFoundException;
+import com.soskate.api.exceptions.photo.PhotoUploadException;
 import com.soskate.api.exceptions.service.ServiceAlreadyExistsException;
 import com.soskate.api.exceptions.service.ServiceNotActiveException;
 import com.soskate.api.exceptions.service.ServiceNotFoundException;
@@ -164,6 +167,58 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCoordinatesException.class)
     public ResponseEntity<ErrorResponse> handleInvalidCoordinates(InvalidCoordinatesException ex) {
         log.error("InvalidCoordinatesException : {}", ex.getMessage());
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    // ========================================
+    // EXCEPTIONS PHOTO
+    // ========================================
+
+    /**
+     * Gère l'exception PhotoNotFoundException.
+     * Retourne un statut 404 NOT FOUND.
+     */
+    @ExceptionHandler(PhotoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePhotoNotFound(PhotoNotFoundException ex) {
+        log.error("PhotoNotFoundException : {}", ex.getMessage());
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    /**
+     * Gère l'exception PhotoUploadException.
+     * Retourne un statut 500 INTERNAL SERVER ERROR.
+     */
+    @ExceptionHandler(PhotoUploadException.class)
+    public ResponseEntity<ErrorResponse> handlePhotoUpload(PhotoUploadException ex) {
+        log.error("PhotoUploadException : {}", ex.getMessage(), ex);
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    /**
+     * Gère l'exception InvalidPhotoFormatException.
+     * Retourne un statut 400 BAD REQUEST.
+     */
+    @ExceptionHandler(InvalidPhotoFormatException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPhotoFormat(InvalidPhotoFormatException ex) {
+        log.error("InvalidPhotoFormatException : {}", ex.getMessage());
 
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),

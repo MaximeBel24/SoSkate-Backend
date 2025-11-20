@@ -26,7 +26,7 @@ import java.util.List;
  * Handles photo upload, retrieval, update, and deletion.
  */
 @RestController
-@RequestMapping("/api/photos")
+@RequestMapping("/photos")
 @RequiredArgsConstructor
 @Slf4j
 public class PhotoController {

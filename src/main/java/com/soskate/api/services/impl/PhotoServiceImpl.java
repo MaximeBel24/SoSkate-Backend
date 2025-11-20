@@ -111,11 +111,20 @@ public class PhotoServiceImpl implements PhotoService {
         // Check content type
         String contentType = file.getContentType();
         if (contentType == null || !photoConfig.getUpload().getAllowedFormats().contains(contentType)) {
-            throw new InvalidPhotoFormatException(
-                    "Format de fichier non supporté. Formats acceptés: " +
-                            String.join(", ", photoConfig.getUpload().getAllowedFormats())
-            );
-        }
+            // Special case: JFIF files often have image/jpeg as content-type
+            // Also check original filename extension
+            String originalFilename = file.getOriginalFilename();
+            boolean isJfif = originalFilename != null &&
+                    originalFilename.toLowerCase().endsWith(".jfif");
+
+            if (!isJfif) {
+                throw new InvalidPhotoFormatException(
+                        "Format de fichier non supporté. Formats acceptés: " +
+                                String.join(", ", photoConfig.getUpload().getAllowedFormats()) +
+                                " (ou .jfif)"
+                );
+            }
+            }
     }
 
     private void validatePhotoLimits(PhotoEntityType entityType, Long entityId, PhotoType photoType) {
