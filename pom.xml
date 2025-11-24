@@ -89,6 +89,18 @@
             <artifactId>scrimage-webp</artifactId>
             <version>4.1.1</version>
         </dependency>
+
+        <!-- Flyway Core -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <!-- Flyway MySQL Driver -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
     </dependencies>
 
 	<build>
@@ -117,6 +129,11 @@
 					</excludes>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>10.4.1</version>
+            </plugin>
 		</plugins>
 	</build>
 
