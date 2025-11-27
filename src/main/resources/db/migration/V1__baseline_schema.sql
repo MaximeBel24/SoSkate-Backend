@@ -1,13 +1,20 @@
 -- =====================================================
--- SoSkate Database - Baseline Schema
+-- SoSkate Database - V1 Clean Migration
 -- Version: V1
--- Description: Initial database schema matching current production state
+-- Description: Clean baseline schema from existing entities
 -- Author: Maxime
 -- Date: 2024-11-24
+--
+-- IMPORTANT NOTES:
+-- - NO event_id in bookings table
+-- - NO @ElementCollection tables (spot_photos, instructor_photos)
+-- - Photos are POLYMORPHIC via PhotoEntity
+-- - Tables with existing data are preserved: users, customers, spots, photos, services
 -- =====================================================
 
 -- =====================================================
--- TABLE: users (parent table for JOINED inheritance)
+-- TABLE: users (preserved - has data)
+-- Parent table for JOINED inheritance
 -- =====================================================
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -25,7 +32,8 @@ CREATE TABLE IF NOT EXISTS users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: customers (child table - JOINED inheritance)
+-- TABLE: customers (preserved - has data)
+-- Child table - JOINED inheritance
 -- =====================================================
 CREATE TABLE IF NOT EXISTS customers (
     id BIGINT PRIMARY KEY,
@@ -37,12 +45,13 @@ CREATE TABLE IF NOT EXISTS customers (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: instructors (child table - JOINED inheritance)
+-- TABLE: instructors (recreated - no data)
+-- Child table - JOINED inheritance
 -- =====================================================
 CREATE TABLE IF NOT EXISTS instructors (
     id BIGINT PRIMARY KEY,
-    bio TEXT,
     status ENUM('ACTIVE', 'INACTIVE', 'PENDING', 'SUSPENDED') NOT NULL DEFAULT 'PENDING',
+    bio TEXT,
 
     CONSTRAINT fk_instructors_users
         FOREIGN KEY (id) REFERENCES users(id)
@@ -52,7 +61,7 @@ CREATE TABLE IF NOT EXISTS instructors (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: spots (skateparks / skate locations)
+-- TABLE: spots (preserved - has data)
 -- =====================================================
 CREATE TABLE IF NOT EXISTS spots (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -75,35 +84,7 @@ CREATE TABLE IF NOT EXISTS spots (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: spot_photos (@ElementCollection - TO BE REMOVED IN V3)
--- =====================================================
-CREATE TABLE IF NOT EXISTS spot_photos (
-    spot_id BIGINT NOT NULL,
-    photo_url VARCHAR(255),
-
-    CONSTRAINT fk_spot_photos_spot
-        FOREIGN KEY (spot_id) REFERENCES spots(id)
-        ON DELETE CASCADE,
-
-    INDEX idx_spot_photos_spot_id (spot_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- =====================================================
--- TABLE: instructor_photos (@ElementCollection - TO BE REMOVED IN V3)
--- =====================================================
-CREATE TABLE IF NOT EXISTS instructor_photos (
-    instructor_id BIGINT NOT NULL,
-    photo_url VARCHAR(255),
-
-    CONSTRAINT fk_instructor_photos_instructor
-        FOREIGN KEY (instructor_id) REFERENCES instructors(id)
-        ON DELETE CASCADE,
-
-    INDEX idx_instructor_photos_instructor_id (instructor_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- =====================================================
--- TABLE: services (lesson types, rentals, etc.)
+-- TABLE: services (preserved - has data)
 -- =====================================================
 CREATE TABLE IF NOT EXISTS services (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -117,11 +98,12 @@ CREATE TABLE IF NOT EXISTS services (
     updated_at DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
 
     INDEX idx_services_type (service_type),
-    INDEX idx_services_active (is_active)
+    INDEX idx_services_active (is_active),
+    INDEX idx_services_created_at (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: events (scheduled sessions)
+-- TABLE: events (recreated - no data)
 -- =====================================================
 CREATE TABLE IF NOT EXISTS events (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -143,17 +125,19 @@ CREATE TABLE IF NOT EXISTS events (
     INDEX idx_events_spot_id (spot_id),
     INDEX idx_events_instructor_id (instructor_id),
     INDEX idx_events_start_time (start_time),
-    INDEX idx_events_stop_time (stop_time)
+    INDEX idx_events_stop_time (stop_time),
+    INDEX idx_events_time_range (start_time, stop_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: bookings (lesson bookings)
+-- TABLE: bookings (recreated - no data)
+-- IMPORTANT: NO event_id column - no relation to events
 -- =====================================================
 CREATE TABLE IF NOT EXISTS bookings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     instructor_id BIGINT,
     service_id BIGINT,
-    sport_id BIGINT COMMENT 'Should be spot_id - typo in original entity',
+    sport_id BIGINT COMMENT 'Actually spot_id (typo kept for entity compatibility)',
     start_time DATETIME(6),
     stop_time DATETIME(6),
     status ENUM('CANCELLED', 'COMPLETED', 'CONFIRMED', 'NO_SHOW', 'PENDING') NOT NULL DEFAULT 'PENDING',
@@ -173,11 +157,14 @@ CREATE TABLE IF NOT EXISTS bookings (
     INDEX idx_bookings_service_id (service_id),
     INDEX idx_bookings_spot_id (sport_id),
     INDEX idx_bookings_status (status),
-    INDEX idx_bookings_start_time (start_time)
+    INDEX idx_bookings_start_time (start_time),
+    INDEX idx_bookings_time_range (start_time, stop_time),
+    INDEX idx_bookings_status_time (status, start_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: customer_booking (join table)
+-- TABLE: customer_booking (recreated - no data)
+-- Join table between customers and bookings
 -- =====================================================
 CREATE TABLE IF NOT EXISTS customer_booking (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -197,7 +184,8 @@ CREATE TABLE IF NOT EXISTS customer_booking (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: customer_event (join table)
+-- TABLE: customer_event (recreated - no data)
+-- Join table between customers and events
 -- =====================================================
 CREATE TABLE IF NOT EXISTS customer_event (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -217,7 +205,8 @@ CREATE TABLE IF NOT EXISTS customer_event (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: event_participants (join table @ManyToMany)
+-- TABLE: event_participants (recreated - no data)
+-- @ManyToMany join table for event participants
 -- =====================================================
 CREATE TABLE IF NOT EXISTS event_participants (
     event_id BIGINT NOT NULL,
@@ -237,13 +226,14 @@ CREATE TABLE IF NOT EXISTS event_participants (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: comments (reviews / feedback)
+-- TABLE: comments (recreated - no data)
+-- Polymorphic comments for spots, instructors, events
 -- =====================================================
 CREATE TABLE IF NOT EXISTS comments (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     customer_id BIGINT,
     author VARCHAR(255),
-    target_type VARCHAR(255) COMMENT 'Polymorphic relation: SPOT, INSTRUCTOR, EVENT',
+    target_type VARCHAR(255) COMMENT 'Polymorphic: SPOT, INSTRUCTOR, EVENT',
     target_id BIGINT COMMENT 'ID of the target entity',
     content TEXT NOT NULL,
     rating INT,
@@ -260,7 +250,9 @@ CREATE TABLE IF NOT EXISTS comments (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- TABLE: photos (polymorphic photo storage)
+-- TABLE: photos (preserved - has data)
+-- POLYMORPHIC photo storage for all entities
+-- NO @ElementCollection tables (spot_photos, instructor_photos)
 -- =====================================================
 CREATE TABLE IF NOT EXISTS photos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -284,10 +276,58 @@ CREATE TABLE IF NOT EXISTS photos (
     INDEX idx_entity_type_id (entity_type, entity_id),
     INDEX idx_photo_type (photo_type),
     INDEX idx_deleted (deleted),
-    INDEX idx_display_order (display_order),
-    INDEX idx_uploaded_at (uploaded_at)
+    INDEX idx_photos_active (entity_type, entity_id, photo_type, deleted),
+    INDEX idx_photos_gallery (entity_type, entity_id, display_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- END OF V1 BASELINE SCHEMA
+-- Data verification queries
+-- =====================================================
+
+-- Count existing data
+SELECT '✓ Counting preserved data...' AS status;
+
+SELECT CONCAT('Users: ', COUNT(*)) AS preserved_data FROM users;
+SELECT CONCAT('Customers: ', COUNT(*)) AS preserved_data FROM customers;
+SELECT CONCAT('Spots: ', COUNT(*)) AS preserved_data FROM spots;
+SELECT CONCAT('Services: ', COUNT(*)) AS preserved_data FROM services;
+SELECT CONCAT('Photos: ', COUNT(*)) AS preserved_data FROM photos;
+
+-- List all tables
+SELECT '✓ Listing all tables...' AS status;
+
+SELECT
+    TABLE_NAME,
+    TABLE_ROWS,
+    ROUND((DATA_LENGTH + INDEX_LENGTH) / 1024 / 1024, 2) AS size_mb
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME NOT LIKE 'flyway%'
+ORDER BY TABLE_NAME;
+
+-- Verify no orphaned records
+SELECT '✓ Verifying data integrity...' AS status;
+
+SELECT
+    CASE
+        WHEN COUNT(*) = 0 THEN '✓ No orphaned customers'
+        ELSE CONCAT('⚠️  ', COUNT(*), ' orphaned customers found')
+    END AS integrity_check
+FROM customers c
+WHERE NOT EXISTS (SELECT 1 FROM users u WHERE u.id = c.id);
+
+-- =====================================================
+-- Summary
+-- =====================================================
+
+SELECT '✓✓✓ V1 Migration Complete ✓✓✓' AS status;
+
+SELECT CONCAT(
+    '✓ Schema created with ',
+    (SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME NOT LIKE 'flyway%'),
+    ' tables'
+) AS summary;
+
+-- =====================================================
+-- END OF V1 BASELINE MIGRATION
 -- =====================================================
