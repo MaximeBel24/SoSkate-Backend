@@ -55,12 +55,6 @@ public class SpotEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ElementCollection
-    @CollectionTable(name = "spot_photos",
-            joinColumns = @JoinColumn(name = "spot_id"))
-    @Column(name = "photo_url")
-    private List<String> photos = new ArrayList<>();
-
     @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<EventEntity> events = new ArrayList<>();
 

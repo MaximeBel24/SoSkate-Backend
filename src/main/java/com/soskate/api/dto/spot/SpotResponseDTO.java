@@ -21,7 +21,6 @@ public record SpotResponseDTO(
         BigDecimal longitude,
         Boolean isIndoor,
         Boolean isActive,
-        List<String> photos,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {}

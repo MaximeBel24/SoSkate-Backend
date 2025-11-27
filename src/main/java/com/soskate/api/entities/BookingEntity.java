@@ -48,10 +48,6 @@ public class BookingEntity {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "event_id")
-//    private EventEntity event;
-
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CustomerBookingEntity> customerBookings = new ArrayList<>();
 

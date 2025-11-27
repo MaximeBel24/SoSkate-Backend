@@ -27,12 +27,6 @@ public class InstructorEntity extends UserEntity {
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    @ElementCollection
-    @CollectionTable(name = "instructor_photos",
-            joinColumns = @JoinColumn(name = "instructor_id"))
-    @Column(name = "photo_url")
-    private List<String> photo = new ArrayList<>();
-
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<EventEntity> events = new ArrayList<>();
 

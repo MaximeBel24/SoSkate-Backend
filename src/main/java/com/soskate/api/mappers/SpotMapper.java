@@ -60,7 +60,6 @@ public class SpotMapper {
                 entity.getLongitude(),
                 entity.getIsIndoor(),
                 entity.getIsActive(),
-                entity.getPhotos(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );
