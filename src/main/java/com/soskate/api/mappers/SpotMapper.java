@@ -1,7 +1,7 @@
 package com.soskate.api.mappers;
 
-import com.soskate.api.dto.spot.SpotRequestDTO;
-import com.soskate.api.dto.spot.SpotResponseDTO;
+import com.soskate.api.dto.spot.SpotRequest;
+import com.soskate.api.dto.spot.SpotResponse;
 import com.soskate.api.entities.SpotEntity;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class SpotMapper {
      * @param dto le DTO de requête
      * @return l'entité Spot
      */
-    public static SpotEntity spotRequestDTOtoSpotEntity(SpotRequestDTO dto) {
+    public static SpotEntity spotRequestDTOtoSpotEntity(SpotRequest dto) {
         if (dto == null) {
             return null;
         }
@@ -44,12 +44,12 @@ public class SpotMapper {
      * @param entity l'entité à convertir
      * @return le DTO de réponse complet
      */
-    public static SpotResponseDTO spotEntityToSpotResponseDTO(SpotEntity entity) {
+    public static SpotResponse spotEntityToSpotResponseDTO(SpotEntity entity) {
         if (entity == null) {
             return null;
         }
 
-        return new SpotResponseDTO(
+        return new SpotResponse(
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription(),
@@ -71,7 +71,7 @@ public class SpotMapper {
      * @param spotEntity l'entité à mettre à jour
      * @param spotRequest le DTO contenant les nouvelles valeurs
      */
-    public static void updateSpotEntityFromSpotRequestDTO(SpotEntity spotEntity, SpotRequestDTO spotRequest) {
+    public static void updateSpotEntityFromSpotRequestDTO(SpotEntity spotEntity, SpotRequest spotRequest) {
         if (spotEntity == null || spotRequest == null) {
             return;
         }

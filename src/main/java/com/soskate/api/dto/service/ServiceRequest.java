@@ -3,7 +3,7 @@ package com.soskate.api.dto.service;
 import com.soskate.api.enums.ServiceType;
 import jakarta.validation.constraints.*;
 
-public record ServiceRequestDTO(
+public record ServiceRequest(
 
         @NotBlank(message = "Le nom est obligatoire.")
         @Size(max = 150, message = "Le nom ne peut excéder 150 caractères.")

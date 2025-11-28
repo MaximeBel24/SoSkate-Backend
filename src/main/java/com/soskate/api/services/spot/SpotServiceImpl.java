@@ -1,7 +1,7 @@
 package com.soskate.api.services.spot;
 
-import com.soskate.api.dto.spot.SpotRequestDTO;
-import com.soskate.api.dto.spot.SpotResponseDTO;
+import com.soskate.api.dto.spot.SpotRequest;
+import com.soskate.api.dto.spot.SpotResponse;
 import com.soskate.api.entities.SpotEntity;
 import com.soskate.api.exceptions.spot.DuplicateSpotException;
 import com.soskate.api.exceptions.spot.InvalidCoordinatesException;
@@ -32,7 +32,7 @@ public class SpotServiceImpl implements SpotService {
 
     @Override
     @Transactional
-    public SpotResponseDTO createSpot(SpotRequestDTO requestDTO) {
+    public SpotResponse createSpot(SpotRequest requestDTO) {
         log.info("Création d'un nouveau spot : {}", requestDTO.name());
 
         if (spotRepository.existsByNameAndAddress(requestDTO.name(), requestDTO.address())) {
@@ -52,7 +52,7 @@ public class SpotServiceImpl implements SpotService {
     }
 
     @Override
-    public List<SpotResponseDTO> getAllSpots() {
+    public List<SpotResponse> getAllSpots() {
         log.debug("Récupération de tous les spots");
 
         return spotRepository.findAll()
@@ -62,7 +62,7 @@ public class SpotServiceImpl implements SpotService {
     }
 
     @Override
-    public List<SpotResponseDTO> getActiveSpots() {
+    public List<SpotResponse> getActiveSpots() {
         log.debug("Récupération des spots actifs");
 
         return spotRepository.findByIsActiveTrue()
@@ -72,7 +72,7 @@ public class SpotServiceImpl implements SpotService {
     }
 
     @Override
-    public SpotResponseDTO getSpotById(Long id) {
+    public SpotResponse getSpotById(Long id) {
         log.debug("Récupération du spot avec l'ID : {}", id);
 
         SpotEntity spot = spotRepository.findById(id)
@@ -82,7 +82,7 @@ public class SpotServiceImpl implements SpotService {
     }
 
     @Override
-    public List<SpotResponseDTO> getSpotsByCity(String city) {
+    public List<SpotResponse> getSpotsByCity(String city) {
         log.debug("Récupération des spots dans la ville : {}", city);
 
         return spotRepository.findByCityContainingIgnoreCaseAndIsActiveTrue(city)
@@ -92,7 +92,7 @@ public class SpotServiceImpl implements SpotService {
     }
 
     @Override
-    public List<SpotResponseDTO> getSpotsByType(Boolean isIndoor) {
+    public List<SpotResponse> getSpotsByType(Boolean isIndoor) {
         log.debug("Récupération des spots {} actifs", isIndoor ? "indoor" : "outdoor");
 
         return spotRepository.findByIsIndoorAndIsActiveTrue(isIndoor)
@@ -102,7 +102,7 @@ public class SpotServiceImpl implements SpotService {
     }
 
     @Override
-    public List<SpotResponseDTO> getSpotsNearby(BigDecimal latitude, BigDecimal longitude, double radiusKm) {
+    public List<SpotResponse> getSpotsNearby(BigDecimal latitude, BigDecimal longitude, double radiusKm) {
         log.debug("Recherche de spots dans un rayon de {} km autour de ({}, {})",
                 radiusKm, latitude, longitude);
 
@@ -127,7 +127,7 @@ public class SpotServiceImpl implements SpotService {
 
     @Override
     @Transactional
-    public SpotResponseDTO updateSpot(Long id, SpotRequestDTO spotRequest) {
+    public SpotResponse updateSpot(Long id, SpotRequest spotRequest) {
         log.info("Mise à jour du spot ID : {}", id);
 
         SpotEntity spotEntity = spotRepository.findById(id)

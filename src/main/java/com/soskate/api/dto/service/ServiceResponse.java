@@ -4,7 +4,7 @@ import com.soskate.api.enums.ServiceType;
 
 import java.time.LocalDateTime;
 
-public record ServiceResponseDTO(
+public record ServiceResponse(
         Long id,
         String name,
         ServiceType type,

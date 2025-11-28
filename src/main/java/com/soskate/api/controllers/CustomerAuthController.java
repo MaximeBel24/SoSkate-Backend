@@ -1,9 +1,9 @@
 package com.soskate.api.controllers;
 
-import com.soskate.api.dto.auth.login.LoginRequestDTO;
-import com.soskate.api.dto.auth.login.LoginResponseDTO;
-import com.soskate.api.dto.auth.register.CustomerRegisterRequestDTO;
-import com.soskate.api.dto.customer.CustomerResponseDTO;
+import com.soskate.api.dto.auth.login.LoginRequest;
+import com.soskate.api.dto.auth.login.LoginResponse;
+import com.soskate.api.dto.auth.register.CustomerRegisterRequest;
+import com.soskate.api.dto.customer.CustomerResponse;
 import com.soskate.api.services.customer.auth.CustomerAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +35,11 @@ public class CustomerAuthController {
      * @return le customer créé avec le statut 201 CREATED
      */
     @PostMapping("/register")
-    public ResponseEntity<CustomerResponseDTO> register(@Valid @RequestBody CustomerRegisterRequestDTO customerToRegister) {
+    public ResponseEntity<CustomerResponse> register(@Valid @RequestBody CustomerRegisterRequest customerToRegister) {
 
         log.info("Requête d'inscription reçue pour l'email : {}", customerToRegister.email());
 
-        CustomerResponseDTO customer = customerAuthService.registerCustomer(customerToRegister);
+        CustomerResponse customer = customerAuthService.registerCustomer(customerToRegister);
 
         log.info("Inscription réussie pour l'email : {}", customer.email());
 
@@ -68,12 +68,12 @@ public class CustomerAuthController {
      * @return les informations du customer avec message de succès
      */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(
-            @Valid @RequestBody LoginRequestDTO loginRequest) {
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest loginRequest) {
 
         log.info("Requête de connexion reçue pour l'email : {}", loginRequest.email());
 
-        LoginResponseDTO response = customerAuthService.login(loginRequest);
+        LoginResponse response = customerAuthService.login(loginRequest);
 
         log.info("Connexion réussie pour l'email : {}", loginRequest.email());
 

@@ -1,6 +1,6 @@
 package com.soskate.api.dto.auth.login;
 
-import com.soskate.api.dto.customer.CustomerResponseDTO;
+import com.soskate.api.dto.customer.CustomerResponse;
 
 /**
  * DTO de réponse après connexion réussie.
@@ -9,12 +9,12 @@ import com.soskate.api.dto.customer.CustomerResponseDTO;
  * @author SoSkate Team
  * @version 1.0
  */
-public record LoginResponseDTO(
-        CustomerResponseDTO customer,
+public record LoginResponse(
+        CustomerResponse customer,
         String message
 ) {
 
-    public LoginResponseDTO(CustomerResponseDTO customer) {
+    public LoginResponse(CustomerResponse customer) {
         this(customer, "Connexion réussie");
     }
 }
