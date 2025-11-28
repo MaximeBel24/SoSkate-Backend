@@ -1,5 +1,7 @@
-package com.soskate.api.dto.photo;
+package com.soskate.api.mappers;
 
+import com.soskate.api.dto.photo.PhotoListResponse;
+import com.soskate.api.dto.photo.PhotoResponse;
 import com.soskate.api.entities.PhotoEntity;
 import org.springframework.stereotype.Component;
 

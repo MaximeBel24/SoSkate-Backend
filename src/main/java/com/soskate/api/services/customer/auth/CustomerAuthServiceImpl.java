@@ -1,9 +1,9 @@
 package com.soskate.api.services.customer.auth;
 
-import com.soskate.api.dto.auth.login.LoginRequestDTO;
-import com.soskate.api.dto.auth.login.LoginResponseDTO;
-import com.soskate.api.dto.auth.register.CustomerRegisterRequestDTO;
-import com.soskate.api.dto.customer.CustomerResponseDTO;
+import com.soskate.api.dto.auth.login.LoginRequest;
+import com.soskate.api.dto.auth.login.LoginResponse;
+import com.soskate.api.dto.auth.register.CustomerRegisterRequest;
+import com.soskate.api.dto.customer.CustomerResponse;
 import com.soskate.api.entities.CustomerEntity;
 import com.soskate.api.exceptions.auth.BadCredentialsException;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
@@ -39,7 +39,7 @@ public class CustomerAuthServiceImpl implements CustomerAuthService{
      */
     @Override
     @Transactional
-    public CustomerResponseDTO registerCustomer(CustomerRegisterRequestDTO customerRegisterDto) {
+    public CustomerResponse registerCustomer(CustomerRegisterRequest customerRegisterDto) {
         log.info("Tentative d'inscription pour l'email : {}", customerRegisterDto.email());
 
         if (customerRepository.existsByEmail(customerRegisterDto.email())) {
@@ -75,7 +75,7 @@ public class CustomerAuthServiceImpl implements CustomerAuthService{
     }
 
     @Override
-    public LoginResponseDTO login(LoginRequestDTO loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
 
         log.info("Tentative de connexion pour l'email : {}", loginRequest.email());
         CustomerEntity customer = customerRepository.findByEmail(loginRequest.email())
@@ -92,8 +92,8 @@ public class CustomerAuthServiceImpl implements CustomerAuthService{
 
         log.info("Connexion réussie pour l'email : {}", loginRequest.email());
 
-        CustomerResponseDTO customerResponse = CustomerMapper.customerEntityToCustomerResponseDTO(customer);
+        CustomerResponse customerResponse = CustomerMapper.customerEntityToCustomerResponseDTO(customer);
 
-        return new LoginResponseDTO(customerResponse);
+        return new LoginResponse(customerResponse);
     }
 }

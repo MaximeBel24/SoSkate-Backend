@@ -1,7 +1,7 @@
 package com.soskate.api.services.service;
 
-import com.soskate.api.dto.service.ServiceRequestDTO;
-import com.soskate.api.dto.service.ServiceResponseDTO;
+import com.soskate.api.dto.service.ServiceRequest;
+import com.soskate.api.dto.service.ServiceResponse;
 import com.soskate.api.entities.ServiceEntity;
 import com.soskate.api.enums.ServiceType;
 import com.soskate.api.exceptions.service.ServiceAlreadyExistsException;
@@ -31,7 +31,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     @Transactional
-    public ServiceResponseDTO createService(ServiceRequestDTO requestDTO) {
+    public ServiceResponse createService(ServiceRequest requestDTO) {
         log.info("Création d'un nouveau service : {}", requestDTO.name());
 
         if (serviceRepository.existsByName(requestDTO.name())) {
@@ -48,7 +48,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceResponseDTO> getAllServices() {
+    public List<ServiceResponse> getAllServices() {
         log.debug("Récupération de tous les services");
 
         return serviceRepository.findAll()
@@ -58,7 +58,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceResponseDTO> getActiveServices() {
+    public List<ServiceResponse> getActiveServices() {
         log.debug("Récupération des services actifs");
 
         return serviceRepository.findByIsActiveTrue()
@@ -68,7 +68,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServiceResponseDTO getServiceById(Long id) {
+    public ServiceResponse getServiceById(Long id) {
         log.debug("Récupération du service avec l'ID : {}", id);
 
         ServiceEntity service = serviceRepository.findById(id)
@@ -78,7 +78,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceResponseDTO> getServicesByType(ServiceType type) {
+    public List<ServiceResponse> getServicesByType(ServiceType type) {
         log.debug("Récupération des services de type : {}", type);
 
         return serviceRepository.findByType(type)
@@ -89,7 +89,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     @Transactional
-    public ServiceResponseDTO updateService(Long id, ServiceRequestDTO requestDTO) {
+    public ServiceResponse updateService(Long id, ServiceRequest requestDTO) {
         log.info("Mise à jour du service ID : {}", id);
 
         ServiceEntity service = serviceRepository.findById(id)

@@ -1,7 +1,7 @@
 package com.soskate.api.services.service;
 
-import com.soskate.api.dto.service.ServiceRequestDTO;
-import com.soskate.api.dto.service.ServiceResponseDTO;
+import com.soskate.api.dto.service.ServiceRequest;
+import com.soskate.api.dto.service.ServiceResponse;
 import com.soskate.api.enums.ServiceType;
 
 import java.util.List;
@@ -20,21 +20,21 @@ public interface ServiceService {
      * @param requestDTO les données du service à créer
      * @return le service créé
      */
-    ServiceResponseDTO createService(ServiceRequestDTO requestDTO);
+    ServiceResponse createService(ServiceRequest requestDTO);
 
     /**
      * Récupère tous les services.
      *
      * @return liste de tous les services
      */
-    List<ServiceResponseDTO> getAllServices();
+    List<ServiceResponse> getAllServices();
 
     /**
      * Récupère uniquement les services actifs.
      *
      * @return liste des services actifs
      */
-    List<ServiceResponseDTO> getActiveServices();
+    List<ServiceResponse> getActiveServices();
 
     /**
      * Récupère un service par son ID.
@@ -42,7 +42,7 @@ public interface ServiceService {
      * @param id l'identifiant du service
      * @return le service trouvé
      */
-    ServiceResponseDTO getServiceById(Long id);
+    ServiceResponse getServiceById(Long id);
 
     /**
      * Récupère les services par type.
@@ -50,7 +50,7 @@ public interface ServiceService {
      * @param type le type de service (LESSON, RENTAL)
      * @return liste des services de ce type
      */
-    List<ServiceResponseDTO> getServicesByType(ServiceType type);
+    List<ServiceResponse> getServicesByType(ServiceType type);
 
     /**
      * Met à jour un service existant.
@@ -59,7 +59,7 @@ public interface ServiceService {
      * @param requestDTO les nouvelles données
      * @return le service mis à jour
      */
-    ServiceResponseDTO updateService(Long id, ServiceRequestDTO requestDTO);
+    ServiceResponse updateService(Long id, ServiceRequest requestDTO);
 
     /**
      * Désactive un service (soft delete).

@@ -1,9 +1,9 @@
 package com.soskate.api.services.customer.auth;
 
-import com.soskate.api.dto.auth.login.LoginRequestDTO;
-import com.soskate.api.dto.auth.login.LoginResponseDTO;
-import com.soskate.api.dto.auth.register.CustomerRegisterRequestDTO;
-import com.soskate.api.dto.customer.CustomerResponseDTO;
+import com.soskate.api.dto.auth.login.LoginRequest;
+import com.soskate.api.dto.auth.login.LoginResponse;
+import com.soskate.api.dto.auth.register.CustomerRegisterRequest;
+import com.soskate.api.dto.customer.CustomerResponse;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 import com.soskate.api.exceptions.auth.BadCredentialsException;
 
@@ -24,7 +24,7 @@ public interface CustomerAuthService {
      * @return le customer créé (sans le password)
      * @throws EmailAlreadyExistsException si l'email existe déjà
      */
-    CustomerResponseDTO registerCustomer(CustomerRegisterRequestDTO customerRegisterDto);
+    CustomerResponse registerCustomer(CustomerRegisterRequest customerRegisterDto);
 
     /**
      * Authentifie un customer avec son email et mot de passe.
@@ -33,7 +33,7 @@ public interface CustomerAuthService {
      * @return les informations de connexion (customer + token JWT si applicable)
      * @throws BadCredentialsException si email ou password invalide
      */
-    LoginResponseDTO login(LoginRequestDTO loginRequest);
+    LoginResponse login(LoginRequest loginRequest);
 
     /**
      * Vérifie si un email existe déjà en base.

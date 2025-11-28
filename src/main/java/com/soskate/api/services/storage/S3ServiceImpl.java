@@ -1,8 +1,7 @@
-package com.soskate.api.services.impl;
+package com.soskate.api.services.storage;
 
 
 import com.soskate.api.exceptions.photo.PhotoUploadException;
-import com.soskate.api.services.S3Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

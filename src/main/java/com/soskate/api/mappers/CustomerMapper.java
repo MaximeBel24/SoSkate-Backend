@@ -1,6 +1,6 @@
 package com.soskate.api.mappers;
-import com.soskate.api.dto.auth.register.CustomerRegisterRequestDTO;
-import com.soskate.api.dto.customer.CustomerResponseDTO;
+import com.soskate.api.dto.auth.register.CustomerRegisterRequest;
+import com.soskate.api.dto.customer.CustomerResponse;
 import com.soskate.api.entities.CustomerEntity;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ public class CustomerMapper {
      * @param hashedPassword le mot de passe déjà hashé
      * @return l'entité CustomerEntity prête à être sauvegardée
      */
-    public static CustomerEntity customerRegisterRequestDTOToCustomerEntity(CustomerRegisterRequestDTO customerRegisterRequestDTO, String hashedPassword) {
+    public static CustomerEntity customerRegisterRequestDTOToCustomerEntity(CustomerRegisterRequest customerRegisterRequestDTO, String hashedPassword) {
         if (customerRegisterRequestDTO == null) {
             return null;
         }
@@ -50,12 +50,12 @@ public class CustomerMapper {
      * @param customerEntity l'entité à convertir
      * @return le DTO de réponse
      */
-    public static CustomerResponseDTO customerEntityToCustomerResponseDTO(CustomerEntity customerEntity) {
+    public static CustomerResponse customerEntityToCustomerResponseDTO(CustomerEntity customerEntity) {
         if (customerEntity == null) {
             return null;
         }
 
-        return new CustomerResponseDTO(
+        return new CustomerResponse(
                 customerEntity.getId(),
                 customerEntity.getEmail(),
                 customerEntity.getFirstname(),
