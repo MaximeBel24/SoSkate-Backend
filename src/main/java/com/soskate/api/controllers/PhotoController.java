@@ -29,6 +29,7 @@ import java.util.List;
 @RequestMapping("/photos")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "*")
 public class PhotoController {
 
     private final PhotoService photoService;
