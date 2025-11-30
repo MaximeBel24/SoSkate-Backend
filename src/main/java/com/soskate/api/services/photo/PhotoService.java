@@ -1,4 +1,4 @@
-package com.soskate.api.service;
+package com.soskate.api.services.photo;
 
 import com.soskate.api.dto.photo.PhotoListResponse;
 import com.soskate.api.dto.photo.PhotoResponse;

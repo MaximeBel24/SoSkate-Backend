@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * @author SoSkate Team
  * @version 1.0
  */
-public record CustomerRegisterRequestDTO(
+public record CustomerRegisterRequest(
 
         @NotBlank(message = "L'email est obligatoire")
         @Email(message = "L'email doit être valide")

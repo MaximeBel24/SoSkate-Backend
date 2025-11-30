@@ -1,7 +1,7 @@
 package com.soskate.api.controllers;
 
-import com.soskate.api.dto.service.ServiceRequestDTO;
-import com.soskate.api.dto.service.ServiceResponseDTO;
+import com.soskate.api.dto.service.ServiceRequest;
+import com.soskate.api.dto.service.ServiceResponse;
 import com.soskate.api.enums.ServiceType;
 import com.soskate.api.services.service.ServiceService;
 import jakarta.validation.Valid;
@@ -35,12 +35,12 @@ public class ServiceController {
      * @return le service créé avec statut 201 CREATED
      */
     @PostMapping
-    public ResponseEntity<ServiceResponseDTO> createService(
-            @Valid @RequestBody ServiceRequestDTO requestDTO) {
+    public ResponseEntity<ServiceResponse> createService(
+            @Valid @RequestBody ServiceRequest requestDTO) {
 
         log.info("Requête POST /api/services - Création d'un service : {}", requestDTO.name());
 
-        ServiceResponseDTO service = serviceService.createService(requestDTO);
+        ServiceResponse service = serviceService.createService(requestDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(service);
     }
@@ -51,10 +51,10 @@ public class ServiceController {
      * @return liste de tous les services
      */
     @GetMapping
-    public ResponseEntity<List<ServiceResponseDTO>> getAllServices() {
+    public ResponseEntity<List<ServiceResponse>> getAllServices() {
         log.info("Requête GET /api/services - Récupération de tous les services");
 
-        List<ServiceResponseDTO> services = serviceService.getAllServices();
+        List<ServiceResponse> services = serviceService.getAllServices();
 
         log.info("{} service(s) trouvé(s)", services.size());
 
@@ -67,10 +67,10 @@ public class ServiceController {
      * @return liste des services actifs
      */
     @GetMapping("/active")
-    public ResponseEntity<List<ServiceResponseDTO>> getActiveServices() {
+    public ResponseEntity<List<ServiceResponse>> getActiveServices() {
         log.info("Requête GET /api/services/active - Récupération des services actifs");
 
-        List<ServiceResponseDTO> services = serviceService.getActiveServices();
+        List<ServiceResponse> services = serviceService.getActiveServices();
 
         return ResponseEntity.ok(services);
     }
@@ -82,10 +82,10 @@ public class ServiceController {
      * @return le service trouvé
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceResponseDTO> getServiceById(@PathVariable Long id) {
+    public ResponseEntity<ServiceResponse> getServiceById(@PathVariable Long id) {
         log.info("Requête GET /api/services/{} - Récupération du service", id);
 
-        ServiceResponseDTO service = serviceService.getServiceById(id);
+        ServiceResponse service = serviceService.getServiceById(id);
 
         return ResponseEntity.ok(service);
     }
@@ -97,10 +97,10 @@ public class ServiceController {
      * @return liste des services de ce type
      */
     @GetMapping("/type/{type}")
-    public ResponseEntity<List<ServiceResponseDTO>> getServicesByType(@PathVariable ServiceType type) {
+    public ResponseEntity<List<ServiceResponse>> getServicesByType(@PathVariable ServiceType type) {
         log.info("Requête GET /api/services/type/{} - Récupération par type", type);
 
-        List<ServiceResponseDTO> services = serviceService.getServicesByType(type);
+        List<ServiceResponse> services = serviceService.getServicesByType(type);
 
         return ResponseEntity.ok(services);
     }
@@ -113,13 +113,13 @@ public class ServiceController {
      * @return le service mis à jour
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ServiceResponseDTO> updateService(
+    public ResponseEntity<ServiceResponse> updateService(
             @PathVariable Long id,
-            @Valid @RequestBody ServiceRequestDTO requestDTO) {
+            @Valid @RequestBody ServiceRequest requestDTO) {
 
         log.info("Requête PUT /api/services/{} - Mise à jour du service", id);
 
-        ServiceResponseDTO service = serviceService.updateService(id, requestDTO);
+        ServiceResponse service = serviceService.updateService(id, requestDTO);
 
         return ResponseEntity.ok(service);
     }

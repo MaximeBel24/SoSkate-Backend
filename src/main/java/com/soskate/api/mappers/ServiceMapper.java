@@ -1,7 +1,7 @@
 package com.soskate.api.mappers;
 
-import com.soskate.api.dto.service.ServiceRequestDTO;
-import com.soskate.api.dto.service.ServiceResponseDTO;
+import com.soskate.api.dto.service.ServiceRequest;
+import com.soskate.api.dto.service.ServiceResponse;
 import com.soskate.api.entities.ServiceEntity;
 import org.springframework.stereotype.Component;
 
@@ -17,45 +17,45 @@ public class ServiceMapper {
     /**
      * Convertit un ServiceRequestDTO en ServiceEntity.
      *
-     * @param serviceRequestDTO le DTO de requête
+     * @param request le DTO de requête
      * @return l'entité Service
      */
-    public static ServiceEntity serviceRequestDTOToServiceEntity(ServiceRequestDTO serviceRequestDTO) {
-        if (serviceRequestDTO == null) {
+    public static ServiceEntity toEntity(ServiceRequest request) {
+        if (request == null) {
             return null;
         }
 
         return ServiceEntity.builder()
-                .name(serviceRequestDTO.name())
-                .type(serviceRequestDTO.type())
-                .description(serviceRequestDTO.description())
-                .durationMinutes(serviceRequestDTO.durationMinutes())
-                .basePriceCents(serviceRequestDTO.basePriceCents())
-                .isActive(serviceRequestDTO.isActive())
+                .name(request.name())
+                .type(request.type())
+                .description(request.description())
+                .durationMinutes(request.durationMinutes())
+                .basePriceCents(request.basePriceCents())
+                .isActive(request.isActive())
                 .build();
     }
 
     /**
      * Convertit une ServiceEntity en ServiceResponseDTO.
      *
-     * @param serviceEntity l'entité à convertir
+     * @param entity l'entité à convertir
      * @return le DTO de réponse
      */
-    public static ServiceResponseDTO serviceEntityToServiceResponseDTO(ServiceEntity serviceEntity) {
-        if (serviceEntity == null) {
+    public static ServiceResponse toResponse(ServiceEntity entity) {
+        if (entity == null) {
             return null;
         }
 
-        return new ServiceResponseDTO(
-                serviceEntity.getId(),
-                serviceEntity.getName(),
-                serviceEntity.getType(),
-                serviceEntity.getDescription(),
-                serviceEntity.getDurationMinutes(),
-                serviceEntity.getBasePriceCents(),
-                serviceEntity.getIsActive(),
-                serviceEntity.getCreatedAt(),
-                serviceEntity.getUpdatedAt()
+        return new ServiceResponse(
+                entity.getId(),
+                entity.getName(),
+                entity.getType(),
+                entity.getDescription(),
+                entity.getDurationMinutes(),
+                entity.getBasePriceCents(),
+                entity.getIsActive(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
         );
     }
 
@@ -63,18 +63,18 @@ public class ServiceMapper {
      * Met à jour une entité existante avec les données d'un DTO.
      *
      * @param serviceToUpdate l'entité à mettre à jour
-     * @param serviceRequestDTO le DTO contenant les nouvelles valeurs
+     * @param request le DTO contenant les nouvelles valeurs
      */
-    public static void updateEntityFromDTO(ServiceEntity serviceToUpdate, ServiceRequestDTO serviceRequestDTO) {
-        if (serviceToUpdate == null || serviceRequestDTO == null) {
+    public static void updateEntityFromRequest(ServiceEntity serviceToUpdate, ServiceRequest request) {
+        if (serviceToUpdate == null || request == null) {
             return;
         }
 
-        serviceToUpdate.setName(serviceRequestDTO.name());
-        serviceToUpdate.setType(serviceRequestDTO.type());
-        serviceToUpdate.setDescription(serviceRequestDTO.description());
-        serviceToUpdate.setDurationMinutes(serviceRequestDTO.durationMinutes());
-        serviceToUpdate.setBasePriceCents(serviceRequestDTO.basePriceCents());
-        serviceToUpdate.setIsActive(serviceRequestDTO.isActive());
+        serviceToUpdate.setName(request.name());
+        serviceToUpdate.setType(request.type());
+        serviceToUpdate.setDescription(request.description());
+        serviceToUpdate.setDurationMinutes(request.durationMinutes());
+        serviceToUpdate.setBasePriceCents(request.basePriceCents());
+        serviceToUpdate.setIsActive(request.isActive());
     }
 }

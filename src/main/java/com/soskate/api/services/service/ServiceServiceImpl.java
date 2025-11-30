@@ -1,7 +1,7 @@
 package com.soskate.api.services.service;
 
-import com.soskate.api.dto.service.ServiceRequestDTO;
-import com.soskate.api.dto.service.ServiceResponseDTO;
+import com.soskate.api.dto.service.ServiceRequest;
+import com.soskate.api.dto.service.ServiceResponse;
 import com.soskate.api.entities.ServiceEntity;
 import com.soskate.api.enums.ServiceType;
 import com.soskate.api.exceptions.service.ServiceAlreadyExistsException;
@@ -31,82 +31,82 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     @Transactional
-    public ServiceResponseDTO createService(ServiceRequestDTO requestDTO) {
-        log.info("Création d'un nouveau service : {}", requestDTO.name());
+    public ServiceResponse createService(ServiceRequest request) {
+        log.info("Création d'un nouveau service : {}", request.name());
 
-        if (serviceRepository.existsByName(requestDTO.name())) {
-            log.warn("Tentative de création d'un service avec un nom existant : {}", requestDTO.name());
-            throw new ServiceAlreadyExistsException(requestDTO.name(), true);
+        if (serviceRepository.existsByName(request.name())) {
+            log.warn("Tentative de création d'un service avec un nom existant : {}", request.name());
+            throw new ServiceAlreadyExistsException(request.name(), true);
         }
 
-        ServiceEntity service = ServiceMapper.serviceRequestDTOToServiceEntity(requestDTO);
+        ServiceEntity service = ServiceMapper.toEntity(request);
         ServiceEntity savedService = serviceRepository.save(service);
 
         log.info("Service créé avec succès : ID {}", savedService.getId());
 
-        return ServiceMapper.serviceEntityToServiceResponseDTO(savedService);
+        return ServiceMapper.toResponse(savedService);
     }
 
     @Override
-    public List<ServiceResponseDTO> getAllServices() {
+    public List<ServiceResponse> getAllServices() {
         log.debug("Récupération de tous les services");
 
         return serviceRepository.findAll()
                 .stream()
-                .map(ServiceMapper::serviceEntityToServiceResponseDTO)
+                .map(ServiceMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceResponseDTO> getActiveServices() {
+    public List<ServiceResponse> getActiveServices() {
         log.debug("Récupération des services actifs");
 
         return serviceRepository.findByIsActiveTrue()
                 .stream()
-                .map(ServiceMapper::serviceEntityToServiceResponseDTO)
+                .map(ServiceMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ServiceResponseDTO getServiceById(Long id) {
+    public ServiceResponse getServiceById(Long id) {
         log.debug("Récupération du service avec l'ID : {}", id);
 
         ServiceEntity service = serviceRepository.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id));
 
-        return ServiceMapper.serviceEntityToServiceResponseDTO(service);
+        return ServiceMapper.toResponse(service);
     }
 
     @Override
-    public List<ServiceResponseDTO> getServicesByType(ServiceType type) {
+    public List<ServiceResponse> getServicesByType(ServiceType type) {
         log.debug("Récupération des services de type : {}", type);
 
         return serviceRepository.findByType(type)
                 .stream()
-                .map(ServiceMapper::serviceEntityToServiceResponseDTO)
+                .map(ServiceMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public ServiceResponseDTO updateService(Long id, ServiceRequestDTO requestDTO) {
+    public ServiceResponse updateService(Long id, ServiceRequest request) {
         log.info("Mise à jour du service ID : {}", id);
 
         ServiceEntity service = serviceRepository.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id));
 
-        if (!service.getName().equals(requestDTO.name())
-                && serviceRepository.existsByName(requestDTO.name())) {
-            log.warn("Tentative de renommage avec un nom existant : {}", requestDTO.name());
-            throw new ServiceAlreadyExistsException(requestDTO.name(), true);
+        if (!service.getName().equals(request.name())
+                && serviceRepository.existsByName(request.name())) {
+            log.warn("Tentative de renommage avec un nom existant : {}", request.name());
+            throw new ServiceAlreadyExistsException(request.name(), true);
         }
 
-        ServiceMapper.updateEntityFromDTO(service, requestDTO);
+        ServiceMapper.updateEntityFromRequest(service, request);
         ServiceEntity updatedService = serviceRepository.save(service);
 
         log.info("Service mis à jour avec succès : ID {}", updatedService.getId());
 
-        return ServiceMapper.serviceEntityToServiceResponseDTO(updatedService);
+        return ServiceMapper.toResponse(updatedService);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.soskate.api.services;
+package com.soskate.api.services.storage;
 
 import java.io.InputStream;
 

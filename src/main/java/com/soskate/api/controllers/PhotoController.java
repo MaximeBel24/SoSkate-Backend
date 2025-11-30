@@ -6,7 +6,7 @@ import com.soskate.api.dto.photo.PhotoUpdateRequest;
 import com.soskate.api.dto.photo.PhotoUploadRequest;
 import com.soskate.api.enums.PhotoEntityType;
 import com.soskate.api.enums.PhotoType;
-import com.soskate.api.service.PhotoService;
+import com.soskate.api.services.photo.PhotoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

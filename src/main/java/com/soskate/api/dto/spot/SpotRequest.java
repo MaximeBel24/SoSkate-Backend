@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * @author SoSkate Team
  * @version 1.0
  */
-public record SpotRequestDTO(
+public record SpotRequest(
 
         @NotBlank(message = "Le nom du spot est obligatoire")
         @Size(max = 150, message = "Le nom ne peut pas dépasser 150 caractères")

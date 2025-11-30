@@ -13,7 +13,7 @@ import java.time.LocalDate;
  * @author SoSkate Team
  * @version 1.0
  */
-public record CustomerUpdateDTO(
+public record CustomerUpdate(
 
     @Size(min = 2, max = 100, message = "Le prénom doit contenir entre 2 et 100 caractères")
     String firstname,

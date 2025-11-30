@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
  * @author SoSkate Team
  * @version 1.0
  */
-public record LoginRequestDTO(
+public record LoginRequest(
 
         @NotBlank(message = "L'email est obligatoire")
         @Email(message = "L'email doit être valide")

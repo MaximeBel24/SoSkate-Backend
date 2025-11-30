@@ -2,7 +2,6 @@ package com.soskate.api.dto.spot;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * DTO de réponse pour un spot.
@@ -10,7 +9,7 @@ import java.util.List;
  * @author SoSkate Team
  * @version 1.0
  */
-public record SpotResponseDTO(
+public record SpotResponse(
         Long id,
         String name,
         String description,

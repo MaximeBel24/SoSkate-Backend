@@ -1,4 +1,4 @@
-package com.soskate.api.services.impl;
+package com.soskate.api.services.photo;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.nio.ImageWriter;
@@ -11,9 +11,9 @@ import com.soskate.api.enums.PhotoType;
 import com.soskate.api.exceptions.photo.InvalidPhotoFormatException;
 import com.soskate.api.exceptions.photo.PhotoNotFoundException;
 import com.soskate.api.exceptions.photo.PhotoUploadException;
+import com.soskate.api.mappers.PhotoMapper;
 import com.soskate.api.repositories.PhotoRepository;
-import com.soskate.api.service.PhotoService;
-import com.soskate.api.services.S3Service;
+import com.soskate.api.services.storage.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
