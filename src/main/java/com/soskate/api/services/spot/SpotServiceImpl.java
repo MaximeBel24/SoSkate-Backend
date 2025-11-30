@@ -32,23 +32,23 @@ public class SpotServiceImpl implements SpotService {
 
     @Override
     @Transactional
-    public SpotResponse createSpot(SpotRequest requestDTO) {
-        log.info("Création d'un nouveau spot : {}", requestDTO.name());
+    public SpotResponse createSpot(SpotRequest request) {
+        log.info("Création d'un nouveau spot : {}", request.name());
 
-        if (spotRepository.existsByNameAndAddress(requestDTO.name(), requestDTO.address())) {
+        if (spotRepository.existsByNameAndAddress(request.name(), request.address())) {
             log.warn("Tentative de création d'un spot déjà existant : {} à {}",
-                    requestDTO.name(), requestDTO.address());
-            throw new DuplicateSpotException(requestDTO.name(), requestDTO.address());
+                    request.name(), request.address());
+            throw new DuplicateSpotException(request.name(), request.address());
         }
 
-        validateCoordinates(requestDTO.latitude(), requestDTO.longitude());
+        validateCoordinates(request.latitude(), request.longitude());
 
-        SpotEntity spot = SpotMapper.spotRequestDTOtoSpotEntity(requestDTO);
+        SpotEntity spot = SpotMapper.toEntity(request);
         SpotEntity savedSpot = spotRepository.save(spot);
 
         log.info("Spot créé avec succès : ID {}", savedSpot.getId());
 
-        return SpotMapper.spotEntityToSpotResponseDTO(savedSpot);
+        return SpotMapper.toResponse(savedSpot);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SpotServiceImpl implements SpotService {
 
         return spotRepository.findAll()
                 .stream()
-                .map(SpotMapper::spotEntityToSpotResponseDTO)
+                .map(SpotMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +67,7 @@ public class SpotServiceImpl implements SpotService {
 
         return spotRepository.findByIsActiveTrue()
                 .stream()
-                .map(SpotMapper::spotEntityToSpotResponseDTO)
+                .map(SpotMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +78,7 @@ public class SpotServiceImpl implements SpotService {
         SpotEntity spot = spotRepository.findById(id)
                 .orElseThrow(() -> new SpotNotFoundException(id));
 
-        return SpotMapper.spotEntityToSpotResponseDTO(spot);
+        return SpotMapper.toResponse(spot);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class SpotServiceImpl implements SpotService {
 
         return spotRepository.findByCityContainingIgnoreCaseAndIsActiveTrue(city)
                 .stream()
-                .map(SpotMapper::spotEntityToSpotResponseDTO)
+                .map(SpotMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -97,7 +97,7 @@ public class SpotServiceImpl implements SpotService {
 
         return spotRepository.findByIsIndoorAndIsActiveTrue(isIndoor)
                 .stream()
-                .map(SpotMapper::spotEntityToSpotResponseDTO)
+                .map(SpotMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -121,33 +121,33 @@ public class SpotServiceImpl implements SpotService {
         log.info("{} spot(s) trouvé(s) dans un rayon de {} km", spots.size(), radiusKm);
 
         return spots.stream()
-                .map(SpotMapper::spotEntityToSpotResponseDTO)
+                .map(SpotMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public SpotResponse updateSpot(Long id, SpotRequest spotRequest) {
+    public SpotResponse updateSpot(Long id, SpotRequest request) {
         log.info("Mise à jour du spot ID : {}", id);
 
         SpotEntity spotEntity = spotRepository.findById(id)
                 .orElseThrow(() -> new SpotNotFoundException(id));
 
-        if ((!spotEntity.getName().equals(spotRequest.name()) || !spotEntity.getAddress().equals(spotRequest.address()))
-                && spotRepository.existsByNameAndAddress(spotRequest.name(), spotRequest.address())) {
+        if ((!spotEntity.getName().equals(request.name()) || !spotEntity.getAddress().equals(request.address()))
+                && spotRepository.existsByNameAndAddress(request.name(), request.address())) {
             log.warn("Tentative de modification vers un nom/adresse déjà existant : {} à {}",
-                    spotRequest.name(), spotRequest.address());
-            throw new DuplicateSpotException(spotRequest.name(), spotRequest.address());
+                    request.name(), request.address());
+            throw new DuplicateSpotException(request.name(), request.address());
         }
 
-        validateCoordinates(spotRequest.latitude(), spotRequest.longitude());
+        validateCoordinates(request.latitude(), request.longitude());
 
-        SpotMapper.updateSpotEntityFromSpotRequestDTO(spotEntity, spotRequest);
+        SpotMapper.updateEntityFromRequest(spotEntity, request);
         SpotEntity updatedSpot = spotRepository.save(spotEntity);
 
         log.info("Spot mis à jour avec succès : ID {}", updatedSpot.getId());
 
-        return SpotMapper.spotEntityToSpotResponseDTO(updatedSpot);
+        return SpotMapper.toResponse(updatedSpot);
     }
 
     @Override

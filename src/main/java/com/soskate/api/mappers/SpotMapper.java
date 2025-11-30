@@ -17,24 +17,24 @@ public class SpotMapper {
     /**
      * Convertit un SpotRequestDTO en SpotEntity.
      *
-     * @param dto le DTO de requête
+     * @param request le DTO de requête
      * @return l'entité Spot
      */
-    public static SpotEntity spotRequestDTOtoSpotEntity(SpotRequest dto) {
-        if (dto == null) {
+    public static SpotEntity toEntity(SpotRequest request) {
+        if (request == null) {
             return null;
         }
 
         return new SpotEntity(
-                dto.name(),
-                dto.description(),
-                dto.address(),
-                dto.city(),
-                dto.zipCode(),
-                dto.latitude(),
-                dto.longitude(),
-                dto.isIndoor(),
-                dto.isActive()
+                request.name(),
+                request.description(),
+                request.address(),
+                request.city(),
+                request.zipCode(),
+                request.latitude(),
+                request.longitude(),
+                request.isIndoor(),
+                request.isActive()
         );
     }
 
@@ -44,7 +44,7 @@ public class SpotMapper {
      * @param entity l'entité à convertir
      * @return le DTO de réponse complet
      */
-    public static SpotResponse spotEntityToSpotResponseDTO(SpotEntity entity) {
+    public static SpotResponse toResponse(SpotEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -68,22 +68,22 @@ public class SpotMapper {
     /**
      * Met à jour une entité existante avec les données d'un DTO.
      *
-     * @param spotEntity l'entité à mettre à jour
-     * @param spotRequest le DTO contenant les nouvelles valeurs
+     * @param entity l'entité à mettre à jour
+     * @param request le DTO contenant les nouvelles valeurs
      */
-    public static void updateSpotEntityFromSpotRequestDTO(SpotEntity spotEntity, SpotRequest spotRequest) {
-        if (spotEntity == null || spotRequest == null) {
+    public static void updateEntityFromRequest(SpotEntity entity, SpotRequest request) {
+        if (entity == null || request == null) {
             return;
         }
 
-        spotEntity.setName(spotRequest.name());
-        spotEntity.setDescription(spotRequest.description());
-        spotEntity.setAddress(spotRequest.address());
-        spotEntity.setCity(spotRequest.city());
-        spotEntity.setZipCode(spotRequest.zipCode());
-        spotEntity.setLatitude(spotRequest.latitude());
-        spotEntity.setLongitude(spotRequest.longitude());
-        spotEntity.setIsIndoor(spotRequest.isIndoor());
-        spotEntity.setIsActive(spotRequest.isActive());
+        entity.setName(request.name());
+        entity.setDescription(request.description());
+        entity.setAddress(request.address());
+        entity.setCity(request.city());
+        entity.setZipCode(request.zipCode());
+        entity.setLatitude(request.latitude());
+        entity.setLongitude(request.longitude());
+        entity.setIsIndoor(request.isIndoor());
+        entity.setIsActive(request.isActive());
     }
 }

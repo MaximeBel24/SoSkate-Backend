@@ -28,37 +28,36 @@ public class CustomerAuthServiceImpl implements CustomerAuthService{
 
     private final CustomerRepository customerRepository;
 
-
     /**
      * Inscrit un nouveau customer.
      * Version simplifiée : le password n'est PAS hashé (phase de dev uniquement).
      *
-     * @param customerRegisterDto les données d'inscription
+     * @param customerToRegister les données d'inscription
      * @return le customer créé
      * @throws EmailAlreadyExistsException si l'email existe déjà
      */
     @Override
     @Transactional
-    public CustomerResponse registerCustomer(CustomerRegisterRequest customerRegisterDto) {
-        log.info("Tentative d'inscription pour l'email : {}", customerRegisterDto.email());
+    public CustomerResponse registerCustomer(CustomerRegisterRequest customerToRegister) {
+        log.info("Tentative d'inscription pour l'email : {}", customerToRegister.email());
 
-        if (customerRepository.existsByEmail(customerRegisterDto.email())) {
-            log.warn("Tentative d'inscription avec un email déjà existant : {}", customerRegisterDto.email());
-            throw new EmailAlreadyExistsException(customerRegisterDto.email(), true);
+        if (customerRepository.existsByEmail(customerToRegister.email())) {
+            log.warn("Tentative d'inscription avec un email déjà existant : {}", customerToRegister.email());
+            throw new EmailAlreadyExistsException(customerToRegister.email(), true);
         }
 
         // TODO: Implémenter le hashage avec BCrypt en production
-//        String hashedPassword = passwordEncoder.encode(customerRegisterDto.password());
+//        String hashedPassword = passwordEncoder.encode(customerToRegister.password());
 //        log.debug("Mot de passe hashé avec succès");
 
-        CustomerEntity customer = CustomerMapper.customerRegisterRequestDTOToCustomerEntity(customerRegisterDto, customerRegisterDto.password());
+        CustomerEntity customer = CustomerMapper.toEntity(customerToRegister, customerToRegister.password());
 
         CustomerEntity savedCustomer = customerRepository.save(customer);
         log.info("Customer créé avec succès : ID {}, Email {}",
                 savedCustomer.getId(),
                 savedCustomer.getEmail());
 
-        return CustomerMapper.customerEntityToCustomerResponseDTO(savedCustomer);
+        return CustomerMapper.toResponse(savedCustomer);
     }
 
     /**
@@ -92,7 +91,7 @@ public class CustomerAuthServiceImpl implements CustomerAuthService{
 
         log.info("Connexion réussie pour l'email : {}", loginRequest.email());
 
-        CustomerResponse customerResponse = CustomerMapper.customerEntityToCustomerResponseDTO(customer);
+        CustomerResponse customerResponse = CustomerMapper.toResponse(customer);
 
         return new LoginResponse(customerResponse);
     }
