@@ -2,8 +2,11 @@ package com.soskate.api.exceptions.handlers;
 
 import com.soskate.api.exceptions.auth.BadCredentialsException;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
+import com.soskate.api.exceptions.auth.InvalidActivationTokenException;
+import com.soskate.api.exceptions.auth.PasswordMismatchException;
 import com.soskate.api.exceptions.common.ErrorResponse;
 import com.soskate.api.exceptions.common.ValidationErrorResponse;
+import com.soskate.api.exceptions.instructor.InstructorNotFoundException;
 import com.soskate.api.exceptions.photo.InvalidPhotoFormatException;
 import com.soskate.api.exceptions.photo.PhotoNotFoundException;
 import com.soskate.api.exceptions.photo.PhotoUploadException;
@@ -298,6 +301,43 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 
+    }
+
+    // ========================================
+    // EXCEPTIONS PHOTO
+    // ========================================
+
+    @ExceptionHandler(InstructorNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleInstructorNotFound(InstructorNotFoundException ex) {
+        log.warn("Instructor not found: {}", ex.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(InvalidActivationTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidActivationToken(InvalidActivationTokenException ex) {
+        log.warn("Invalid activation token: {}", ex.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordMismatch(PasswordMismatchException ex) {
+        log.warn("Password mismatch: {}", ex.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     // ========================================
