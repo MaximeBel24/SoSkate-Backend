@@ -17,7 +17,7 @@ import java.util.List;
  * TODO: Secure with @PreAuthorize("hasRole('ADMIN')") when Spring Security is implemented
  */
 @RestController
-@RequestMapping("/api/admin/instructors")
+@RequestMapping("/admin/instructors")
 @RequiredArgsConstructor
 @Slf4j
 public class AdminInstructorController {

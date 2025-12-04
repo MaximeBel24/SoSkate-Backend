@@ -20,7 +20,7 @@ import java.util.Map;
  * - Account activation (for invited instructors)
  */
 @RestController
-@RequestMapping("/api/instructors")
+@RequestMapping("/instructors")
 @RequiredArgsConstructor
 @Slf4j
 public class InstructorController {
