@@ -14,7 +14,6 @@ import java.util.Map;
 
 /**
  * REST Controller for public instructor operations.
- *
  * Includes:
  * - Public listing of active instructors (for customers)
  * - Account activation (for invited instructors)
@@ -32,7 +31,6 @@ public class InstructorController {
     /**
      * Gets all active instructors.
      * Used by customers to browse available instructors.
-     *
      * GET /api/instructors
      */
     @GetMapping
@@ -44,7 +42,6 @@ public class InstructorController {
     /**
      * Gets an active instructor by ID.
      * Returns full profile for public viewing.
-     *
      * GET /api/instructors/{id}
      */
     @GetMapping("/{id}")
@@ -55,7 +52,6 @@ public class InstructorController {
 
     /**
      * Gets instructors filtered by specialty.
-     *
      * GET /api/instructors/specialty/{specialty}
      */
     @GetMapping("/specialty/{specialty}")
@@ -66,7 +62,6 @@ public class InstructorController {
 
     /**
      * Searches instructors by name.
-     *
      * GET /api/instructors/search?q=...
      */
     @GetMapping("/search")
@@ -80,7 +75,6 @@ public class InstructorController {
     /**
      * Validates an activation token.
      * Used by frontend to check if a token is valid before showing the form.
-     *
      * GET /api/instructors/activate/validate?token=...
      */
     @GetMapping("/activate/validate")
@@ -93,7 +87,6 @@ public class InstructorController {
     /**
      * Activates an instructor account.
      * Called when the instructor submits the activation form with their new password.
-     *
      * POST /api/instructors/activate
      */
     @PostMapping("/activate")
@@ -108,9 +101,7 @@ public class InstructorController {
 
     /**
      * Updates the authenticated instructor's profile.
-     *
      * PUT /api/instructors/{id}/profile
-     *
      * TODO: Replace {id} with authentication context when Spring Security is implemented
      */
     @PutMapping("/{id}/profile")

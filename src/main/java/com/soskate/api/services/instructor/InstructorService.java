@@ -66,6 +66,7 @@ public class InstructorService {
         // TODO : Implement spring security to encode the password
 //        instructor.setPassword(passwordEncoder.encode(temporaryPassword));
 //        instructor.setPassword(temporaryPassword);
+        instructor.setPassword("PENDING_ACTIVATION");
 
         // Generate activation token
         String activationToken = tokenGeneratorService.generateActivationToken();
@@ -115,6 +116,7 @@ public class InstructorService {
 //        );
 //        instructor.setPassword(passwordEncoder.encode(temporaryPassword));
 //        instructor.setPassword(newTemporaryPassword);
+        instructor.setPassword("PENDING_REACTIVATION");
 
         // Generate new activation token (invalidates the old one)
         String newActivationToken = tokenGeneratorService.generateActivationToken();
