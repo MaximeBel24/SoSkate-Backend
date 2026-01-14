@@ -15,9 +15,6 @@ public record ServiceRequest(
         @Size(max = 10000, message = "La description ne peut excéder 10 000 caractères.")
         String description,
 
-        @Positive(message = "La durée doit être strictement positive si elle est saisie.")
-        Integer durationMinutes,
-
         @NotNull(message = "Le prix de base est obligatoire.")
         @Min(value = 0, message = "Le prix de base doit être supérieur ou égal à 0.")
         Integer basePriceCents,

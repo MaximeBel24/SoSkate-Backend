@@ -6,10 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -110,6 +107,12 @@ public class InstructorEntity extends UserEntity {
 
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookingEntity> bookings = new ArrayList<>();
+
+    // Ajouter après les autres champs
+
+    @Column(name = "buffer_minutes_between_bookings", nullable = false)
+    @Builder.Default
+    private Integer bufferMinutesBetweenBookings = 30;
 
     // ==================== Helper Methods ====================
 

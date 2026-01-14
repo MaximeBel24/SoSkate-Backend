@@ -9,7 +9,6 @@ public record ServiceResponse(
         String name,
         ServiceType type,
         String description,
-        Integer durationMinutes,
         Integer basePriceCents,
         Boolean isActive,
         LocalDateTime createdAt,

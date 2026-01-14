@@ -11,6 +11,7 @@ public record InstructorSummary(
         Long id,
         String firstname,
         String lastname,
+        String phone,
         InstructorStatus status,
         SkateSpecialty specialty,
         Integer yearsOfExperience

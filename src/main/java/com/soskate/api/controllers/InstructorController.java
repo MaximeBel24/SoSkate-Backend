@@ -22,6 +22,7 @@ import java.util.Map;
 @RequestMapping("/instructors")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "*") // Pour permettre les requêtes depuis le frontend (dev uniquement)
 public class InstructorController {
 
     private final InstructorService instructorService;

@@ -32,14 +32,12 @@ public class ServiceEntity {
     @Column(name = "base_price_cents", nullable = false)
     private Integer basePriceCents;
 
-    @Column(name = "duration_minutes")
-    private Integer durationMinutes;
+    @Column(name = "max_participants", nullable = false)
+    @Builder.Default
+    private Integer maxParticipants = 1;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
-
-//    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<BookingEntity> bookings = new ArrayList<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

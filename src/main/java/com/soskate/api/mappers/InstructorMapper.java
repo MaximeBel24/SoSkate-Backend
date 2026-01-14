@@ -7,15 +7,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Mapper for converting between InstructorEntity and various DTOs.
- */
 @Component
 public class InstructorMapper {
 
-    /**
-     * Converts an InstructorEntity to a full response record.
-     */
     public InstructorResponse toResponse(InstructorEntity entity) {
         if (entity == null) {
             return null;
@@ -52,6 +46,7 @@ public class InstructorMapper {
                 entity.getId(),
                 entity.getFirstname(),
                 entity.getLastname(),
+                entity.getPhone(),
                 entity.getStatus(),
                 entity.getSpecialty(),
                 entity.getYearsOfExperience()
