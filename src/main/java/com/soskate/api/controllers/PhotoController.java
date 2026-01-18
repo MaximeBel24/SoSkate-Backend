@@ -128,7 +128,6 @@ public class PhotoController {
 
     /**
      * Get all photos for a Spot.
-     *
      * GET /api/photos/spots/{spotId}
      */
     @GetMapping("/spots/{spotId}")
@@ -141,7 +140,6 @@ public class PhotoController {
 
     /**
      * Get avatar for a Customer.
-     *
      * GET /api/photos/customers/{customerId}/avatar
      */
     @GetMapping("/customers/{customerId}/avatar")
@@ -159,7 +157,6 @@ public class PhotoController {
 
     /**
      * Get avatar for an Instructor.
-     *
      * GET /api/photos/instructors/{instructorId}/avatar
      */
     @GetMapping("/instructors/{instructorId}/avatar")
@@ -177,7 +174,6 @@ public class PhotoController {
 
     /**
      * Get trick/course photos for an Instructor.
-     *
      * GET /api/photos/instructors/{instructorId}/tricks
      */
     @GetMapping("/instructors/{instructorId}/tricks")
@@ -193,7 +189,6 @@ public class PhotoController {
 
     /**
      * Get cover photo for an Event.
-     *
      * GET /api/photos/events/{eventId}/cover
      */
     @GetMapping("/events/{eventId}/cover")
@@ -211,7 +206,6 @@ public class PhotoController {
 
     /**
      * Get gallery photos for an Event.
-     *
      * GET /api/photos/events/{eventId}/gallery
      */
     @GetMapping("/events/{eventId}/gallery")
@@ -229,7 +223,6 @@ public class PhotoController {
 
     /**
      * Update photo metadata (display order).
-     *
      * PATCH /api/photos/{id}
      *
      * @param id Photo ID

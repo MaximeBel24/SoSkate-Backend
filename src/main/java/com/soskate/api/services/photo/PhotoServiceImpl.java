@@ -55,13 +55,14 @@ public class PhotoServiceImpl implements PhotoService {
         // Step 1: Validate file
         validateFile(file);
 
-        // Step 2: Check photo limits
-        validatePhotoLimits(request.getEntityType(), request.getEntityId(), request.getPhotoType());
-
-        // Step 3: Handle avatar replacement (delete old avatar if exists)
-        if (request.getPhotoType() == PhotoType.AVATAR) {
-            deleteExistingAvatar(request.getEntityType(), request.getEntityId(), request.getUploadedBy());
+        // Step 2: Handle avatar/cover replacement BEFORE checking limits
+        if (request.getPhotoType() == PhotoType.AVATAR || request.getPhotoType() == PhotoType.COVER) {
+            deleteExistingAvatarOrCover(request.getEntityType(), request.getEntityId(),
+                    request.getPhotoType(), request.getUploadedBy());
         }
+
+        // Step 3: Check photo limits (now safe since old avatar/cover is deleted)
+        validatePhotoLimits(request.getEntityType(), request.getEntityId(), request.getPhotoType());
 
         try {
             // Step 4: Load and validate image
@@ -157,12 +158,18 @@ public class PhotoServiceImpl implements PhotoService {
         };
     }
 
-    private void deleteExistingAvatar(PhotoEntityType entityType, Long entityId, Long deletedBy) {
+    /**
+     * Delete existing avatar or cover photo before uploading a new one.
+     * This ensures the 1-photo limit is respected while allowing replacement.
+     */
+    private void deleteExistingAvatarOrCover(PhotoEntityType entityType, Long entityId,
+                                             PhotoType photoType, Long deletedBy) {
         photoRepository.findFirstByEntityTypeAndEntityIdAndPhotoTypeAndDeletedFalse(
-                entityType, entityId, PhotoType.AVATAR
-        ).ifPresent(existingAvatar -> {
-            log.info("Deleting existing avatar: id={}", existingAvatar.getId());
-            deletePhoto(existingAvatar.getId(), deletedBy);
+                entityType, entityId, photoType
+        ).ifPresent(existingPhoto -> {
+            log.info("Replacing existing {} for entityType={}, entityId={}: deleting photo id={}",
+                    photoType, entityType, entityId, existingPhoto.getId());
+            deletePhoto(existingPhoto.getId(), deletedBy);
         });
     }
 
