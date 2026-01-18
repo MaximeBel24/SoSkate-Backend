@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/customer/auth")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*") // Pour permettre les requêtes depuis le frontend (dev uniquement)
 public class CustomerAuthController {
 
     private final CustomerAuthService customerAuthService;

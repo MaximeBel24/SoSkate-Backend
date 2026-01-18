@@ -23,7 +23,6 @@ import java.util.List;
 @RequestMapping("/spots")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class SpotController {
 
     private final SpotService spotService;

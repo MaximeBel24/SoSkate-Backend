@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*") // Pour permettre les requêtes depuis le frontend (dev uniquement)
 @Tag(name = "Authentication", description = "Endpoints d'authentification unifiée")
 public class AuthController {
 

@@ -23,7 +23,6 @@ import java.util.List;
 @RequestMapping("/services")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class ServiceController {
 
     private final ServiceService serviceService;
