@@ -20,7 +20,6 @@ import java.util.List;
 @RequestMapping("/admin/instructors")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*") // Pour permettre les requêtes depuis le frontend (dev uniquement)
 public class AdminInstructorController {
 
     private final InstructorService instructorService;
