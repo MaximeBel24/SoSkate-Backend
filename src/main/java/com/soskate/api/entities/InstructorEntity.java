@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.*;  // Version simplifiée
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -110,6 +111,10 @@ public class InstructorEntity extends UserEntity {
 
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookingEntity> bookings = new ArrayList<>();
+
+    @Column(name = "buffer_minutes_between_bookings", nullable = false)
+    @Builder.Default
+    private Integer bufferMinutesBetweenBookings = 30;
 
     // ==================== Helper Methods ====================
 

@@ -29,7 +29,6 @@ public class ServiceMapper {
                 .name(request.name())
                 .type(request.type())
                 .description(request.description())
-                .durationMinutes(request.durationMinutes())
                 .basePriceCents(request.basePriceCents())
                 .isActive(request.isActive())
                 .build();
@@ -51,7 +50,6 @@ public class ServiceMapper {
                 entity.getName(),
                 entity.getType(),
                 entity.getDescription(),
-                entity.getDurationMinutes(),
                 entity.getBasePriceCents(),
                 entity.getIsActive(),
                 entity.getCreatedAt(),
@@ -73,7 +71,6 @@ public class ServiceMapper {
         serviceToUpdate.setName(request.name());
         serviceToUpdate.setType(request.type());
         serviceToUpdate.setDescription(request.description());
-        serviceToUpdate.setDurationMinutes(request.durationMinutes());
         serviceToUpdate.setBasePriceCents(request.basePriceCents());
         serviceToUpdate.setIsActive(request.isActive());
     }

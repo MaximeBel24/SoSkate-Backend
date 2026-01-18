@@ -38,29 +38,81 @@ public class BookingEntity {
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
-    @Column(name = "stop_time")
-    private LocalDateTime stopTime;
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
+
+    @Column(name = "duration_minutes", nullable = false)
+    private Integer durationMinutes = 60;
+
+    @Column(name = "max_participants", nullable = false)
+    @Builder.Default
+    private Integer maxParticipants = 1;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private BookingStatus status;
+    @Builder.Default
+    private BookingStatus status = BookingStatus.OPEN;
 
     @Column(columnDefinition = "TEXT")
     private String notes;
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CustomerBookingEntity> customerBookings = new ArrayList<>();
+    @Builder.Default
+    private List<BookingParticipantEntity> participants = new ArrayList<>();
 
-    // Méthode utilitaire
-//    public int getAvailablePlaces() {
-//        int maxPlaces = service.getMaxParticipants();
-//        long reservedPlaces = customerBookings.stream()
-//                .filter(cb -> cb.getStatus() == CustomerBookingStatus.CONFIRMED)
-//                .count();
-//        return maxPlaces - (int) reservedPlaces;
-//    }
-//
-//    public boolean isFull() {
-//        return getAvailablePlaces() <= 0;
-//    }
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    public boolean isOpen() {
+        return status == BookingStatus.OPEN;
+    }
+
+    public boolean isConfirmed() {
+        return status == BookingStatus.CONFIRMED;
+    }
+
+    public boolean isCompleted() {
+        return status == BookingStatus.COMPLETED;
+    }
+
+    public boolean isCancelled() {
+        return status == BookingStatus.CANCELLED;
+    }
+
+    public int getConfirmedParticipantsCount() {
+        return (int) participants.stream()
+                .filter(BookingParticipantEntity::isConfirmed)
+                .count();
+    }
+
+    public int getAvailablePlaces() {
+        return maxParticipants - getConfirmedParticipantsCount();
+    }
+
+    public boolean hasAvailablePlaces() {
+        return getAvailablePlaces() > 0;
+    }
+
+    /**
+     * Calcule le prix total basé sur la durée et le prix horaire du service.
+     */
+    public int calculateTotalPriceCents() {
+        if (service == null) return 0;
+        double hours = durationMinutes / 60.0;
+        return (int) Math.round(service.getBasePriceCents() * hours);
+    }
 }

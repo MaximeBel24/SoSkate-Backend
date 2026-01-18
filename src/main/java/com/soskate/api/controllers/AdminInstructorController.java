@@ -13,13 +13,13 @@ import java.util.List;
 
 /**
  * REST Controller for admin operations on instructors.
- *
  * TODO: Secure with @PreAuthorize("hasRole('ADMIN')") when Spring Security is implemented
  */
 @RestController
 @RequestMapping("/admin/instructors")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "*") // Pour permettre les requêtes depuis le frontend (dev uniquement)
 public class AdminInstructorController {
 
     private final InstructorService instructorService;

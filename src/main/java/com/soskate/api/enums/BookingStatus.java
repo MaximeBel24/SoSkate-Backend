@@ -1,9 +1,12 @@
 package com.soskate.api.enums;
 
 public enum BookingStatus {
-    PENDING,
+    OPEN,
+    FULL,
     CONFIRMED,
-    CANCELLED,
     COMPLETED,
+    CANCELLED,
+    // Legacy
+    PENDING,
     NO_SHOW
 }
