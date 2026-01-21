@@ -1,9 +1,9 @@
 package com.soskate.api.mappers;
 
+import com.soskate.api.dto.booking.MyBookingResponse;
 import com.soskate.api.dto.customer.CustomerSummary; // ← Utilise ton existant
 import com.soskate.api.dto.booking.ParticipantResponse;
-import com.soskate.api.entities.BookingParticipantEntity;
-import com.soskate.api.entities.CustomerEntity;
+import com.soskate.api.entities.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -43,6 +43,49 @@ public class BookingParticipantMapper {
                 entity.getFirstname(),
                 entity.getLastname(),
                 entity.getEmail()
+        );
+    }
+
+    public MyBookingResponse toMyBookingResponse(BookingParticipantEntity participation) {
+        BookingEntity booking = participation.getBooking();
+        InstructorEntity instructor = booking.getInstructor();
+        SpotEntity spot = booking.getSpot();
+        ServiceEntity service = booking.getService();
+
+        // Calculer le prix total
+        int totalPriceCents = (service.getBasePriceCents() * booking.getDurationMinutes()) / 60;
+
+        return new MyBookingResponse(
+                // Participation
+                participation.getId(),
+                participation.getStatus(),
+
+                // Booking
+                booking.getId(),
+                booking.getStartTime(),
+                booking.getEndTime(),
+                booking.getDurationMinutes(),
+                booking.getStatus(),
+                booking.getNotes(),
+
+                // Instructor
+                instructor.getId(),
+                instructor.getFirstname(),
+                instructor.getLastname(),
+
+                // Spot
+                spot.getId(),
+                spot.getName(),
+                spot.getAddress(),
+                spot.getCity(),
+
+                // Service
+                service.getId(),
+                service.getName(),
+                service.getBasePriceCents(),
+
+                // Prix calculé
+                totalPriceCents
         );
     }
 }

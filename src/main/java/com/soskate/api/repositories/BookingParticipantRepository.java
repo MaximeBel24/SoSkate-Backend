@@ -63,4 +63,14 @@ public interface BookingParticipantRepository extends JpaRepository<BookingParti
     List<BookingParticipantEntity> findPendingInvitationsByCustomerId(
             @Param("customerId") Long customerId
     );
+
+    @Query("SELECT bp FROM BookingParticipantEntity bp " +
+            "JOIN FETCH bp.booking b " +
+            "JOIN FETCH b.instructor " +
+            "JOIN FETCH b.spot " +
+            "JOIN FETCH b.service " +
+            "WHERE bp.customer.id = :customerId " +
+            "ORDER BY b.startTime DESC")
+    List<BookingParticipantEntity> findAllByCustomerIdWithDetails(@Param("customerId") Long customerId);
+
 }

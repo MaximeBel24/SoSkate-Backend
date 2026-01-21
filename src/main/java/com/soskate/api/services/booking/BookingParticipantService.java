@@ -1,9 +1,6 @@
 package com.soskate.api.services.booking;
 
-import com.soskate.api.dto.booking.ParticipantCancelRequest;
-import com.soskate.api.dto.booking.ParticipantConfirmRequest;
-import com.soskate.api.dto.booking.ParticipantInviteRequest;
-import com.soskate.api.dto.booking.ParticipantResponse;
+import com.soskate.api.dto.booking.*;
 import com.soskate.api.entities.*;
 import com.soskate.api.enums.BookingStatus;
 import com.soskate.api.enums.InvitedBy;
@@ -22,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -239,5 +237,17 @@ public class BookingParticipantService {
         List<BookingParticipantEntity> participants = participantRepository
                 .findCompletedByCustomerId(customerId);
         return participantMapper.toResponseList(participants);
+    }
+
+    /**
+     * Récupère toutes les réservations d'un customer
+     */
+    public List<MyBookingResponse> getMyBookings(Long customerId) {
+        List<BookingParticipantEntity> participations =
+                participantRepository.findAllByCustomerIdWithDetails(customerId);
+
+        return participations.stream()
+                .map(participantMapper::toMyBookingResponse)
+                .collect(Collectors.toList());
     }
 }

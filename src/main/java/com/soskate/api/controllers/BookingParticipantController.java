@@ -1,9 +1,6 @@
 package com.soskate.api.controllers;
 
-import com.soskate.api.dto.booking.ParticipantCancelRequest;
-import com.soskate.api.dto.booking.ParticipantConfirmRequest;
-import com.soskate.api.dto.booking.ParticipantInviteRequest;
-import com.soskate.api.dto.booking.ParticipantResponse;
+import com.soskate.api.dto.booking.*;
 import com.soskate.api.services.booking.BookingParticipantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -119,5 +116,16 @@ public class BookingParticipantController {
     ) {
         List<ParticipantResponse> response = participantService.getCompletedByCustomer(customerId);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Récupère toutes les réservations d'un customer (pour "Mes réservations")
+     */
+    @GetMapping("/customers/{customerId}/my-bookings")
+    public ResponseEntity<List<MyBookingResponse>> getMyBookings(
+            @PathVariable Long customerId
+    ) {
+        List<MyBookingResponse> bookings = participantService.getMyBookings(customerId);
+        return ResponseEntity.ok(bookings);
     }
 }
