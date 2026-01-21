@@ -1,7 +1,9 @@
 package com.soskate.api.controllers;
 
+import com.soskate.api.dto.instructor.InstructorResponse;
 import com.soskate.api.dto.instructor.InstructorSpotRequest;
 import com.soskate.api.dto.instructor.InstructorSpotResponse;
+import com.soskate.api.dto.instructor.InstructorSummary;
 import com.soskate.api.services.instructor.InstructorSpotService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +37,9 @@ public class InstructorSpotController {
     }
 
     @GetMapping("/spots/{spotId}/instructors")
-    public ResponseEntity<List<Long>> getInstructorsBySpot(@PathVariable Long spotId) {
-        List<Long> instructorIds = instructorSpotService.getInstructorIdsBySpot(spotId);
-        return ResponseEntity.ok(instructorIds);
+    public ResponseEntity<List<InstructorSummary>> getInstructorsBySpot(@PathVariable Long spotId) {
+        List<InstructorSummary> instructors = instructorSpotService.getInstructorsBySpot(spotId);
+        return ResponseEntity.ok(instructors);
     }
 
     @DeleteMapping("/instructors/{instructorId}/spots/{spotId}")

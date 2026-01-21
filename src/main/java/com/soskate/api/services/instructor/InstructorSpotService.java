@@ -2,6 +2,7 @@ package com.soskate.api.services.instructor;
 
 import com.soskate.api.dto.instructor.InstructorSpotRequest;
 import com.soskate.api.dto.instructor.InstructorSpotResponse;
+import com.soskate.api.dto.instructor.InstructorSummary;
 import com.soskate.api.entities.InstructorEntity;
 import com.soskate.api.entities.InstructorSpotEntity;
 import com.soskate.api.entities.SpotEntity;
@@ -10,6 +11,7 @@ import com.soskate.api.exceptions.booking.BookingException;
 import com.soskate.api.exceptions.common.ResourceNotFoundException;
 import com.soskate.api.exceptions.instructor.InstructorNotFoundException;
 import com.soskate.api.exceptions.spot.SpotNotFoundException;
+import com.soskate.api.mappers.InstructorMapper;
 import com.soskate.api.mappers.InstructorSpotMapper;
 import com.soskate.api.repositories.InstructorRepository;
 import com.soskate.api.repositories.InstructorSpotRepository;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class InstructorSpotService {
     private final InstructorRepository instructorRepository;
     private final SpotRepository spotRepository;
     private final InstructorSpotMapper instructorSpotMapper;
+    private final InstructorMapper instructorMapper;
 
     @Transactional
     public InstructorSpotResponse addSpotToInstructor(Long instructorId, InstructorSpotRequest request) {
@@ -59,8 +63,12 @@ public class InstructorSpotService {
         return instructorSpotMapper.toResponseList(instructorSpots);
     }
 
-    public List<Long> getInstructorIdsBySpot(Long spotId) {
-        return instructorSpotRepository.findInstructorIdsBySpotId(spotId);
+    public List<InstructorSummary> getInstructorsBySpot(Long spotId) {
+        List<InstructorEntity> instructors = instructorSpotRepository.findActiveInstructorsBySpotId(spotId);
+
+        return instructors.stream()
+                .map(instructorMapper::toSummary)
+                .collect(Collectors.toList());
     }
 
     @Transactional

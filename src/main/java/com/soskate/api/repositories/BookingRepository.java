@@ -20,13 +20,9 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
 
     List<BookingEntity> findByInstructorIdAndStatus(Long instructorId, BookingStatus status);
 
-    @Query("""
-        SELECT b FROM BookingEntity b
-        WHERE b.instructor.id = :instructorId
-        AND DATE(b.startTime) = :date
-        AND b.status NOT IN ('CANCELLED')
-        ORDER BY b.startTime
-    """)
+    @Query("SELECT b FROM BookingEntity b WHERE b.instructor.id = :instructorId " +
+            "AND DATE(b.startTime) = :date " +
+            "AND b.status != 'CANCELLED'")
     List<BookingEntity> findByInstructorAndDateNotCancelled(
             @Param("instructorId") Long instructorId,
             @Param("date") LocalDate date
