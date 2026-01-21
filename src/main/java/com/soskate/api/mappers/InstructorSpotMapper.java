@@ -1,7 +1,9 @@
 package com.soskate.api.mappers;
 
 import com.soskate.api.dto.instructor.InstructorSpotResponse;
+import com.soskate.api.dto.instructor.InstructorSummary;
 import com.soskate.api.dto.spot.SpotSummary;
+import com.soskate.api.entities.InstructorEntity;
 import com.soskate.api.entities.InstructorSpotEntity;
 import com.soskate.api.entities.SpotEntity;
 import org.springframework.stereotype.Component;
@@ -36,4 +38,5 @@ public class InstructorSpotMapper {
                 entity.getLongitude()
         );
     }
+
 }
