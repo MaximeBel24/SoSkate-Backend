@@ -128,4 +128,21 @@ public class BookingParticipantController {
         List<MyBookingResponse> bookings = participantService.getMyBookings(customerId);
         return ResponseEntity.ok(bookings);
     }
+
+    /**
+     * Modifie les notes d'une réservation
+     */
+    @PatchMapping("/customers/{customerId}/participations/{participationId}/notes")
+    public ResponseEntity<MyBookingResponse> updateNotes(
+            @PathVariable Long customerId,
+            @PathVariable Long participationId,
+            @RequestBody @Valid UpdateNotesRequest request
+    ) {
+        MyBookingResponse response = participantService.updateNotes(
+                customerId,
+                participationId,
+                request.notes()
+        );
+        return ResponseEntity.ok(response);
+    }
 }

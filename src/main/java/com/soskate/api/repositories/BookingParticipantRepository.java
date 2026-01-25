@@ -73,4 +73,6 @@ public interface BookingParticipantRepository extends JpaRepository<BookingParti
             "ORDER BY b.startTime DESC")
     List<BookingParticipantEntity> findAllByCustomerIdWithDetails(@Param("customerId") Long customerId);
 
+    Optional<BookingParticipantEntity> findByIdAndCustomerId(Long id, Long customerId);
+
 }

@@ -5,10 +5,7 @@ import com.soskate.api.entities.*;
 import com.soskate.api.enums.BookingStatus;
 import com.soskate.api.enums.InvitedBy;
 import com.soskate.api.enums.ParticipantStatus;
-import com.soskate.api.exceptions.booking.BookingException;
-import com.soskate.api.exceptions.booking.BookingFullException;
-import com.soskate.api.exceptions.booking.CancellationNotAllowedException;
-import com.soskate.api.exceptions.booking.ParticipantAlreadyExistsException;
+import com.soskate.api.exceptions.booking.*;
 import com.soskate.api.exceptions.common.ResourceNotFoundException;
 import com.soskate.api.exceptions.customer.CustomerNotFoundException;
 import com.soskate.api.mappers.BookingParticipantMapper;
@@ -249,5 +246,35 @@ public class BookingParticipantService {
         return participations.stream()
                 .map(participantMapper::toMyBookingResponse)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Modifie les notes d'une réservation
+     */
+    public MyBookingResponse updateNotes(Long customerId, Long participationId, String notes) {
+        BookingParticipantEntity participation = participantRepository
+                .findByIdAndCustomerId(participationId, customerId)
+                .orElseThrow(() -> new ParticipationNotFoundException("Participation non trouvée"));
+
+        BookingEntity booking = participation.getBooking();
+
+        // Vérifier que le cours n'est pas dans moins de 24h
+        if (booking.getStartTime().isBefore(LocalDateTime.now().plusHours(24))) {
+            throw new BookingModificationNotAllowedException(
+                    "Impossible de modifier les notes moins de 24h avant le cours"
+            );
+        }
+
+        // Vérifier le statut
+        if (participation.getStatus() == ParticipantStatus.CANCELLED) {
+            throw new BookingModificationNotAllowedException(
+                    "Impossible de modifier une participation annulée"
+            );
+        }
+
+        booking.setNotes(notes);
+        bookingRepository.save(booking);
+
+        return participantMapper.toMyBookingResponse(participation);
     }
 }
