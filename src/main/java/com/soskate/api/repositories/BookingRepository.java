@@ -16,10 +16,6 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
 
     List<BookingEntity> findByInstructorId(Long instructorId);
 
-    List<BookingEntity> findBySpotId(Long spotId);
-
-    List<BookingEntity> findByInstructorIdAndStatus(Long instructorId, BookingStatus status);
-
     @Query("SELECT b FROM BookingEntity b WHERE b.instructor.id = :instructorId " +
             "AND DATE(b.startTime) = :date " +
             "AND b.status != 'CANCELLED'")
@@ -72,4 +68,58 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
         ORDER BY b.startTime DESC
     """)
     List<BookingEntity> findCompletedByInstructorId(@Param("instructorId") Long instructorId);
+
+    /**
+     * Récupère les bookings d'un instructeur pour une période donnée.
+     * Utilisé pour calculer les créneaux réellement disponibles.
+     */
+    @Query("""
+        SELECT b FROM BookingEntity b
+        WHERE b.instructor.id = :instructorId
+        AND b.startTime >= :start
+        AND b.startTime < :end
+        AND b.status != 'CANCELLED'
+        ORDER BY b.startTime
+    """)
+    List<BookingEntity> findByInstructorIdAndStartTimeBetween(
+            @Param("instructorId") Long instructorId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
+    /**
+     * Récupère les bookings d'un instructeur pour une date spécifique.
+     */
+    @Query("""
+        SELECT b FROM BookingEntity b
+        WHERE b.instructor.id = :instructorId
+        AND CAST(b.startTime AS LocalDate) = :date
+        AND b.status != 'CANCELLED'
+        ORDER BY b.startTime
+    """)
+    List<BookingEntity> findByInstructorIdAndDate(
+            @Param("instructorId") Long instructorId,
+            @Param("date") java.time.LocalDate date
+    );
+
+    // ============================================
+    // AUTRES MÉTHODES UTILES
+    // ============================================
+
+    /**
+     * Vérifie si un booking existe déjà pour un créneau donné.
+     */
+    @Query("""
+        SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END
+        FROM BookingEntity b
+        WHERE b.instructor.id = :instructorId
+        AND b.startTime < :endTime
+        AND b.endTime > :startTime
+        AND b.status != 'CANCELLED'
+    """)
+    boolean existsOverlappingBooking(
+            @Param("instructorId") Long instructorId,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime
+    );
 }

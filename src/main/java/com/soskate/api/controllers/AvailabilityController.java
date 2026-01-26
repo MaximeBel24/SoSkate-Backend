@@ -3,6 +3,7 @@ package com.soskate.api.controllers;
 import com.soskate.api.dto.availability.AvailabilityCreateRequest;
 import com.soskate.api.dto.availability.AvailabilityResponse;
 import com.soskate.api.dto.availability.AvailabilityUpdateRequest;
+import com.soskate.api.dto.availability.AvailableSlotResponse;
 import com.soskate.api.services.instructor.AvailabilityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -69,5 +70,15 @@ public class AvailabilityController {
     ) {
         availabilityService.delete(instructorId, id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/instructors/{instructorId}/planning-slots")
+    public ResponseEntity<List<AvailableSlotResponse>> getPlanningSlots(
+            @PathVariable Long instructorId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
+    ) {
+        List<AvailableSlotResponse> response = availabilityService.getPlanningSlots(instructorId, from, to);
+        return ResponseEntity.ok(response);
     }
 }
