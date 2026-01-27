@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+/**
+ * Calculates buffer time between spots based on Haversine distance formula.
+ */
 @Service
 public class BufferCalculationService {
 

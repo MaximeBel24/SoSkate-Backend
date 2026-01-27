@@ -1,75 +1,89 @@
 package com.soskate.api.exceptions.handlers;
 
 import com.soskate.api.exceptions.booking.*;
+import com.soskate.api.exceptions.common.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Exception handler for booking-related exceptions.
+ */
+@Slf4j
 @RestControllerAdvice
 public class BookingExceptionHandler {
 
     @ExceptionHandler(SlotNotAvailableException.class)
-    public ResponseEntity<Map<String, Object>> handleSlotNotAvailable(SlotNotAvailableException ex) {
-        return buildResponse(HttpStatus.CONFLICT, "SLOT_NOT_AVAILABLE", ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleSlotNotAvailable(SlotNotAvailableException ex) {
+        log.warn("Slot not available: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "SLOT_NOT_AVAILABLE", ex.getMessage()));
     }
 
     @ExceptionHandler(BookingTooSoonException.class)
-    public ResponseEntity<Map<String, Object>> handleBookingTooSoon(BookingTooSoonException ex) {
-        Map<String, Object> response = buildResponseBody(HttpStatus.BAD_REQUEST, "BOOKING_TOO_SOON", ex.getMessage());
-        response.put("minimumHours", ex.getMinimumHours());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    public ResponseEntity<ErrorResponse> handleBookingTooSoon(BookingTooSoonException ex) {
+        log.warn("Booking too soon: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), "BOOKING_TOO_SOON", ex.getMessage()));
     }
 
     @ExceptionHandler(BookingFullException.class)
-    public ResponseEntity<Map<String, Object>> handleBookingFull(BookingFullException ex) {
-        return buildResponse(HttpStatus.CONFLICT, "BOOKING_FULL", ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleBookingFull(BookingFullException ex) {
+        log.warn("Booking full: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "BOOKING_FULL", ex.getMessage()));
     }
 
     @ExceptionHandler(InstructorNotAvailableException.class)
-    public ResponseEntity<Map<String, Object>> handleInstructorNotAvailable(InstructorNotAvailableException ex) {
-        return buildResponse(HttpStatus.CONFLICT, "INSTRUCTOR_NOT_AVAILABLE", ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleInstructorNotAvailable(InstructorNotAvailableException ex) {
+        log.warn("Instructor not available: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "INSTRUCTOR_NOT_AVAILABLE", ex.getMessage()));
     }
 
     @ExceptionHandler(InstructorNotAtSpotException.class)
-    public ResponseEntity<Map<String, Object>> handleInstructorNotAtSpot(InstructorNotAtSpotException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, "INSTRUCTOR_NOT_AT_SPOT", ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleInstructorNotAtSpot(InstructorNotAtSpotException ex) {
+        log.warn("Instructor not at spot: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), "INSTRUCTOR_NOT_AT_SPOT", ex.getMessage()));
     }
 
     @ExceptionHandler(ParticipantAlreadyExistsException.class)
-    public ResponseEntity<Map<String, Object>> handleParticipantAlreadyExists(ParticipantAlreadyExistsException ex) {
-        return buildResponse(HttpStatus.CONFLICT, "PARTICIPANT_ALREADY_EXISTS", ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleParticipantAlreadyExists(ParticipantAlreadyExistsException ex) {
+        log.warn("Participant already exists: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "PARTICIPANT_ALREADY_EXISTS", ex.getMessage()));
     }
 
     @ExceptionHandler(CancellationNotAllowedException.class)
-    public ResponseEntity<Map<String, Object>> handleCancellationNotAllowed(CancellationNotAllowedException ex) {
-        return buildResponse(HttpStatus.FORBIDDEN, "CANCELLATION_NOT_ALLOWED", ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleCancellationNotAllowed(CancellationNotAllowedException ex) {
+        log.warn("Cancellation not allowed: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.of(HttpStatus.FORBIDDEN.value(), "CANCELLATION_NOT_ALLOWED", ex.getMessage()));
     }
 
     @ExceptionHandler(AvailabilityOverlapException.class)
-    public ResponseEntity<Map<String, Object>> handleAvailabilityOverlap(AvailabilityOverlapException ex) {
-        return buildResponse(HttpStatus.CONFLICT, "AVAILABILITY_OVERLAP", ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleAvailabilityOverlap(AvailabilityOverlapException ex) {
+        log.warn("Availability overlap: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "AVAILABILITY_OVERLAP", ex.getMessage()));
     }
 
     @ExceptionHandler(BookingException.class)
-    public ResponseEntity<Map<String, Object>> handleBookingException(BookingException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, "BOOKING_ERROR", ex.getMessage());
-    }
-
-    private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status, String code, String message) {
-        return ResponseEntity.status(status).body(buildResponseBody(status, code, message));
-    }
-
-    private Map<String, Object> buildResponseBody(HttpStatus status, String code, String message) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", LocalDateTime.now());
-        response.put("status", status.value());
-        response.put("code", code);
-        response.put("message", message);
-        return response;
+    public ResponseEntity<ErrorResponse> handleBookingException(BookingException ex) {
+        log.warn("Booking error: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), "BOOKING_ERROR", ex.getMessage()));
     }
 }

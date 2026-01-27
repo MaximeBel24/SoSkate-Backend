@@ -2,7 +2,8 @@ package com.soskate.api.controllers;
 
 import com.soskate.api.dto.instructor.*;
 import com.soskate.api.enums.SkateSpecialty;
-import com.soskate.api.services.instructor.InstructorService;
+import com.soskate.api.services.instructor.InstructorActivationService;
+import com.soskate.api.services.instructor.InstructorQueryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,8 @@ import java.util.Map;
 @Slf4j
 public class InstructorController {
 
-    private final InstructorService instructorService;
+    private final InstructorQueryService queryService;
+    private final InstructorActivationService activationService;
 
     // ==================== Public Listing ====================
 
@@ -36,7 +38,7 @@ public class InstructorController {
     @GetMapping
     public ResponseEntity<List<InstructorSummary>> getActiveInstructors() {
         log.info("GET /api/instructors - Fetching active instructors");
-        return ResponseEntity.ok(instructorService.getActiveInstructors());
+        return ResponseEntity.ok(queryService.getActiveInstructors());
     }
 
     /**
@@ -47,7 +49,7 @@ public class InstructorController {
     @GetMapping("/{id}")
     public ResponseEntity<InstructorResponse> getInstructorById(@PathVariable Long id) {
         log.info("GET /api/instructors/{} - Fetching instructor profile", id);
-        return ResponseEntity.ok(instructorService.getInstructorById(id));
+        return ResponseEntity.ok(queryService.getInstructorById(id));
     }
 
     /**
@@ -57,7 +59,7 @@ public class InstructorController {
     @GetMapping("/specialty/{specialty}")
     public ResponseEntity<List<InstructorSummary>> getInstructorsBySpecialty(@PathVariable SkateSpecialty specialty) {
         log.info("GET /api/instructors/specialty/{} - Fetching instructors by specialty", specialty);
-        return ResponseEntity.ok(instructorService.getInstructorsBySpecialty(specialty));
+        return ResponseEntity.ok(queryService.getInstructorsBySpecialty(specialty));
     }
 
     /**
@@ -67,7 +69,7 @@ public class InstructorController {
     @GetMapping("/search")
     public ResponseEntity<List<InstructorSummary>> searchInstructors(@RequestParam("q") String query) {
         log.info("GET /api/instructors/search?q={} - Searching instructors", query);
-        return ResponseEntity.ok(instructorService.searchInstructors(query));
+        return ResponseEntity.ok(queryService.searchInstructors(query));
     }
 
     // ==================== Account Activation ====================
@@ -80,7 +82,7 @@ public class InstructorController {
     @GetMapping("/activate/validate")
     public ResponseEntity<Map<String, Boolean>> validateActivationToken(@RequestParam("token") String token) {
         log.info("GET /api/instructors/activate/validate - Validating token");
-        boolean isValid = instructorService.validateActivationToken(token);
+        boolean isValid = activationService.validateActivationToken(token);
         return ResponseEntity.ok(Map.of("valid", isValid));
     }
 
@@ -92,7 +94,7 @@ public class InstructorController {
     @PostMapping("/activate")
     public ResponseEntity<InstructorResponse> activateAccount(@Valid @RequestBody InstructorActivateRequest request) {
         log.info("POST /api/instructors/activate - Activating account");
-        return ResponseEntity.ok(instructorService.activateAccount(request));
+        return ResponseEntity.ok(activationService.activateAccount(request));
     }
 
     // ==================== Authenticated Instructor Operations ====================
@@ -105,9 +107,10 @@ public class InstructorController {
      * TODO: Replace {id} with authentication context when Spring Security is implemented
      */
     @PutMapping("/{id}/profile")
-    public ResponseEntity<InstructorResponse> updateMyProfile(@PathVariable Long id, @Valid @RequestBody InstructorUpdateRequest request) {
+    public ResponseEntity<InstructorResponse> updateMyProfile(
+            @PathVariable Long id,
+            @Valid @RequestBody InstructorUpdateRequest request) {
         log.info("PUT /api/instructors/{}/profile - Updating instructor profile", id);
-        // TODO: Verify that the authenticated user matches the ID
-        return ResponseEntity.ok(instructorService.updateProfile(id, request));
+        return ResponseEntity.ok(queryService.updateProfile(id, request));
     }
 }

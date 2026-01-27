@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 import java.util.UUID;
 
 /**
- * Service for generating secure tokens and passwords.
+ * Generates secure tokens and passwords using cryptographically secure random.
  */
 @Service
 public class TokenGeneratorService {
