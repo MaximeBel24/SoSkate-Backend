@@ -44,6 +44,14 @@ public interface BookingService {
     List<BookingResponse> getUpcomingByInstructor(Long instructorId);
 
     /**
+     * Gets passed bookings for an instructor.
+     *
+     * @param instructorId The instructor ID
+     * @return List of passed bookings
+     */
+    List<BookingResponse> getPassedByInstructor(Long instructorId);
+
+    /**
      * Gets upcoming bookings at a spot.
      *
      * @param spotId The spot ID
@@ -68,4 +76,6 @@ public interface BookingService {
      * @return The updated booking
      */
     BookingResponse cancel(Long instructorId, Long bookingId);
+
+
 }

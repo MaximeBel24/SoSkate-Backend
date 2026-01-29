@@ -62,15 +62,13 @@ public class BookingController {
     @GetMapping("/instructors/{instructorId}/bookings")
     public ResponseEntity<List<BookingResponse>> getByInstructor(
             @PathVariable Long instructorId,
-            @RequestParam(required = false, defaultValue = "false") Boolean upcomingOnly
+            @RequestParam(required = false) String filter
     ) {
-        List<BookingResponse> response;
-
-        if (upcomingOnly) {
-            response = bookingService.getUpcomingByInstructor(instructorId);
-        } else {
-            response = bookingService.getByInstructor(instructorId);
-        }
+        List<BookingResponse> response = switch(filter) {
+          case "upcoming" -> bookingService.getUpcomingByInstructor(instructorId);
+          case "passed" -> bookingService.getPassedByInstructor(instructorId);
+          case null, default -> bookingService.getByInstructor(instructorId);
+        };
 
         return ResponseEntity.ok(response);
     }

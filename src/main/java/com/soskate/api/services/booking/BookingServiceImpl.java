@@ -112,6 +112,14 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<BookingResponse> getPassedByInstructor(Long instructorId) {
+        List<BookingEntity> bookings = bookingRepository
+                .findPassedByInstructorId(instructorId, LocalDateTime.now());
+        return bookingMapper.toResponseList(bookings);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<BookingResponse> getUpcomingBySpot(Long spotId) {
         List<BookingEntity> bookings = bookingRepository
                 .findUpcomingBySpotId(spotId, LocalDateTime.now());
@@ -169,6 +177,7 @@ public class BookingServiceImpl implements BookingService {
         log.info("Booking {} cancelled", bookingId);
         return bookingMapper.toResponse(booking);
     }
+
 
     // ========== Private helpers ==========
 

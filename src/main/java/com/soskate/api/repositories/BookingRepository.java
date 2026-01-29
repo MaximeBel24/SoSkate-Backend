@@ -24,6 +24,14 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
             @Param("date") LocalDate date
     );
 
+    @Query("SELECT b FROM BookingEntity b WHERE b.instructor.id = :instructorId " +
+            "AND DATE(b.startTime) = :date " +
+            "AND b.status = 'CANCELLED'")
+    List<BookingEntity> findByInstructorAndDateCancelled(
+            @Param("instructorId") Long instructorId,
+            @Param("date") LocalDate date
+    );
+
     @Query("""
         SELECT b FROM BookingEntity b
         WHERE b.instructor.id = :instructorId
@@ -45,6 +53,18 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
         ORDER BY b.startTime
     """)
     List<BookingEntity> findUpcomingByInstructorId(
+            @Param("instructorId") Long instructorId,
+            @Param("now") LocalDateTime now
+    );
+
+    @Query("""
+        SELECT b FROM BookingEntity b
+        WHERE b.instructor.id = :instructorId
+        AND b.startTime < :now
+        AND b.status IN ('COMPLETED')
+        ORDER BY b.startTime
+    """)
+    List<BookingEntity> findPassedByInstructorId(
             @Param("instructorId") Long instructorId,
             @Param("now") LocalDateTime now
     );
@@ -122,4 +142,15 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime
     );
+
+    /**
+     * Récupère les bookings qui sont passés mais qui n'ont pas le status COMPLETED
+     */
+    @Query("""
+        SELECT b FROM BookingEntity b
+        WHERE b.startTime < :now
+        AND b.status != 'COMPLETED'
+        AND b.status != 'CANCELLED'
+    """)
+    List<BookingEntity> findPassedAndNotCompleted(@Param("now") LocalDateTime now);
 }
