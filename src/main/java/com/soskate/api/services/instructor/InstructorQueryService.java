@@ -32,13 +32,9 @@ public interface InstructorQueryService {
      */
     List<InstructorSummary> getInstructorsBySpecialty(SkateSpecialty specialty);
 
-    /**
-     * Searches instructors by name.
-     */
-    List<InstructorSummary> searchInstructors(String query);
 
     /**
      * Updates an instructor's profile.
      */
-    InstructorResponse updateProfile(Long instructorId, InstructorUpdateRequest request);
+    InstructorResponse updateInstructor(Long instructorId, InstructorUpdateRequest request);
 }

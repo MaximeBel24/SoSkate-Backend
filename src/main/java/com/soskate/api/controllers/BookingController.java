@@ -25,7 +25,7 @@ public class BookingController {
     // ==================== Création de réservation ====================
 
     @PostMapping("/customers/{customerId}/bookings")
-    public ResponseEntity<BookingResponse> create(
+    public ResponseEntity<BookingResponse> createBooking(
             @PathVariable Long customerId,
             @Valid @RequestBody BookingCreateRequest request
     ) {

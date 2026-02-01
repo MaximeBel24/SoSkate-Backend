@@ -85,7 +85,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerResponse getCustomerProfile(Long customerId) {
+    public CustomerResponse getCustomerById(Long customerId) {
         log.debug("Récupération du profil pour le customer ID: {}", customerId);
 
         CustomerEntity customer = customerRepository.findById(customerId)

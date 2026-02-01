@@ -26,11 +26,8 @@ public class AdminInstructorController {
     private final InstructorAdminService adminService;
     private final InstructorQueryService queryService;
 
-    // ==================== Create Operations ====================
-
     /**
      * Creates a new instructor and sends an invitation email.
-     * POST /api/admin/instructors
      */
     @PostMapping
     public ResponseEntity<InstructorResponse> createInstructor(
@@ -40,11 +37,8 @@ public class AdminInstructorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // ==================== Read Operations ====================
-
     /**
      * Gets all instructors (all statuses).
-     * GET /api/admin/instructors
      */
     @GetMapping
     public ResponseEntity<List<InstructorResponse>> getAllInstructors() {
@@ -54,7 +48,6 @@ public class AdminInstructorController {
 
     /**
      * Gets a specific instructor by ID.
-     * GET /api/admin/instructors/{id}
      */
     @GetMapping("/{id}")
     public ResponseEntity<InstructorResponse> getInstructorById(@PathVariable Long id) {
@@ -64,7 +57,6 @@ public class AdminInstructorController {
 
     /**
      * Gets all instructors with pending invitations.
-     * GET /api/admin/instructors/pending
      */
     @GetMapping("/pending")
     public ResponseEntity<List<InstructorResponse>> getPendingInvitations() {
@@ -85,18 +77,6 @@ public class AdminInstructorController {
     // ==================== Update Operations ====================
 
     /**
-     * Updates an instructor's profile (admin can edit any field).
-     * PUT /api/admin/instructors/{id}
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<InstructorResponse> updateInstructor(
-            @PathVariable Long id,
-            @Valid @RequestBody InstructorUpdateRequest request) {
-        log.info("PUT /api/admin/instructors/{} - Updating instructor", id);
-        return ResponseEntity.ok(queryService.updateProfile(id, request));
-    }
-
-    /**
      * Resends the invitation email to an instructor.
      * Generates a new token and resets the expiration timer.
      * POST /api/admin/instructors/{id}/resend-invitation
@@ -109,9 +89,9 @@ public class AdminInstructorController {
 
     /**
      * Suspends an instructor account.
-     * POST /api/admin/instructors/{id}/suspend
+     * PATCH /api/admin/instructors/{id}/suspend
      */
-    @PostMapping("/{id}/suspend")
+    @PatchMapping("/{id}/suspend")
     public ResponseEntity<InstructorResponse> suspendInstructor(@PathVariable Long id) {
         log.info("POST /api/admin/instructors/{}/suspend - Suspending instructor", id);
         return ResponseEntity.ok(adminService.suspendInstructor(id));

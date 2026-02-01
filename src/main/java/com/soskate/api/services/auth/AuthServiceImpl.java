@@ -42,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
         String email = loginRequest.email();
         String password = loginRequest.password();
 
-        log.info("Tentative de connexion unifiée pour l'email : {}", email);
+        log.info("Tentative de connexion pour l'email : {}", email);
 
         // === 1. Chercher dans les Customers ===
         Optional<CustomerEntity> customerOpt = customerRepository.findByEmail(email);

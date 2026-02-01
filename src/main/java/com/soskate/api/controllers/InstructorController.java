@@ -33,7 +33,6 @@ public class InstructorController {
     /**
      * Gets all active instructors.
      * Used by customers to browse available instructors.
-     * GET /api/instructors
      */
     @GetMapping
     public ResponseEntity<List<InstructorSummary>> getActiveInstructors() {
@@ -62,16 +61,6 @@ public class InstructorController {
         return ResponseEntity.ok(queryService.getInstructorsBySpecialty(specialty));
     }
 
-    /**
-     * Searches instructors by name.
-     * GET /api/instructors/search?q=...
-     */
-    @GetMapping("/search")
-    public ResponseEntity<List<InstructorSummary>> searchInstructors(@RequestParam("q") String query) {
-        log.info("GET /api/instructors/search?q={} - Searching instructors", query);
-        return ResponseEntity.ok(queryService.searchInstructors(query));
-    }
-
     // ==================== Account Activation ====================
 
     /**
@@ -97,20 +86,16 @@ public class InstructorController {
         return ResponseEntity.ok(activationService.activateAccount(request));
     }
 
-    // ==================== Authenticated Instructor Operations ====================
-    // TODO: These endpoints should be secured with @PreAuthorize to ensure
-    // only the instructor themselves can update their own profile
-
     /**
      * Updates the authenticated instructor's profile.
      * PUT /api/instructors/{id}/profile
      * TODO: Replace {id} with authentication context when Spring Security is implemented
      */
-    @PutMapping("/{id}/profile")
-    public ResponseEntity<InstructorResponse> updateMyProfile(
+    @PutMapping("/{id}")
+    public ResponseEntity<InstructorResponse> updateInstructor(
             @PathVariable Long id,
             @Valid @RequestBody InstructorUpdateRequest request) {
         log.info("PUT /api/instructors/{}/profile - Updating instructor profile", id);
-        return ResponseEntity.ok(queryService.updateProfile(id, request));
+        return ResponseEntity.ok(queryService.updateInstructor(id, request));
     }
 }

@@ -32,5 +32,5 @@ public interface CustomerService {
      * @return le profil du customer
      * @throws CustomerNotFoundException si le customer n'existe pas
      */
-    CustomerResponse getCustomerProfile(Long customerId);
+    CustomerResponse getCustomerById(Long customerId);
 }

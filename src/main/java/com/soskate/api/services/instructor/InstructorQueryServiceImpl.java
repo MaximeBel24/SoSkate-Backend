@@ -65,20 +65,10 @@ public class InstructorQueryServiceImpl implements InstructorQueryService {
     }
 
     /**
-     * Searches instructors by name.
-     */
-    @Transactional(readOnly = true)
-    public List<InstructorSummary> searchInstructors(String query) {
-        return instructorMapper.toSummaryList(
-                instructorRepository.searchActiveByName(query)
-        );
-    }
-
-    /**
      * Updates an instructor's profile.
      */
     @Transactional
-    public InstructorResponse updateProfile(Long instructorId, InstructorUpdateRequest request) {
+    public InstructorResponse updateInstructor(Long instructorId, InstructorUpdateRequest request) {
         log.info("Updating profile for instructor id: {}", instructorId);
 
         InstructorEntity instructor = instructorRepository.findById(instructorId)
