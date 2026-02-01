@@ -22,11 +22,11 @@ public class AvailabilityController {
     private final AvailabilityService availabilityService;
 
     @PostMapping("/instructors/{instructorId}/availabilities")
-    public ResponseEntity<AvailabilityResponse> create(
+    public ResponseEntity<AvailabilityResponse> createAvailability(
             @PathVariable Long instructorId,
             @Valid @RequestBody AvailabilityCreateRequest request
     ) {
-        AvailabilityResponse response = availabilityService.create(instructorId, request);
+        AvailabilityResponse response = availabilityService.createAvailability(instructorId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

@@ -16,7 +16,7 @@ public interface AvailabilityService {
     /**
      * Creates a new availability slot.
      */
-    AvailabilityResponse create(Long instructorId, AvailabilityCreateRequest request);
+    AvailabilityResponse createAvailability(Long instructorId, AvailabilityCreateRequest request);
 
     /**
      * Gets all availabilities for an instructor.

@@ -42,7 +42,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     private final AvailabilityMapper availabilityMapper;
 
     @Transactional
-    public AvailabilityResponse create(Long instructorId, AvailabilityCreateRequest request) {
+    public AvailabilityResponse createAvailability(Long instructorId, AvailabilityCreateRequest request) {
         InstructorEntity instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new InstructorNotFoundException("Instructeur non trouvé"));
 
