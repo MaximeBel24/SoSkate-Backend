@@ -75,8 +75,4 @@ public interface PhotoRepository extends JpaRepository<PhotoEntity, Long> {
     @Query("SELECT p FROM PhotoEntity p WHERE p.deleted = true AND p.deletedAt < :cutoffDate")
     List<PhotoEntity> findDeletedPhotosOlderThan(@Param("cutoffDate") java.time.LocalDateTime cutoffDate);
 
-    /**
-     * Check if a photo exists for a specific entity.
-     */
-    boolean existsByEntityTypeAndEntityIdAndDeletedFalse(PhotoEntityType entityType, Long entityId);
 }

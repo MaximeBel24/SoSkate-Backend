@@ -26,22 +26,6 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
     List<ServiceEntity> findByType(ServiceType type);
 
     /**
-     * Trouve les services actifs par type.
-     *
-     * @param type le type de service
-     * @return liste des services actifs de ce type
-     */
-    List<ServiceEntity> findByTypeAndIsActiveTrue(ServiceType type);
-
-    /**
-     * Trouve les services dont le prix est inférieur ou égal à un montant.
-     *
-     * @param maxPrice le prix maximum en centimes
-     * @return liste des services dans cette gamme de prix
-     */
-    List<ServiceEntity> findByBasePriceCentsLessThanEqual(Integer maxPrice);
-
-    /**
      * Vérifie si un service avec ce nom existe déjà.
      *
      * @param name le nom du service

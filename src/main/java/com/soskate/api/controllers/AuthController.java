@@ -37,7 +37,7 @@ public class AuthController {
     private final AuthService authService;
 
     /**
-     * Endpoint de connexion unifié pour Customer et Instructor.
+     * Endpoint de connexion pour Customer et Instructor.
      *
      * Le service détecte automatiquement le type d'utilisateur et retourne
      * les informations appropriées avec le rôle correspondant.
@@ -45,27 +45,6 @@ public class AuthController {
      * @param loginRequest email + password (validés automatiquement)
      * @return les informations de l'utilisateur avec son rôle
      */
-    @Operation(
-            summary = "Connexion unifiée",
-            description = "Authentifie un utilisateur (Customer ou Instructor) et retourne ses informations avec son rôle"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Connexion réussie",
-                    content = @Content(schema = @Schema(implementation = UnifiedLoginResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Email ou mot de passe incorrect",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Données de requête invalides",
-                    content = @Content
-            )
-    })
     @PostMapping("/login")
     public ResponseEntity<UnifiedLoginResponse> login(
             @Valid @RequestBody LoginRequest loginRequest) {
@@ -88,10 +67,6 @@ public class AuthController {
      * @param email l'email à vérifier
      * @return true si l'email existe déjà
      */
-    @Operation(
-            summary = "Vérifier l'existence d'un email",
-            description = "Vérifie si un email est déjà utilisé par un Customer ou un Instructor"
-    )
     @GetMapping("/email-exists")
     public ResponseEntity<Boolean> emailExists(@RequestParam String email) {
         log.debug("Vérification de l'existence de l'email : {}", email);

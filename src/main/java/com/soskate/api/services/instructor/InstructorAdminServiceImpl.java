@@ -148,7 +148,7 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
      * Deletes an instructor.
      */
     @Transactional
-    public void deleteInstructor(Long instructorId) {
+    public void deleteInstructorById(Long instructorId) {
         log.info("Deleting instructor id: {}", instructorId);
 
         if (!instructorRepository.existsById(instructorId)) {

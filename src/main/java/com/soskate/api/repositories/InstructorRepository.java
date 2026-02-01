@@ -34,11 +34,6 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
      */
     boolean existsByEmail(String email);
 
-    /**
-     * Check if an activation token exists.
-     */
-    boolean existsByActivationToken(String activationToken);
-
     // ==================== Status-based Queries ====================
 
     /**
@@ -74,8 +69,6 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
         return findByStatusAndSpecialty(InstructorStatus.ACTIVE, specialty);
     }
 
-    // ==================== Token Expiration Queries ====================
-
     /**
      * Find instructors with expired activation tokens.
      * Useful for cleanup jobs or notifications.
@@ -92,40 +85,4 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
     default List<InstructorEntity> findExpiredInvitations() {
         return findByStatusAndActivationTokenExpired(InstructorStatus.INVITED, LocalDateTime.now());
     }
-
-    /**
-     * Find instructors invited but not yet activated, with valid tokens.
-     */
-    @Query("SELECT i FROM InstructorEntity i WHERE i.status = 'INVITED' AND i.activationTokenExpiry > :now")
-    List<InstructorEntity> findPendingInvitationsWithValidToken(@Param("now") LocalDateTime now);
-
-    // ==================== Search Queries ====================
-
-    /**
-     * Search instructors by name (firstname or lastname).
-     */
-    @Query("SELECT i FROM InstructorEntity i WHERE " +
-            "LOWER(i.firstname) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(i.lastname) LIKE LOWER(CONCAT('%', :query, '%'))")
-    List<InstructorEntity> searchByName(@Param("query") String query);
-
-    /**
-     * Search active instructors by name.
-     */
-    @Query("SELECT i FROM InstructorEntity i WHERE i.status = 'ACTIVE' AND (" +
-            "LOWER(i.firstname) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(i.lastname) LIKE LOWER(CONCAT('%', :query, '%')))")
-    List<InstructorEntity> searchActiveByName(@Param("query") String query);
-
-    // ==================== Statistics Queries ====================
-
-    /**
-     * Count instructors by status.
-     */
-    long countByStatus(InstructorStatus status);
-
-    /**
-     * Count active instructors by specialty.
-     */
-    long countByStatusAndSpecialty(InstructorStatus status, SkateSpecialty specialty);
 }

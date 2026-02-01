@@ -33,7 +33,7 @@ public interface InstructorAdminService {
     /**
      * Deletes an instructor.
      */
-    void deleteInstructor(Long instructorId);
+    void deleteInstructorById(Long instructorId);
 
     /**
      * Gets instructors with pending invitations.

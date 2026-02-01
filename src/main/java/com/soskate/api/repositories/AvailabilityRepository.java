@@ -13,14 +13,6 @@ import java.util.List;
 @Repository
 public interface AvailabilityRepository extends JpaRepository<AvailabilityEntity, Long> {
 
-    List<AvailabilityEntity> findByInstructorIdAndDate(Long instructorId, LocalDate date);
-
-    List<AvailabilityEntity> findByInstructorIdAndDateBetween(
-            Long instructorId,
-            LocalDate startDate,
-            LocalDate endDate
-    );
-
     List<AvailabilityEntity> findByInstructorIdAndStatus(
             Long instructorId,
             AvailabilityStatus status

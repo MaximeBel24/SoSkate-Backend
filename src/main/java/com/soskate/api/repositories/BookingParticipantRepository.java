@@ -16,10 +16,6 @@ public interface BookingParticipantRepository extends JpaRepository<BookingParti
 
     List<BookingParticipantEntity> findByBookingId(Long bookingId);
 
-    List<BookingParticipantEntity> findByCustomerId(Long customerId);
-
-    Optional<BookingParticipantEntity> findByBookingIdAndCustomerId(Long bookingId, Long customerId);
-
     boolean existsByBookingIdAndCustomerId(Long bookingId, Long customerId);
 
     List<BookingParticipantEntity> findByBookingIdAndStatus(Long bookingId, ParticipantStatus status);

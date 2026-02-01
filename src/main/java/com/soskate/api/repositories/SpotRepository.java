@@ -27,28 +27,12 @@ public interface SpotRepository extends JpaRepository<SpotEntity, Long> {
     List<SpotEntity> findByIsActiveTrue();
 
     /**
-     * Trouve les spots par ville.
-     *
-     * @param city le nom de la ville
-     * @return liste des spots dans cette ville
-     */
-    List<SpotEntity> findByCityContainingIgnoreCase(String city);
-
-    /**
      * Trouve les spots par ville et actifs uniquement.
      *
      * @param city le nom de la ville
      * @return liste des spots actifs dans cette ville
      */
     List<SpotEntity> findByCityContainingIgnoreCaseAndIsActiveTrue(String city);
-
-    /**
-     * Trouve les spots indoor ou outdoor.
-     *
-     * @param isIndoor true pour indoor, false pour outdoor
-     * @return liste des spots correspondants
-     */
-    List<SpotEntity> findByIsIndoor(Boolean isIndoor);
 
     /**
      * Trouve les spots actifs indoor ou outdoor.
@@ -86,12 +70,4 @@ public interface SpotRepository extends JpaRepository<SpotEntity, Long> {
             @Param("longitude") BigDecimal longitude,
             @Param("radiusKm") double radiusKm
     );
-
-    /**
-     * Trouve un spot par son nom exact (insensible à la casse).
-     *
-     * @param name le nom du spot
-     * @return le spot trouvé
-     */
-    Optional<SpotEntity> findByNameIgnoreCase(String name);
 }

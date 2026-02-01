@@ -81,7 +81,7 @@ public class AdminInstructorController {
      * Generates a new token and resets the expiration timer.
      * POST /api/admin/instructors/{id}/resend-invitation
      */
-    @PostMapping("/{id}/resend-invitation")
+    @PostMapping("/{id}/resend")
     public ResponseEntity<InstructorResponse> resendInvitation(@PathVariable Long id) {
         log.info("POST /api/admin/instructors/{}/resend-invitation - Resending invitation", id);
         return ResponseEntity.ok(adminService.resendInvitation(id));
@@ -114,9 +114,9 @@ public class AdminInstructorController {
      * DELETE /api/admin/instructors/{id}
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInstructor(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteInstructorById(@PathVariable Long id) {
         log.info("DELETE /api/admin/instructors/{} - Deleting instructor", id);
-        adminService.deleteInstructor(id);
+        adminService.deleteInstructorById(id);
         return ResponseEntity.noContent().build();
     }
 }
