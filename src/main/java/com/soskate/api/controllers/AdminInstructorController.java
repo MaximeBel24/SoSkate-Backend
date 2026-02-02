@@ -99,9 +99,9 @@ public class AdminInstructorController {
 
     /**
      * Reactivates a suspended instructor account.
-     * POST /api/admin/instructors/{id}/reactivate
+     * PATCH /api/admin/instructors/{id}/reactivate
      */
-    @PostMapping("/{id}/reactivate")
+    @PatchMapping("/{id}/reactivate")
     public ResponseEntity<InstructorResponse> reactivateInstructor(@PathVariable Long id) {
         log.info("POST /api/admin/instructors/{}/reactivate - Reactivating instructor", id);
         return ResponseEntity.ok(adminService.reactivateInstructor(id));
