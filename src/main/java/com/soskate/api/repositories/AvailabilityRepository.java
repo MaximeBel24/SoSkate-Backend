@@ -18,18 +18,15 @@ public interface AvailabilityRepository extends JpaRepository<AvailabilityEntity
             AvailabilityStatus status
     );
 
-    @Query("""
-        SELECT a FROM AvailabilityEntity a
-        WHERE a.instructor.id = :instructorId
-        AND a.date = :date
-        AND a.status = 'AVAILABLE'
-        ORDER BY a.startTime
-    """)
-    List<AvailabilityEntity> findAvailableByInstructorAndDate(
-            @Param("instructorId") Long instructorId,
-            @Param("date") LocalDate date
-    );
-
+    /**
+     * Récupère les disponibilités d'un instructeur pour une plage de dates.
+     * Utilisé pour afficher le planning et calculer les créneaux réservables.
+     *
+     * @param instructorId ID de l'instructeur
+     * @param startDate Date de début (incluse)
+     * @param endDate Date de fin (incluse) - peut être égale à startDate pour une date unique
+     * @return Liste des disponibilités triées par date et heure de début
+     */
     @Query("""
         SELECT a FROM AvailabilityEntity a
         WHERE a.instructor.id = :instructorId

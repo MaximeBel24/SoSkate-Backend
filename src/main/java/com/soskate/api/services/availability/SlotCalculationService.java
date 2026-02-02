@@ -1,4 +1,4 @@
-package com.soskate.api.services.booking;
+package com.soskate.api.services.availability;
 
 import com.soskate.api.dto.booking.AvailableSlotsResponse;
 

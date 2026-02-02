@@ -1,4 +1,4 @@
-package com.soskate.api.services.instructor;
+package com.soskate.api.services.availability;
 
 import com.soskate.api.dto.availability.AvailabilityCreateRequest;
 import com.soskate.api.dto.availability.AvailabilityResponse;

@@ -37,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponse create(Long customerId, BookingCreateRequest request) {
+    public BookingResponse createBooking(Long customerId, BookingCreateRequest request) {
         log.info("Creating booking for customer {} with instructor {}", customerId, request.instructorId());
 
         // 1. Load context (all required entities)
@@ -90,21 +90,21 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public BookingResponse getById(Long id) {
+    public BookingResponse getBookingById(Long id) {
         BookingEntity booking = findBookingById(id);
         return bookingMapper.toResponse(booking);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingResponse> getByInstructor(Long instructorId) {
+    public List<BookingResponse> getBookingsByInstructor(Long instructorId) {
         List<BookingEntity> bookings = bookingRepository.findByInstructorId(instructorId);
         return bookingMapper.toResponseList(bookings);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingResponse> getUpcomingByInstructor(Long instructorId) {
+    public List<BookingResponse> getUpcomingBookingsByInstructor(Long instructorId) {
         List<BookingEntity> bookings = bookingRepository
                 .findUpcomingByInstructorId(instructorId, LocalDateTime.now());
         return bookingMapper.toResponseList(bookings);
@@ -112,50 +112,16 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingResponse> getPassedByInstructor(Long instructorId) {
+    public List<BookingResponse> getPassedBookingsByInstructor(Long instructorId) {
         List<BookingEntity> bookings = bookingRepository
                 .findPassedByInstructorId(instructorId, LocalDateTime.now());
         return bookingMapper.toResponseList(bookings);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<BookingResponse> getUpcomingBySpot(Long spotId) {
-        List<BookingEntity> bookings = bookingRepository
-                .findUpcomingBySpotId(spotId, LocalDateTime.now());
-        return bookingMapper.toResponseList(bookings);
-    }
 
     @Override
     @Transactional
-    public BookingResponse complete(Long instructorId, Long bookingId) {
-        log.info("Completing booking {} by instructor {}", bookingId, instructorId);
-
-        BookingEntity booking = findBookingByIdAndInstructor(bookingId, instructorId);
-
-        if (booking.getStartTime().isAfter(LocalDateTime.now())) {
-            throw new BookingException("Le cours n'a pas encore eu lieu");
-        }
-
-        booking.setStatus(BookingStatus.COMPLETED);
-        bookingRepository.save(booking);
-
-        // Mark all confirmed participants as completed
-        List<BookingParticipantEntity> participants = participantRepository
-                .findByBookingIdAndStatus(bookingId, ParticipantStatus.CONFIRMED);
-
-        for (BookingParticipantEntity participant : participants) {
-            participant.setStatus(ParticipantStatus.COMPLETED);
-            participantRepository.save(participant);
-        }
-
-        log.info("Booking {} completed", bookingId);
-        return bookingMapper.toResponse(booking);
-    }
-
-    @Override
-    @Transactional
-    public BookingResponse cancel(Long instructorId, Long bookingId) {
+    public BookingResponse cancelBooking(Long instructorId, Long bookingId) {
         log.info("Cancelling booking {} by instructor {}", bookingId, instructorId);
 
         BookingEntity booking = findBookingByIdAndInstructor(bookingId, instructorId);

@@ -1,4 +1,4 @@
-package com.soskate.api.services.booking;
+package com.soskate.api.services.availability;
 
 import com.soskate.api.dto.booking.AvailableSlotsResponse;
 import com.soskate.api.dto.booking.TimeSlotResponse;
@@ -43,10 +43,14 @@ public class SlotCalculationServiceImpl implements SlotCalculationService {
                 .orElseThrow(() -> new SpotNotFoundException("Spot non trouvé"));
 
         List<AvailabilityEntity> availabilities = availabilityRepository
-                .findAvailableByInstructorAndDate(instructorId, date);
+                .findAvailableByInstructorAndDateRange(instructorId, date, date);
 
         List<BookingEntity> existingBookings = bookingRepository
-                .findByInstructorAndDateNotCancelled(instructorId, date);
+                .findByInstructorIdAndStartTimeBetween(
+                        instructorId,
+                        date.atStartOfDay(),
+                        date.plusDays(1).atStartOfDay()
+                );
 
         List<TimeSlotResponse> slots = new ArrayList<>();
 

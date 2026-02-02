@@ -17,7 +17,7 @@ public interface BookingService {
      * @param request    The booking details
      * @return The created booking
      */
-    BookingResponse create(Long customerId, BookingCreateRequest request);
+    BookingResponse createBooking(Long customerId, BookingCreateRequest request);
 
     /**
      * Gets a booking by ID.
@@ -25,7 +25,7 @@ public interface BookingService {
      * @param id The booking ID
      * @return The booking
      */
-    BookingResponse getById(Long id);
+    BookingResponse getBookingById(Long id);
 
     /**
      * Gets all bookings for an instructor.
@@ -33,7 +33,7 @@ public interface BookingService {
      * @param instructorId The instructor ID
      * @return List of bookings
      */
-    List<BookingResponse> getByInstructor(Long instructorId);
+    List<BookingResponse> getBookingsByInstructor(Long instructorId);
 
     /**
      * Gets upcoming bookings for an instructor.
@@ -41,7 +41,7 @@ public interface BookingService {
      * @param instructorId The instructor ID
      * @return List of upcoming bookings
      */
-    List<BookingResponse> getUpcomingByInstructor(Long instructorId);
+    List<BookingResponse> getUpcomingBookingsByInstructor(Long instructorId);
 
     /**
      * Gets passed bookings for an instructor.
@@ -49,24 +49,7 @@ public interface BookingService {
      * @param instructorId The instructor ID
      * @return List of passed bookings
      */
-    List<BookingResponse> getPassedByInstructor(Long instructorId);
-
-    /**
-     * Gets upcoming bookings at a spot.
-     *
-     * @param spotId The spot ID
-     * @return List of upcoming bookings
-     */
-    List<BookingResponse> getUpcomingBySpot(Long spotId);
-
-    /**
-     * Marks a booking as completed.
-     *
-     * @param instructorId The instructor ID (for authorization)
-     * @param bookingId    The booking ID
-     * @return The updated booking
-     */
-    BookingResponse complete(Long instructorId, Long bookingId);
+    List<BookingResponse> getPassedBookingsByInstructor(Long instructorId);
 
     /**
      * Cancels a booking.
@@ -75,7 +58,7 @@ public interface BookingService {
      * @param bookingId    The booking ID
      * @return The updated booking
      */
-    BookingResponse cancel(Long instructorId, Long bookingId);
+    BookingResponse cancelBooking(Long instructorId, Long bookingId);
 
 
 }

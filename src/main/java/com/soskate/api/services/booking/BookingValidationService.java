@@ -9,6 +9,7 @@ import com.soskate.api.exceptions.booking.*;
 import com.soskate.api.repositories.AvailabilityRepository;
 import com.soskate.api.repositories.BookingRepository;
 import com.soskate.api.repositories.InstructorSpotRepository;
+import com.soskate.api.services.availability.BufferCalculationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

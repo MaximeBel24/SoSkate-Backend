@@ -16,14 +16,6 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
 
     List<BookingEntity> findByInstructorId(Long instructorId);
 
-    @Query("SELECT b FROM BookingEntity b WHERE b.instructor.id = :instructorId " +
-            "AND DATE(b.startTime) = :date " +
-            "AND b.status != 'CANCELLED'")
-    List<BookingEntity> findByInstructorAndDateNotCancelled(
-            @Param("instructorId") Long instructorId,
-            @Param("date") LocalDate date
-    );
-
     @Query("""
         SELECT b FROM BookingEntity b
         WHERE b.instructor.id = :instructorId
@@ -48,21 +40,14 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
             @Param("now") LocalDateTime now
     );
 
-    @Query("""
-        SELECT b FROM BookingEntity b
-        WHERE b.spot.id = :spotId
-        AND b.startTime > :now
-        AND b.status IN ('OPEN', 'FULL', 'CONFIRMED')
-        ORDER BY b.startTime
-    """)
-    List<BookingEntity> findUpcomingBySpotId(
-            @Param("spotId") Long spotId,
-            @Param("now") LocalDateTime now
-    );
-
     /**
-     * Récupère les bookings d'un instructeur pour une période donnée.
-     * Utilisé pour calculer les créneaux réellement disponibles.
+     * Récupère les bookings non annulés d'un instructeur pour une période donnée.
+     * Utilisé pour calculer les créneaux réellement disponibles (planning et réservation).
+     *
+     * @param instructorId ID de l'instructeur
+     * @param start Début de la période (inclus)
+     * @param end Fin de la période (exclus) - pour une date unique, utiliser date.atStartOfDay() et date.plusDays(1).atStartOfDay()
+     * @return Liste des bookings triés par heure de début
      */
     @Query("""
         SELECT b FROM BookingEntity b
