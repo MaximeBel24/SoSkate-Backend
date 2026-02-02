@@ -74,30 +74,29 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         return availabilityMapper.toResponse(saved);
     }
 
-    public List<AvailabilityResponse> getByInstructor(Long instructorId) {
+    public List<AvailabilityResponse> getAvailabilityByInstructor(Long instructorId) {
         List<AvailabilityEntity> availabilities = availabilityRepository
                 .findByInstructorIdAndStatus(instructorId, AvailabilityStatus.AVAILABLE);
         return availabilityMapper.toResponseList(availabilities);
     }
 
-    public List<AvailabilityResponse> getByInstructorAndDateRange(
+    public List<AvailabilityResponse> getAvailabilityByInstructorAndDateRange(
             Long instructorId,
             LocalDate startDate,
             LocalDate endDate
     ) {
-        List<AvailabilityEntity> availabilities = availabilityRepository
-                .findAvailableByInstructorAndDateRange(instructorId, startDate, endDate);
+        List<AvailabilityEntity> availabilities = availabilityRepository.findAvailableByInstructorAndDateRange(instructorId, startDate, endDate);
         return availabilityMapper.toResponseList(availabilities);
     }
 
-    public AvailabilityResponse getById(Long id) {
+    public AvailabilityResponse getAvailabilityById(Long id) {
         AvailabilityEntity availability = availabilityRepository.findById(id)
                 .orElseThrow(() -> new AvailabilityNotFoundException("Disponibilité non trouvée"));
         return availabilityMapper.toResponse(availability);
     }
 
     @Transactional
-    public AvailabilityResponse update(Long instructorId, Long id, AvailabilityUpdateRequest request) {
+    public AvailabilityResponse updateAvailability(Long instructorId, Long id, AvailabilityUpdateRequest request) {
         AvailabilityEntity availability = availabilityRepository.findById(id)
                 .orElseThrow(() -> new AvailabilityNotFoundException("Disponibilité non trouvée"));
 
@@ -120,7 +119,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     }
 
     @Transactional
-    public void delete(Long instructorId, Long id) {
+    public void deleteAvailability(Long instructorId, Long id) {
         AvailabilityEntity availability = availabilityRepository.findById(id)
                 .orElseThrow(() -> new AvailabilityNotFoundException("Disponibilité non trouvée"));
 
@@ -132,16 +131,14 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         availabilityRepository.save(availability);
     }
 
-    // Ajouter la méthode
     @Transactional(readOnly = true)
-    public List<AvailableSlotResponse> getPlanningSlots(
+    public List<AvailableSlotResponse> getAvailableSlots(
             Long instructorId,
             LocalDate startDate,
             LocalDate endDate
     ) {
         // 1. Récupérer les disponibilités
-        List<AvailabilityEntity> availabilities = availabilityRepository
-                .findAvailableByInstructorAndDateRange(instructorId, startDate, endDate);
+        List<AvailabilityEntity> availabilities = availabilityRepository.findAvailableByInstructorAndDateRange(instructorId, startDate, endDate);
 
         // 2. Récupérer les bookings
         List<BookingEntity> bookings = bookingRepository

@@ -21,30 +21,30 @@ public interface AvailabilityService {
     /**
      * Gets all availabilities for an instructor.
      */
-    List<AvailabilityResponse> getByInstructor(Long instructorId);
+    List<AvailabilityResponse> getAvailabilityByInstructor(Long instructorId);
 
     /**
      * Gets availabilities for an instructor within a date range.
      */
-    List<AvailabilityResponse> getByInstructorAndDateRange(Long instructorId, LocalDate startDate, LocalDate endDate);
+    List<AvailabilityResponse> getAvailabilityByInstructorAndDateRange(Long instructorId, LocalDate startDate, LocalDate endDate);
 
     /**
      * Gets an availability by ID.
      */
-    AvailabilityResponse getById(Long id);
+    AvailabilityResponse getAvailabilityById(Long id);
 
     /**
      * Updates an availability.
      */
-    AvailabilityResponse update(Long instructorId, Long id, AvailabilityUpdateRequest request);
+    AvailabilityResponse updateAvailability(Long instructorId, Long id, AvailabilityUpdateRequest request);
 
     /**
      * Deletes (cancels) an availability.
      */
-    void delete(Long instructorId, Long id);
+    void deleteAvailability(Long instructorId, Long id);
 
     /**
      * Gets planning slots (availabilities minus existing bookings).
      */
-    List<AvailableSlotResponse> getPlanningSlots(Long instructorId, LocalDate startDate, LocalDate endDate);
+    List<AvailableSlotResponse> getAvailableSlots(Long instructorId, LocalDate startDate, LocalDate endDate);
 }

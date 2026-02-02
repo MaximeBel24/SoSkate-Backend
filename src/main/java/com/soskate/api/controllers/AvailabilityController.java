@@ -31,7 +31,7 @@ public class AvailabilityController {
     }
 
     @GetMapping("/instructors/{instructorId}/availabilities")
-    public ResponseEntity<List<AvailabilityResponse>> getByInstructor(
+    public ResponseEntity<List<AvailabilityResponse>> getAvailabilityByInstructor(
             @PathVariable Long instructorId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
@@ -39,46 +39,46 @@ public class AvailabilityController {
         List<AvailabilityResponse> response;
 
         if (from != null && to != null) {
-            response = availabilityService.getByInstructorAndDateRange(instructorId, from, to);
+            response = availabilityService.getAvailabilityByInstructorAndDateRange(instructorId, from, to);
         } else {
-            response = availabilityService.getByInstructor(instructorId);
+            response = availabilityService.getAvailabilityByInstructor(instructorId);
         }
 
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/availabilities/{id}")
-    public ResponseEntity<AvailabilityResponse> getById(@PathVariable Long id) {
-        AvailabilityResponse response = availabilityService.getById(id);
+    public ResponseEntity<AvailabilityResponse> getAvailabilityById(@PathVariable Long id) {
+        AvailabilityResponse response = availabilityService.getAvailabilityById(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/instructors/{instructorId}/availabilities/{id}")
-    public ResponseEntity<AvailabilityResponse> update(
+    public ResponseEntity<AvailabilityResponse> updateAvailability(
             @PathVariable Long instructorId,
             @PathVariable Long id,
             @Valid @RequestBody AvailabilityUpdateRequest request
     ) {
-        AvailabilityResponse response = availabilityService.update(instructorId, id, request);
+        AvailabilityResponse response = availabilityService.updateAvailability(instructorId, id, request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/instructors/{instructorId}/availabilities/{id}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<Void> deleteAvailability(
             @PathVariable Long instructorId,
             @PathVariable Long id
     ) {
-        availabilityService.delete(instructorId, id);
+        availabilityService.deleteAvailability(instructorId, id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/instructors/{instructorId}/planning-slots")
-    public ResponseEntity<List<AvailableSlotResponse>> getPlanningSlots(
+    @GetMapping("/instructors/{instructorId}/available")
+    public ResponseEntity<List<AvailableSlotResponse>> getAvailableSlots(
             @PathVariable Long instructorId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
-        List<AvailableSlotResponse> response = availabilityService.getPlanningSlots(instructorId, from, to);
+        List<AvailableSlotResponse> response = availabilityService.getAvailableSlots(instructorId, from, to);
         return ResponseEntity.ok(response);
     }
 }
