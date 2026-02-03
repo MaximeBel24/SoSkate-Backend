@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomerAuthServiceImpl implements CustomerAuthService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
     /**
      * Inscrit un nouveau customer.
@@ -47,14 +48,14 @@ public class CustomerAuthServiceImpl implements CustomerAuthService {
 //        String hashedPassword = passwordEncoder.encode(customerToRegister.password());
 //        log.debug("Mot de passe hashé avec succès");
 
-        CustomerEntity customer = CustomerMapper.toEntity(customerToRegister, customerToRegister.password());
+        CustomerEntity customer = customerMapper.toEntity(customerToRegister, customerToRegister.password());
 
         CustomerEntity savedCustomer = customerRepository.save(customer);
         log.info("Customer créé avec succès : ID {}, Email {}",
                 savedCustomer.getId(),
                 savedCustomer.getEmail());
 
-        return CustomerMapper.toResponse(savedCustomer);
+        return customerMapper.toResponse(savedCustomer);
     }
 
     /**

@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 public class SpotServiceImpl implements SpotService {
 
     private final SpotRepository spotRepository;
+    private final SpotMapper spotMapper;
 
     @Override
     @Transactional
@@ -43,12 +44,12 @@ public class SpotServiceImpl implements SpotService {
 
         validateCoordinates(request.latitude(), request.longitude());
 
-        SpotEntity spot = SpotMapper.toEntity(request);
+        SpotEntity spot = spotMapper.toEntity(request);
         SpotEntity savedSpot = spotRepository.save(spot);
 
         log.info("Spot créé avec succès : ID {}", savedSpot.getId());
 
-        return SpotMapper.toResponse(savedSpot);
+        return spotMapper.toResponse(savedSpot);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class SpotServiceImpl implements SpotService {
 
         return spotRepository.findAll()
                 .stream()
-                .map(SpotMapper::toResponse)
+                .map(spotMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +68,7 @@ public class SpotServiceImpl implements SpotService {
 
         return spotRepository.findByIsActiveTrue()
                 .stream()
-                .map(SpotMapper::toResponse)
+                .map(spotMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +79,7 @@ public class SpotServiceImpl implements SpotService {
         SpotEntity spot = spotRepository.findById(id)
                 .orElseThrow(() -> new SpotNotFoundException(id));
 
-        return SpotMapper.toResponse(spot);
+        return spotMapper.toResponse(spot);
     }
 
     @Override
@@ -87,7 +88,7 @@ public class SpotServiceImpl implements SpotService {
 
         return spotRepository.findByCityContainingIgnoreCaseAndIsActiveTrue(city)
                 .stream()
-                .map(SpotMapper::toResponse)
+                .map(spotMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -97,7 +98,7 @@ public class SpotServiceImpl implements SpotService {
 
         return spotRepository.findByIsIndoorAndIsActiveTrue(isIndoor)
                 .stream()
-                .map(SpotMapper::toResponse)
+                .map(spotMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -121,7 +122,7 @@ public class SpotServiceImpl implements SpotService {
         log.info("{} spot(s) trouvé(s) dans un rayon de {} km", spots.size(), radiusKm);
 
         return spots.stream()
-                .map(SpotMapper::toResponse)
+                .map(spotMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -142,12 +143,12 @@ public class SpotServiceImpl implements SpotService {
 
         validateCoordinates(request.latitude(), request.longitude());
 
-        SpotMapper.updateEntityFromRequest(spotEntity, request);
+        spotMapper.updateEntityFromRequest(spotEntity, request);
         SpotEntity updatedSpot = spotRepository.save(spotEntity);
 
         log.info("Spot mis à jour avec succès : ID {}", updatedSpot.getId());
 
-        return SpotMapper.toResponse(updatedSpot);
+        return spotMapper.toResponse(updatedSpot);
     }
 
     @Override

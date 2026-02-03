@@ -25,6 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final EmailValidationService emailValidationService;
+    private final CustomerMapper customerMapper;
 
     @Override
     @Transactional
@@ -73,7 +74,7 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerEntity updatedCustomer = customerRepository.save(customer);
         log.info("Profil mis à jour avec succès pour le customer ID: {}", customerId);
 
-        return CustomerMapper.toResponse(updatedCustomer);
+        return customerMapper.toResponse(updatedCustomer);
     }
 
     @Override
@@ -86,6 +87,6 @@ public class CustomerServiceImpl implements CustomerService {
                     return new CustomerNotFoundException("Client non trouvé avec l'id : " + customerId);
                 });
 
-        return CustomerMapper.toResponse(customer);
+        return customerMapper.toResponse(customer);
     }
 }

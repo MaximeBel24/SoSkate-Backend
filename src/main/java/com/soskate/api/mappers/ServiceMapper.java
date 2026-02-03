@@ -20,7 +20,7 @@ public class ServiceMapper {
      * @param request le DTO de requête
      * @return l'entité Service
      */
-    public static ServiceEntity toEntity(ServiceRequest request) {
+    public ServiceEntity toEntity(ServiceRequest request) {
         if (request == null) {
             return null;
         }
@@ -40,7 +40,7 @@ public class ServiceMapper {
      * @param entity l'entité à convertir
      * @return le DTO de réponse
      */
-    public static ServiceResponse toResponse(ServiceEntity entity) {
+    public ServiceResponse toResponse(ServiceEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -63,7 +63,7 @@ public class ServiceMapper {
      * @param serviceToUpdate l'entité à mettre à jour
      * @param request le DTO contenant les nouvelles valeurs
      */
-    public static void updateEntityFromRequest(ServiceEntity serviceToUpdate, ServiceRequest request) {
+    public void updateEntityFromRequest(ServiceEntity serviceToUpdate, ServiceRequest request) {
         if (serviceToUpdate == null || request == null) {
             return;
         }

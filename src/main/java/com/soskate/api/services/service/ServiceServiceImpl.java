@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class ServiceServiceImpl implements ServiceService {
 
     private final ServiceRepository serviceRepository;
+    private final ServiceMapper serviceMapper;
 
     @Override
     @Transactional
@@ -39,12 +40,12 @@ public class ServiceServiceImpl implements ServiceService {
             throw new ServiceAlreadyExistsException(request.name(), true);
         }
 
-        ServiceEntity service = ServiceMapper.toEntity(request);
+        ServiceEntity service = serviceMapper.toEntity(request);
         ServiceEntity savedService = serviceRepository.save(service);
 
         log.info("Service créé avec succès : ID {}", savedService.getId());
 
-        return ServiceMapper.toResponse(savedService);
+        return serviceMapper.toResponse(savedService);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         return serviceRepository.findAll()
                 .stream()
-                .map(ServiceMapper::toResponse)
+                .map(serviceMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +64,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         return serviceRepository.findByIsActiveTrue()
                 .stream()
-                .map(ServiceMapper::toResponse)
+                .map(serviceMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -74,7 +75,7 @@ public class ServiceServiceImpl implements ServiceService {
         ServiceEntity service = serviceRepository.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id));
 
-        return ServiceMapper.toResponse(service);
+        return serviceMapper.toResponse(service);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         return serviceRepository.findByType(type)
                 .stream()
-                .map(ServiceMapper::toResponse)
+                .map(serviceMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -101,12 +102,12 @@ public class ServiceServiceImpl implements ServiceService {
             throw new ServiceAlreadyExistsException(request.name(), true);
         }
 
-        ServiceMapper.updateEntityFromRequest(service, request);
+        serviceMapper.updateEntityFromRequest(service, request);
         ServiceEntity updatedService = serviceRepository.save(service);
 
         log.info("Service mis à jour avec succès : ID {}", updatedService.getId());
 
-        return ServiceMapper.toResponse(updatedService);
+        return serviceMapper.toResponse(updatedService);
     }
 
     @Override

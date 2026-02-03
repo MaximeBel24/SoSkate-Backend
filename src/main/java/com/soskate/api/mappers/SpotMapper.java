@@ -20,7 +20,7 @@ public class SpotMapper {
      * @param request le DTO de requête
      * @return l'entité Spot
      */
-    public static SpotEntity toEntity(SpotRequest request) {
+    public SpotEntity toEntity(SpotRequest request) {
         if (request == null) {
             return null;
         }
@@ -44,7 +44,7 @@ public class SpotMapper {
      * @param entity l'entité à convertir
      * @return le DTO de réponse complet
      */
-    public static SpotResponse toResponse(SpotEntity entity) {
+    public SpotResponse toResponse(SpotEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -71,7 +71,7 @@ public class SpotMapper {
      * @param entity l'entité à mettre à jour
      * @param request le DTO contenant les nouvelles valeurs
      */
-    public static void updateEntityFromRequest(SpotEntity entity, SpotRequest request) {
+    public void updateEntityFromRequest(SpotEntity entity, SpotRequest request) {
         if (entity == null || request == null) {
             return;
         }
