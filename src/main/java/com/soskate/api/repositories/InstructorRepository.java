@@ -34,6 +34,17 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
      */
     boolean existsByEmail(String email);
 
+    /**
+     * Checks if an email exists for another instructor (excluding the given ID).
+     * Used for email uniqueness validation during profile updates.
+     *
+     * @param email the email to check
+     * @param id the instructor ID to exclude from the search
+     * @return true if another instructor has this email
+     */
+    boolean existsByEmailAndIdNot(String email, Long id);
+
+
     // ==================== Status-based Queries ====================
 
     /**

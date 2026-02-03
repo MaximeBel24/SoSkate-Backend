@@ -3,11 +3,10 @@ package com.soskate.api.services.customer;
 import com.soskate.api.dto.customer.CustomerResponse;
 import com.soskate.api.dto.customer.CustomerUpdateRequest;
 import com.soskate.api.entities.CustomerEntity;
-import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 import com.soskate.api.exceptions.customer.CustomerNotFoundException;
 import com.soskate.api.mappers.CustomerMapper;
 import com.soskate.api.repositories.CustomerRepository;
-import com.soskate.api.repositories.InstructorRepository;
+import com.soskate.api.services.common.EmailValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final InstructorRepository instructorRepository;
+    private final EmailValidationService emailValidationService;
 
     @Override
     @Transactional
@@ -41,14 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         // 2. Vérifier l'unicité de l'email si modifié
         if (request.email() != null && !request.email().equalsIgnoreCase(customer.getEmail())) {
-            if (customerRepository.existsByEmail(request.email())) {
-                log.warn("Tentative de mise à jour avec un email déjà existant (client): {}", request.email());
-                throw new EmailAlreadyExistsException(request.email(), true);
-            }
-            if (instructorRepository.existsByEmail(request.email())) {
-                log.warn("Tentative de mise à jour avec un email déjà existant (professeur): {}", request.email());
-                throw new EmailAlreadyExistsException(request.email(), true);
-            }
+            emailValidationService.validateEmailUniqueForUpdate(request.email(), customerId, true);
         }
 
         // 3. Mise à jour partielle (seuls les champs non-null)

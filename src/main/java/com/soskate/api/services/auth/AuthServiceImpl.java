@@ -8,6 +8,7 @@ import com.soskate.api.enums.InstructorStatus;
 import com.soskate.api.exceptions.auth.BadCredentialsException;
 import com.soskate.api.repositories.CustomerRepository;
 import com.soskate.api.repositories.InstructorRepository;
+import com.soskate.api.services.common.EmailValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final CustomerRepository customerRepository;
     private final InstructorRepository instructorRepository;
+
+    private final EmailValidationService emailValidationService;
 
     // Message d'erreur générique pour ne pas révéler si l'email existe
     private static final String BAD_CREDENTIALS_MESSAGE = "Email ou mot de passe incorrect";
@@ -113,13 +116,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean emailExists(String email) {
-        log.debug("Vérification de l'existence de l'email : {}", email);
-
-        boolean existsAsCustomer = customerRepository.existsByEmail(email);
-        if (existsAsCustomer) {
-            return true;
-        }
-
-        return instructorRepository.existsByEmail(email);
+        return emailValidationService.emailExists(email);
     }
 }
