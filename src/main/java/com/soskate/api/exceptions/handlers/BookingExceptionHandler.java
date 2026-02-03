@@ -31,14 +31,6 @@ public class BookingExceptionHandler {
                 .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), "BOOKING_TOO_SOON", ex.getMessage()));
     }
 
-    @ExceptionHandler(BookingFullException.class)
-    public ResponseEntity<ErrorResponse> handleBookingFull(BookingFullException ex) {
-        log.warn("Booking full: {}", ex.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "BOOKING_FULL", ex.getMessage()));
-    }
-
     @ExceptionHandler(InstructorNotAvailableException.class)
     public ResponseEntity<ErrorResponse> handleInstructorNotAvailable(InstructorNotAvailableException ex) {
         log.warn("Instructor not available: {}", ex.getMessage());
@@ -53,14 +45,6 @@ public class BookingExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), "INSTRUCTOR_NOT_AT_SPOT", ex.getMessage()));
-    }
-
-    @ExceptionHandler(ParticipantAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleParticipantAlreadyExists(ParticipantAlreadyExistsException ex) {
-        log.warn("Participant already exists: {}", ex.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "PARTICIPANT_ALREADY_EXISTS", ex.getMessage()));
     }
 
     @ExceptionHandler(CancellationNotAllowedException.class)
