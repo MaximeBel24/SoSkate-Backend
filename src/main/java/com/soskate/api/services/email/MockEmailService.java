@@ -24,7 +24,7 @@ public class MockEmailService implements EmailService {
         log.info("To: {}", instructor.getEmail());
         log.info("Subject: Bienvenue sur SoSkate - Activez votre compte instructeur");
         log.info("----------------------------------------");
-        log.info("Bonjour {} {},", instructor.getFirstname(), instructor.getLastname());
+        log.info("Bonjour {} {},", instructor.getFirstName(), instructor.getLastName());
         log.info("");
         log.info("Vous avez été invité(e) à rejoindre SoSkate en tant qu'instructeur de skateboard !");
         log.info("");
@@ -51,7 +51,7 @@ public class MockEmailService implements EmailService {
         log.info("To: {}", instructor.getEmail());
         log.info("Subject: Votre compte SoSkate est activé !");
         log.info("----------------------------------------");
-        log.info("Bonjour {} {},", instructor.getFirstname(), instructor.getLastname());
+        log.info("Bonjour {} {},", instructor.getFirstName(), instructor.getLastName());
         log.info("");
         log.info("Félicitations ! Votre compte instructeur SoSkate est maintenant actif.");
         log.info("");
@@ -75,7 +75,7 @@ public class MockEmailService implements EmailService {
         log.info("To: {}", instructor.getEmail());
         log.info("Subject: Nouvelle invitation SoSkate - Activez votre compte");
         log.info("----------------------------------------");
-        log.info("Bonjour {} {},", instructor.getFirstname(), instructor.getLastname());
+        log.info("Bonjour {} {},", instructor.getFirstName(), instructor.getLastName());
         log.info("");
         log.info("Une nouvelle invitation vous a été envoyée pour rejoindre SoSkate.");
         log.info("");

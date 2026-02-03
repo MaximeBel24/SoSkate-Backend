@@ -32,8 +32,8 @@ public class CustomerMapper {
         CustomerEntity customer = new CustomerEntity();
         customer.setEmail(request.email());
         customer.setPassword(hashedPassword);
-        customer.setFirstname(request.firstname());
-        customer.setLastname(request.lastname());
+        customer.setFirstName(request.firstName());
+        customer.setLastName(request.lastName());
         customer.setPhone(request.phone());
         customer.setBirthDate(request.birthDate());
         customer.setCreatedAt(LocalDateTime.now());
@@ -58,8 +58,8 @@ public class CustomerMapper {
         return new CustomerResponse(
                 entity.getId(),
                 entity.getEmail(),
-                entity.getFirstname(),
-                entity.getLastname(),
+                entity.getFirstName(),
+                entity.getLastName(),
                 entity.getPhone(),
                 entity.getBirthDate(),
                 entity.getCreatedAt(),

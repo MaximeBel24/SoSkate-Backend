@@ -10,21 +10,21 @@ import jakarta.validation.constraints.*;
  */
 public record InstructorCreateRequest(
 
-        @NotBlank(message = "First name is required")
-        @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
+        @NotBlank(message = "Le prénom est obligatoire")
+        @Size(min = 2, max = 50, message = "Le prénom doit contenir entre 2 et 50 caractères")
         String firstname,
 
-        @NotBlank(message = "Last name is required")
-        @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
+        @NotBlank(message = "Le nom est obligatoire")
+        @Size(min = 2, max = 50, message = "Le nom doit contenir entre 2 et 50 caractères")
         String lastname,
 
-        @NotBlank(message = "Email is required")
-        @Email(message = "Email must be valid")
-        @Size(max = 100, message = "Email cannot exceed 100 characters")
+        @NotBlank(message = "L'email est obligatoire")
+        @Email(message = "L'email doit être valide")
+        @Size(max = 100, message = "L'email ne peut pas dépasser 100 caractères")
         String email,
 
-        @Size(max = 15, message = "Phone number cannot exceed 15 characters")
-        @Pattern(regexp = "^[+]?[0-9\\s-]{0,15}$", message = "Phone number format is invalid")
+        @Size(max = 15, message = "Le téléphone ne peut pas dépasser 15 caractères")
+        @Pattern(regexp = "^[+]?[0-9\\s-]{0,15}$", message = "Le format du téléphone est invalide")
         String phone,
 
         /**
@@ -35,8 +35,8 @@ public record InstructorCreateRequest(
         /**
          * Optional: Admin can pre-fill years of experience if known.
          */
-        @Min(value = 0, message = "Years of experience cannot be negative")
-        @Max(value = 50, message = "Years of experience cannot exceed 50")
+        @Min(value = 0, message = "L'expérience ne peut pas être négative")
+        @Max(value = 50, message = "L'expérience ne peut pas dépasser 50 ans")
         Integer yearsOfExperience
 
 ) {}

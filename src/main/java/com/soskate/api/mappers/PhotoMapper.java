@@ -60,12 +60,12 @@ public class PhotoMapper {
         List<PhotoResponse> photoResponses = toResponseList(entities);
         int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 
-        return PhotoListResponse.builder()
-                .photos(photoResponses)
-                .totalCount(totalCount)
-                .page(page)
-                .pageSize(pageSize)
-                .totalPages(totalPages)
-                .build();
+        return new PhotoListResponse(
+                photoResponses,
+                totalCount,
+                page,
+                pageSize,
+                totalPages
+        );
     }
 }

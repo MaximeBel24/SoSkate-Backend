@@ -11,21 +11,13 @@ import java.util.List;
  * DTO for paginated photo lists.
  * Contains photos and pagination metadata.
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class PhotoListResponse {
-
-    private List<PhotoResponse> photos;
-
-    private Integer totalCount;
-
-    private Integer page;
-
-    private Integer pageSize;
-
-    private Integer totalPages;
+public record PhotoListResponse (
+        List<PhotoResponse> photos,
+        Integer totalCount,
+        Integer page,
+        Integer pageSize,
+        Integer totalPages
+        ) {
 
     /**
      * Check if there are more pages available.

@@ -53,12 +53,12 @@ public class CustomerServiceImpl implements CustomerService {
 
         // 3. Mise à jour partielle (seuls les champs non-null)
         if (request.firstname() != null) {
-            customer.setFirstname(request.firstname());
+            customer.setFirstName(request.firstname());
             log.debug("Prénom mis à jour: {}", request.firstname());
         }
 
         if (request.lastname() != null) {
-            customer.setLastname(request.lastname());
+            customer.setLastName(request.lastname());
             log.debug("Nom mis à jour: {}", request.lastname());
         }
 

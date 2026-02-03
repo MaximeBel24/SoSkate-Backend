@@ -64,8 +64,8 @@ public class AuthServiceImpl implements AuthService {
                     customer.getId(),       // userId (hérité de UserEntity)
                     customer.getId(),       // customerId (même valeur car JOINED inheritance)
                     customer.getEmail(),
-                    customer.getFirstname(),
-                    customer.getLastname(),
+                    customer.getFirstName(),
+                    customer.getLastName(),
                     customer.getPhone()
             );
         }
@@ -100,8 +100,8 @@ public class AuthServiceImpl implements AuthService {
                     instructor.getId(),     // userId (hérité de UserEntity)
                     instructor.getId(),     // instructorId (même valeur car JOINED inheritance)
                     instructor.getEmail(),
-                    instructor.getFirstname(),
-                    instructor.getLastname(),
+                    instructor.getFirstName(),
+                    instructor.getLastName(),
                     instructor.getPhone()
             );
         }

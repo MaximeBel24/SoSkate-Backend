@@ -196,8 +196,8 @@ public class PhotoServiceImpl implements PhotoService {
                 .filter(p -> !p.getDeleted())
                 .orElseThrow(() -> new PhotoNotFoundException(photoId));
 
-        if (request.getDisplayOrder() != null) {
-            photo.setDisplayOrder(request.getDisplayOrder());
+        if (request.displayOrder() != null) {
+            photo.setDisplayOrder(request.displayOrder());
         }
 
         PhotoEntity updatedPhoto = photoRepository.save(photo);
@@ -205,8 +205,6 @@ public class PhotoServiceImpl implements PhotoService {
 
         return photoMapper.toResponse(updatedPhoto);
     }
-
-    // ========== DELETE ==========
 
     @Override
     @Transactional
@@ -220,8 +218,6 @@ public class PhotoServiceImpl implements PhotoService {
 
         log.info("Photo soft-deleted: id={}, deletedBy={}", photoId, deletedBy);
     }
-
-    // ========== CLEANUP ==========
 
     @Override
     @Transactional

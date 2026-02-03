@@ -40,8 +40,8 @@ public class BookingParticipantMapper {
     public CustomerSummary toCustomerSummary(CustomerEntity entity) {
         return new CustomerSummary(
                 entity.getId(),
-                entity.getFirstname(),
-                entity.getLastname(),
+                entity.getFirstName(),
+                entity.getLastName(),
                 entity.getEmail()
         );
     }
@@ -70,8 +70,8 @@ public class BookingParticipantMapper {
 
                 // Instructor
                 instructor.getId(),
-                instructor.getFirstname(),
-                instructor.getLastname(),
+                instructor.getFirstName(),
+                instructor.getLastName(),
 
                 // Spot
                 spot.getId(),

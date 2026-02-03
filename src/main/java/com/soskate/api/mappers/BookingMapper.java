@@ -47,8 +47,8 @@ public class BookingMapper {
     public InstructorSummary toInstructorSummary(InstructorEntity entity) {
         return new InstructorSummary(
                 entity.getId(),
-                entity.getFirstname(),
-                entity.getLastname(),
+                entity.getFirstName(),
+                entity.getLastName(),
                 entity.getPhone(),
                 entity.getStatus(),
                 entity.getSpecialty(),
@@ -80,7 +80,7 @@ public class BookingMapper {
         return new ParticipantSummary(
                 entity.getId(),
                 entity.getCustomer().getId(),
-                entity.getCustomer().getFirstname() + " " + entity.getCustomer().getLastname(),
+                entity.getCustomer().getFirstName() + " " + entity.getCustomer().getLastName(),
                 entity.getNumberOfParticipants(),
                 entity.getStatus(),
                 entity.getAmountCents(),

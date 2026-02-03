@@ -21,8 +21,8 @@ public class InstructorMapper {
         return new InstructorResponse(
                 entity.getId(),
                 entity.getEmail(),
-                entity.getFirstname(),
-                entity.getLastname(),
+                entity.getFirstName(),
+                entity.getLastName(),
                 entity.getPhone(),
                 entity.getStatus(),
                 entity.getBio(),
@@ -47,8 +47,8 @@ public class InstructorMapper {
 
         return new InstructorSummary(
                 entity.getId(),
-                entity.getFirstname(),
-                entity.getLastname(),
+                entity.getFirstName(),
+                entity.getLastName(),
                 entity.getPhone(),
                 entity.getStatus(),
                 entity.getSpecialty(),
@@ -85,8 +85,8 @@ public class InstructorMapper {
 
         return InstructorEntity.builder()
                 .email(request.email().toLowerCase().trim())
-                .firstname(request.firstname().trim())
-                .lastname(request.lastname().trim())
+                .firstName(request.firstname().trim())
+                .lastName(request.lastname().trim())
                 .phone(request.phone() != null ? request.phone().trim() : null)
                 .specialty(request.specialty())
                 .yearsOfExperience(request.yearsOfExperience())
@@ -103,10 +103,10 @@ public class InstructorMapper {
         }
 
         if (request.firstname() != null) {
-            entity.setFirstname(request.firstname().trim());
+            entity.setFirstName(request.firstname().trim());
         }
         if (request.lastname() != null) {
-            entity.setLastname(request.lastname().trim());
+            entity.setLastName(request.lastname().trim());
         }
         if (request.phone() != null) {
             entity.setPhone(request.phone().trim());
