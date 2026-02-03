@@ -20,7 +20,7 @@ public class EmailValidationServiceImpl implements EmailValidationService{
 
         email = normalizeEmail(email);
 
-        if (customerRepository.existsByEmail(email) || instructorRepository.existsByEmail(email)) {
+        if (customerRepository.existsByEmail(email) || instructorRepository.existsByEmailAndDeletedFalse(email)) {
             log.warn("Email déjà existant: {}", email);
             throw new EmailAlreadyExistsException("Email déjà existant");
         }
@@ -32,12 +32,12 @@ public class EmailValidationServiceImpl implements EmailValidationService{
         email = normalizeEmail(email);
 
         if (isCustomer) {
-            if (customerRepository.existsByEmailAndIdNot(email, currentUserId) || instructorRepository.existsByEmail(email)) {
+            if (customerRepository.existsByEmailAndIdNot(email, currentUserId) || instructorRepository.existsByEmailAndDeletedFalse(email)) {
                 log.warn("Email déjà existant: {}", email);
                 throw new EmailAlreadyExistsException("Email déjà existant");
             }
         } else {
-            if (customerRepository.existsByEmail(email) || instructorRepository.existsByEmailAndIdNot(email, currentUserId)) {
+            if (customerRepository.existsByEmail(email) || instructorRepository.existsByEmailAndIdNotAndDeletedFalse(email, currentUserId)) {
                 log.warn("Email déjà existant: {}", email);
                 throw new EmailAlreadyExistsException("Email déjà existant");
             }
@@ -47,7 +47,7 @@ public class EmailValidationServiceImpl implements EmailValidationService{
     @Override
     public boolean emailExists(String email) {
         email = normalizeEmail(email);
-         return customerRepository.existsByEmail(email) || instructorRepository.existsByEmail(email);
+         return customerRepository.existsByEmail(email) || instructorRepository.existsByEmailAndDeletedFalse(email);
     }
 
     private String normalizeEmail(String email){

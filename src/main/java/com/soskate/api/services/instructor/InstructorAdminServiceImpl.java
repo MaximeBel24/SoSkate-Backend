@@ -5,6 +5,7 @@ import com.soskate.api.dto.instructor.InstructorCreateRequest;
 import com.soskate.api.dto.instructor.InstructorResponse;
 import com.soskate.api.entities.InstructorEntity;
 import com.soskate.api.enums.InstructorStatus;
+import com.soskate.api.exceptions.instructor.InstructorAlreadyDeletedException;
 import com.soskate.api.exceptions.instructor.InstructorNotFoundException;
 import com.soskate.api.exceptions.instructor.InvalidAccountStateException;
 import com.soskate.api.mappers.InstructorMapper;
@@ -154,9 +155,14 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
             throw new InstructorNotFoundException(instructorId);
         }
 
-        // TODO: Consider soft delete instead
-        // TODO: Handle related bookings, events, etc.
-        instructorRepository.deleteById(instructorId);
+        InstructorEntity instructor = instructorRepository.getReferenceById(instructorId);
+        if (Boolean.TRUE.equals(instructor.getDeleted())) {
+            throw new InstructorAlreadyDeletedException("Cet instructeur est déjà supprimé");
+        }
+
+        instructor.markAsDeleted();
+
+        instructorRepository.save(instructor);
 
         log.info("Instructor {} deleted", instructorId);
     }

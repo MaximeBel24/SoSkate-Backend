@@ -51,7 +51,7 @@ public class InstructorQueryServiceImpl implements InstructorQueryService {
      */
     @Transactional(readOnly = true)
     public List<InstructorSummary> getActiveInstructors() {
-        return instructorMapper.toSummaryList(instructorRepository.findAllActive());
+        return instructorMapper.toSummaryList(instructorRepository.findAllActiveAndDeletedFalse());
     }
 
     /**

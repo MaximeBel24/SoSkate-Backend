@@ -1,6 +1,7 @@
 package com.soskate.api.exceptions.handlers;
 
 import com.soskate.api.exceptions.common.ErrorResponse;
+import com.soskate.api.exceptions.instructor.InstructorAlreadyDeletedException;
 import com.soskate.api.exceptions.instructor.InstructorNotFoundException;
 import com.soskate.api.exceptions.instructor.InvalidAccountStateException;
 import lombok.extern.slf4j.Slf4j;
@@ -30,5 +31,13 @@ public class InstructorExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "INVALID_ACCOUNT_STATE", ex.getMessage()));
+    }
+
+    @ExceptionHandler(InstructorAlreadyDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleInstructorAlreadyDeleted(InstructorAlreadyDeletedException ex) {
+        log.warn("Instructor already deleted: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "INSTRUCTOR_ALREADY_DELETED", ex.getMessage()));
     }
 }

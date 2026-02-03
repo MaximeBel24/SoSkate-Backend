@@ -37,8 +37,6 @@ public class PhotoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // === Polymorphic relation fields ===
-
     @NotNull(message = "Entity type is required")
     @Enumerated(EnumType.STRING)
     @Column(name = "entity_type", nullable = false, length = 20)

@@ -18,9 +18,9 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
     // ==================== Find by Unique Fields ====================
 
     /**
-     * Find an instructor by their email address.
+     * Find a no deleted instructor by their email address.
      */
-    Optional<InstructorEntity> findByEmail(String email);
+    Optional<InstructorEntity> findByEmailAndDeletedFalse(String email);
 
     /**
      * Find an instructor by their activation token.
@@ -32,7 +32,7 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
     /**
      * Check if an instructor with the given email already exists.
      */
-    boolean existsByEmail(String email);
+    boolean existsByEmailAndDeletedFalse(String email);
 
     /**
      * Checks if an email exists for another instructor (excluding the given ID).
@@ -42,7 +42,7 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
      * @param id the instructor ID to exclude from the search
      * @return true if another instructor has this email
      */
-    boolean existsByEmailAndIdNot(String email, Long id);
+    boolean existsByEmailAndIdNotAndDeletedFalse(String email, Long id);
 
 
     // ==================== Status-based Queries ====================
@@ -50,20 +50,20 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
     /**
      * Find all instructors with a specific status.
      */
-    List<InstructorEntity> findByStatus(InstructorStatus status);
+    List<InstructorEntity> findByStatusAndDeletedFalse(InstructorStatus status);
 
     /**
-     * Find all active instructors.
+     * Find all active and not deleted instructors.
      */
-    default List<InstructorEntity> findAllActive() {
-        return findByStatus(InstructorStatus.ACTIVE);
+    default List<InstructorEntity> findAllActiveAndDeletedFalse() {
+        return findByStatusAndDeletedFalse(InstructorStatus.ACTIVE);
     }
 
     /**
      * Find all instructors with pending invitations.
      */
     default List<InstructorEntity> findAllInvited() {
-        return findByStatus(InstructorStatus.INVITED);
+        return findByStatusAndDeletedFalse(InstructorStatus.INVITED);
     }
 
     // ==================== Specialty-based Queries ====================
@@ -71,20 +71,20 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
     /**
      * Find all active instructors with a specific specialty.
      */
-    List<InstructorEntity> findByStatusAndSpecialty(InstructorStatus status, SkateSpecialty specialty);
+    List<InstructorEntity> findByStatusAndSpecialtyAndDeletedFalse(InstructorStatus status, SkateSpecialty specialty);
 
     /**
      * Find all active instructors for a specific specialty.
      */
     default List<InstructorEntity> findActiveBySpecialty(SkateSpecialty specialty) {
-        return findByStatusAndSpecialty(InstructorStatus.ACTIVE, specialty);
+        return findByStatusAndSpecialtyAndDeletedFalse(InstructorStatus.ACTIVE, specialty);
     }
 
     /**
      * Find instructors with expired activation tokens.
      * Useful for cleanup jobs or notifications.
      */
-    @Query("SELECT i FROM InstructorEntity i WHERE i.status = :status AND i.activationTokenExpiry < :now")
+    @Query("SELECT i FROM InstructorEntity i WHERE i.status = :status AND i.activationTokenExpiry < :now AND i.deleted = false")
     List<InstructorEntity> findByStatusAndActivationTokenExpired(
             @Param("status") InstructorStatus status,
             @Param("now") LocalDateTime now

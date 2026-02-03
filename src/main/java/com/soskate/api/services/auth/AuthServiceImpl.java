@@ -74,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // === 2. Chercher dans les Instructors ===
-        Optional<InstructorEntity> instructorOpt = instructorRepository.findByEmail(email);
+        Optional<InstructorEntity> instructorOpt = instructorRepository.findByEmailAndDeletedFalse(email);
 
         if (instructorOpt.isPresent()) {
             InstructorEntity instructor = instructorOpt.get();

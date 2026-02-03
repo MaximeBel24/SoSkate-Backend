@@ -1,0 +1,5 @@
+ALTER TABLE instructors
+    ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE instructors
+    ADD COLUMN deleted_at TIMESTAMP NULL;
