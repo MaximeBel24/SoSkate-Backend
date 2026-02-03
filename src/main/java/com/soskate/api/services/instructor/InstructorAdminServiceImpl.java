@@ -5,10 +5,11 @@ import com.soskate.api.dto.instructor.InstructorCreateRequest;
 import com.soskate.api.dto.instructor.InstructorResponse;
 import com.soskate.api.entities.InstructorEntity;
 import com.soskate.api.enums.InstructorStatus;
-import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 import com.soskate.api.exceptions.instructor.InstructorNotFoundException;
+import com.soskate.api.exceptions.instructor.InvalidAccountStateException;
 import com.soskate.api.mappers.InstructorMapper;
 import com.soskate.api.repositories.InstructorRepository;
+import com.soskate.api.services.common.EmailValidationService;
 import com.soskate.api.services.email.EmailService;
 import com.soskate.api.services.token.TokenGeneratorService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
 
     private final InstructorRepository instructorRepository;
     private final InstructorMapper instructorMapper;
+    private final EmailValidationService emailValidationService;
     private final TokenGeneratorService tokenGeneratorService;
     private final EmailService emailService;
     private final SoskateSecurityProperties securityProperties;
@@ -41,10 +43,7 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
     public InstructorResponse createInstructor(InstructorCreateRequest request) {
         log.info("Creating new instructor with email: {}", request.email());
 
-        String normalizedEmail = request.email().toLowerCase().trim();
-        if (instructorRepository.existsByEmail(normalizedEmail)) {
-            throw new EmailAlreadyExistsException(normalizedEmail);
-        }
+        emailValidationService.validateEmailUnique(request.email());
 
         InstructorEntity instructor = instructorMapper.toEntity(request);
 
@@ -81,7 +80,7 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
                 .orElseThrow(() -> new InstructorNotFoundException(instructorId));
 
         if (instructor.getStatus() != InstructorStatus.INVITED) {
-            throw new IllegalStateException("Cannot resend invitation to an already activated account");
+            throw new InvalidAccountStateException("Cannot resend invitation to an already activated account");
         }
 
         instructor.setPassword("PENDING_REACTIVATION");
@@ -132,7 +131,7 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
                 .orElseThrow(() -> new InstructorNotFoundException(instructorId));
 
         if (instructor.getStatus() != InstructorStatus.SUSPENDED) {
-            throw new IllegalStateException("Can only reactivate suspended accounts");
+            throw new InvalidAccountStateException("Can only reactivate suspended accounts");
         }
 
         instructor.setStatus(InstructorStatus.ACTIVE);

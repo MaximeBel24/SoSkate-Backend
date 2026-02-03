@@ -2,6 +2,7 @@ package com.soskate.api.exceptions.handlers;
 
 import com.soskate.api.exceptions.common.ErrorResponse;
 import com.soskate.api.exceptions.instructor.InstructorNotFoundException;
+import com.soskate.api.exceptions.instructor.InvalidAccountStateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,13 @@ public class InstructorExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ErrorResponse.of(HttpStatus.NOT_FOUND.value(), "INSTRUCTOR_NOT_FOUND", ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidAccountStateException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidAccountState(InvalidAccountStateException ex) {
+        log.warn("Invalid account state: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "INVALID_ACCOUNT_STATE", ex.getMessage()));
     }
 }

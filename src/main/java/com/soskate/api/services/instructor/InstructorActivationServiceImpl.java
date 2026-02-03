@@ -6,6 +6,7 @@ import com.soskate.api.entities.InstructorEntity;
 import com.soskate.api.enums.InstructorStatus;
 import com.soskate.api.exceptions.auth.InvalidActivationTokenException;
 import com.soskate.api.exceptions.auth.PasswordMismatchException;
+import com.soskate.api.exceptions.instructor.InvalidAccountStateException;
 import com.soskate.api.mappers.InstructorMapper;
 import com.soskate.api.repositories.InstructorRepository;
 import com.soskate.api.services.email.EmailService;
@@ -48,7 +49,7 @@ public class InstructorActivationServiceImpl implements InstructorActivationServ
         }
 
         if (instructor.getStatus() != InstructorStatus.INVITED) {
-            throw new IllegalStateException("Account has already been activated");
+            throw new InvalidAccountStateException("Account has already been activated");
         }
 
         // TODO: Implement spring security to encode the password
