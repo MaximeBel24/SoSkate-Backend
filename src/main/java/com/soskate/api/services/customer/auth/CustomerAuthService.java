@@ -1,15 +1,12 @@
 package com.soskate.api.services.customer.auth;
 
-import com.soskate.api.dto.auth.login.LoginRequest;
-import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.dto.auth.register.CustomerRegisterRequest;
 import com.soskate.api.dto.customer.CustomerResponse;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
-import com.soskate.api.exceptions.auth.BadCredentialsException;
 
 /**
  * Service dédié à l'authentification des customers.
- * Gère l'inscription, la connexion, la vérification d'email et le reset de password.
+ * Gère l'inscription et la vérification d'email.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -27,15 +24,6 @@ public interface CustomerAuthService {
     CustomerResponse registerCustomer(CustomerRegisterRequest customerRegisterDto);
 
     /**
-     * Authentifie un customer avec son email et mot de passe.
-     *
-     * @param loginRequest email + password
-     * @return les informations de connexion (customer + token JWT si applicable)
-     * @throws BadCredentialsException si email ou password invalide
-     */
-    LoginResponse login(LoginRequest loginRequest);
-
-    /**
      * Vérifie si un email existe déjà en base.
      * Utile pour la validation côté frontend avant soumission du formulaire.
      *
@@ -43,49 +31,4 @@ public interface CustomerAuthService {
      * @return true si l'email existe déjà
      */
     boolean emailExists(String email);
-
-//    /**
-//     * Envoie un email de vérification après l'inscription.
-//     * (Optionnel pour le MVP, mais utile pour éviter les faux comptes)
-//     *
-//     * @param email l'email du customer
-//     */
-//    void sendVerificationEmail(String email);
-//
-//    /**
-//     * Vérifie le token de confirmation d'email.
-//     *
-//     * @param token le token reçu par email
-//     * @return true si la vérification a réussi
-//     */
-//    boolean verifyEmail(String token);
-//
-//    /**
-//     * Initie une demande de réinitialisation de mot de passe.
-//     * Envoie un email avec un lien de reset.
-//     *
-//     * @param email l'email du customer
-//     */
-//    void requestPasswordReset(String email);
-//
-//    /**
-//     * Réinitialise le mot de passe avec le token reçu par email.
-//     *
-//     * @param token le token de reset
-//     * @param newPassword le nouveau mot de passe
-//     * @return true si la réinitialisation a réussi
-//     */
-//    boolean resetPassword(String token, String newPassword);
-//
-//    /**
-//     * Change le mot de passe d'un customer connecté.
-//     * Vérifie que l'ancien mot de passe est correct avant de le changer.
-//     *
-//     * @param customerId l'ID du customer
-//     * @param oldPassword l'ancien mot de passe
-//     * @param newPassword le nouveau mot de passe
-//     * @return true si le changement a réussi
-//     * @throws BadCredentialsException si l'ancien password est incorrect
-//     */
-//    boolean changePassword(Long customerId, String oldPassword, String newPassword);
 }

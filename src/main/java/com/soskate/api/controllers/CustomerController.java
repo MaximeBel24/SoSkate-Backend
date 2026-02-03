@@ -58,7 +58,7 @@ public class CustomerController {
      * @return le customer mis à jour
      */
     @PutMapping("/{customerId}")
-    public ResponseEntity<CustomerResponse> updateCustomerProfile(
+    public ResponseEntity<CustomerResponse> updateCustomer(
             @Parameter(description = "ID du customer")
             @PathVariable Long customerId,
             @Valid @RequestBody CustomerUpdateRequest request) {

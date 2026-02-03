@@ -92,8 +92,6 @@ public class PhotoController {
         return ResponseEntity.ok(response);
     }
 
-    // ========== GET PHOTOS BY ENTITY ==========
-
     /**
      * Get all photos for a specific entity.
      *

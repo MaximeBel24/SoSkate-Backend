@@ -1,13 +1,8 @@
 package com.soskate.api.controllers;
 
 import com.soskate.api.dto.auth.login.LoginRequest;
-import com.soskate.api.dto.auth.login.UnifiedLoginResponse;
+import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.services.auth.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,12 +41,12 @@ public class AuthController {
      * @return les informations de l'utilisateur avec son rôle
      */
     @PostMapping("/login")
-    public ResponseEntity<UnifiedLoginResponse> login(
+    public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody LoginRequest loginRequest) {
 
         log.info("Requête de connexion unifiée reçue pour l'email : {}", loginRequest.email());
 
-        UnifiedLoginResponse response = authService.login(loginRequest);
+        LoginResponse response = authService.login(loginRequest);
 
         log.info("Connexion réussie - Email: {}, Rôle: {}",
                 loginRequest.email(),

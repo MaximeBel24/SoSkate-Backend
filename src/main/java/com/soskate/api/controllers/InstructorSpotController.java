@@ -20,7 +20,7 @@ public class InstructorSpotController {
     private final InstructorSpotService instructorSpotService;
 
     @PostMapping("/instructors/{instructorId}/spots")
-    public ResponseEntity<InstructorSpotResponse> addSpot(
+    public ResponseEntity<InstructorSpotResponse> addSpotToInstructor(
             @PathVariable Long instructorId,
             @Valid @RequestBody InstructorSpotRequest request
     ) {
@@ -43,7 +43,7 @@ public class InstructorSpotController {
     }
 
     @DeleteMapping("/instructors/{instructorId}/spots/{spotId}")
-    public ResponseEntity<Void> removeSpot(
+    public ResponseEntity<Void> removeSpotFromInstructor(
             @PathVariable Long instructorId,
             @PathVariable Long spotId
     ) {

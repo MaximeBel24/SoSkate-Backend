@@ -1,7 +1,5 @@
 package com.soskate.api.controllers;
 
-import com.soskate.api.dto.auth.login.LoginRequest;
-import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.dto.auth.register.CustomerRegisterRequest;
 import com.soskate.api.dto.customer.CustomerResponse;
 import com.soskate.api.services.customer.auth.CustomerAuthService;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Contrôleur REST pour l'authentification des customers.
- * Gère les endpoints d'inscription, connexion et gestion du mot de passe.
+ * Gère les endpoints d'inscription et de vérification d'email.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -57,25 +55,5 @@ public class CustomerAuthController {
         log.debug("Vérification de l'existence de l'email : {}", email);
         boolean exists = customerAuthService.emailExists(email);
         return ResponseEntity.ok(exists);
-    }
-
-    /**
-     * Endpoint de connexion pour un customer.
-     * Version simplifiée sans JWT (pour le dev).
-     *
-     * @param loginRequest email + password (validés automatiquement)
-     * @return les informations du customer avec message de succès
-     */
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(
-            @Valid @RequestBody LoginRequest loginRequest) {
-
-        log.info("Requête de connexion reçue pour l'email : {}", loginRequest.email());
-
-        LoginResponse response = customerAuthService.login(loginRequest);
-
-        log.info("Connexion réussie pour l'email : {}", loginRequest.email());
-
-        return ResponseEntity.ok(response);
     }
 }

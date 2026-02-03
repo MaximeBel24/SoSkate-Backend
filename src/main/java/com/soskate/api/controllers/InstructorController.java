@@ -61,8 +61,6 @@ public class InstructorController {
         return ResponseEntity.ok(queryService.getInstructorsBySpecialty(specialty));
     }
 
-    // ==================== Account Activation ====================
-
     /**
      * Validates an activation token.
      * Used by frontend to check if a token is valid before showing the form.

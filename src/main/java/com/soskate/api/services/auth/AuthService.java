@@ -1,7 +1,7 @@
 package com.soskate.api.services.auth;
 
 import com.soskate.api.dto.auth.login.LoginRequest;
-import com.soskate.api.dto.auth.login.UnifiedLoginResponse;
+import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.exceptions.auth.BadCredentialsException;
 
 /**
@@ -26,7 +26,7 @@ public interface AuthService {
      * @return les informations de connexion unifiées avec le rôle
      * @throws BadCredentialsException si email ou password invalide
      */
-    UnifiedLoginResponse login(LoginRequest loginRequest);
+    LoginResponse login(LoginRequest loginRequest);
 
     /**
      * Vérifie si un email existe déjà dans le système (Customer OU Instructor).

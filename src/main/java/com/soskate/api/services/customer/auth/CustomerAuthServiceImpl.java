@@ -1,11 +1,8 @@
 package com.soskate.api.services.customer.auth;
 
-import com.soskate.api.dto.auth.login.LoginRequest;
-import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.dto.auth.register.CustomerRegisterRequest;
 import com.soskate.api.dto.customer.CustomerResponse;
 import com.soskate.api.entities.CustomerEntity;
-import com.soskate.api.exceptions.auth.BadCredentialsException;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 import com.soskate.api.mappers.CustomerMapper;
 import com.soskate.api.repositories.CustomerRepository;
@@ -24,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CustomerAuthServiceImpl implements CustomerAuthService{
+public class CustomerAuthServiceImpl implements CustomerAuthService {
 
     private final CustomerRepository customerRepository;
 
@@ -71,28 +68,5 @@ public class CustomerAuthServiceImpl implements CustomerAuthService{
     public boolean emailExists(String email) {
         log.debug("Vérification de l'existence de l'email : {}", email);
         return customerRepository.existsByEmail(email);
-    }
-
-    @Override
-    public LoginResponse login(LoginRequest loginRequest) {
-
-        log.info("Tentative de connexion pour l'email : {}", loginRequest.email());
-        CustomerEntity customer = customerRepository.findByEmail(loginRequest.email())
-                .orElseThrow(() -> {
-                    log.warn("Tentative de connexion avec un email inexistant : {}", loginRequest.email());
-                    return new BadCredentialsException("Email ou mot de passe incorrect");
-                });
-
-        // TODO: Remplacer par BCrypt en production
-        if (!loginRequest.password().equals(customer.getPassword())) {
-            log.warn("Tentative de connexion avec un mot de passe incorrect pour l'email : {}", loginRequest.email());
-            throw new BadCredentialsException("Email ou mot de passe incorrect");
-        }
-
-        log.info("Connexion réussie pour l'email : {}", loginRequest.email());
-
-        CustomerResponse customerResponse = CustomerMapper.toResponse(customer);
-
-        return new LoginResponse(customerResponse);
     }
 }

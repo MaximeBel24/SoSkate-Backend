@@ -1,7 +1,7 @@
 package com.soskate.api.services.auth;
 
 import com.soskate.api.dto.auth.login.LoginRequest;
-import com.soskate.api.dto.auth.login.UnifiedLoginResponse;
+import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.entities.CustomerEntity;
 import com.soskate.api.entities.InstructorEntity;
 import com.soskate.api.enums.InstructorStatus;
@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     private static final String BAD_CREDENTIALS_MESSAGE = "Email ou mot de passe incorrect";
 
     @Override
-    public UnifiedLoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
         String email = loginRequest.email();
         String password = loginRequest.password();
 
@@ -60,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
             log.info("Connexion réussie pour le Customer : {} (ID: {})", email, customer.getId());
 
-            return UnifiedLoginResponse.forCustomer(
+            return LoginResponse.forCustomer(
                     customer.getId(),       // userId (hérité de UserEntity)
                     customer.getId(),       // customerId (même valeur car JOINED inheritance)
                     customer.getEmail(),
@@ -96,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
 
             log.info("Connexion réussie pour l'Instructor : {} (ID: {})", email, instructor.getId());
 
-            return UnifiedLoginResponse.forInstructor(
+            return LoginResponse.forInstructor(
                     instructor.getId(),     // userId (hérité de UserEntity)
                     instructor.getId(),     // instructorId (même valeur car JOINED inheritance)
                     instructor.getEmail(),
