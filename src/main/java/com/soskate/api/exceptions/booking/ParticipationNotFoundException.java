@@ -1,6 +1,7 @@
 package com.soskate.api.exceptions.booking;
 
-public class ParticipationNotFoundException extends RuntimeException {
-    public ParticipationNotFoundException(String participationNonTrouvée) {
+public class ParticipationNotFoundException extends BookingException {
+    public ParticipationNotFoundException(String participationNonTrouvee) {
+        super(participationNonTrouvee);
     }
 }

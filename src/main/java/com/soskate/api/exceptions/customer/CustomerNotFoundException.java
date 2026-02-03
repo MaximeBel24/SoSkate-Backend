@@ -7,6 +7,6 @@ public class CustomerNotFoundException extends RuntimeException {
     }
 
     public CustomerNotFoundException(Long id) {
-        super("Client non trouvé avec l'id: " + id);
+        super("Customer not found with id: " + id);
     }
 }

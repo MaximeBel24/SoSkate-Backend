@@ -9,7 +9,7 @@ package com.soskate.api.exceptions.service;
 public class ServiceNotFoundException extends RuntimeException {
 
     public ServiceNotFoundException(Long id) {
-        super(String.format("Service introuvable avec l'ID : %d", id));
+        super(String.format("Service not found with id: %d", id));
     }
 
     public ServiceNotFoundException(String message) {

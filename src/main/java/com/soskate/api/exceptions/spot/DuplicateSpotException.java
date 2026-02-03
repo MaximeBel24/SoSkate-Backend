@@ -9,7 +9,7 @@ package com.soskate.api.exceptions.spot;
 public class DuplicateSpotException extends RuntimeException {
 
     public DuplicateSpotException(String name, String address) {
-        super(String.format("Un spot avec le nom '%s' existe déjà à l'adresse '%s'", name, address));
+        super(String.format("Spot with name '%s' already exists at address '%s'", name, address));
     }
 
     public DuplicateSpotException(String message) {

@@ -13,6 +13,6 @@ public class BadCredentialsException extends RuntimeException {
     }
 
     public BadCredentialsException() {
-        super("Email ou mot de passe incorrect");
+        super("Invalid email or password");
     }
 }

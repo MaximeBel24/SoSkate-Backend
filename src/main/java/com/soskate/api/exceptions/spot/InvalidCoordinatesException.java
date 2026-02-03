@@ -13,6 +13,6 @@ public class InvalidCoordinatesException extends RuntimeException {
     }
 
     public InvalidCoordinatesException() {
-        super("Les coordonnées GPS fournies sont invalides");
+        super("Invalid GPS coordinates provided");
     }
 }

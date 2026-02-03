@@ -63,6 +63,30 @@ public class BookingExceptionHandler {
                 .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "AVAILABILITY_OVERLAP", ex.getMessage()));
     }
 
+    @ExceptionHandler(AvailabilityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAvailabilityNotFound(AvailabilityNotFoundException ex) {
+        log.warn("Availability not found: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse.of(HttpStatus.NOT_FOUND.value(), "AVAILABILITY_NOT_FOUND", ex.getMessage()));
+    }
+
+    @ExceptionHandler(BookingModificationNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleBookingModificationNotAllowed(BookingModificationNotAllowedException ex) {
+        log.warn("Modification not allowed: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.of(HttpStatus.FORBIDDEN.value(), "MODIFICATION_NOT_ALLOWED", ex.getMessage()));
+    }
+
+    @ExceptionHandler(ParticipationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleParticipationNotFound(ParticipationNotFoundException ex) {
+        log.warn("Participation not found: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse.of(HttpStatus.NOT_FOUND.value(), "PARTICIPATION_NOT_FOUND", ex.getMessage()));
+    }
+
     @ExceptionHandler(BookingException.class)
     public ResponseEntity<ErrorResponse> handleBookingException(BookingException ex) {
         log.warn("Booking error: {}", ex.getMessage());

@@ -3,6 +3,6 @@ package com.soskate.api.exceptions.booking;
 public class InstructorNotAvailableException extends BookingException {
 
     public InstructorNotAvailableException() {
-        super("L'instructeur n'est pas disponible sur ce créneau");
+        super("Instructor is not available for this time slot");
     }
 }

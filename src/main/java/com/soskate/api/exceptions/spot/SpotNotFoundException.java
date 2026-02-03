@@ -9,7 +9,7 @@ package com.soskate.api.exceptions.spot;
 public class SpotNotFoundException extends RuntimeException {
 
     public SpotNotFoundException(Long id) {
-        super(String.format("Spot introuvable avec l'ID : %d", id));
+        super(String.format("Spot not found with id: %d", id));
     }
 
     public SpotNotFoundException(String message) {

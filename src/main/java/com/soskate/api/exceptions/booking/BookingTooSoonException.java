@@ -8,7 +8,7 @@ public class BookingTooSoonException extends BookingException {
     private final int minimumHours;
 
     public BookingTooSoonException(int minimumHours) {
-        super(String.format("La réservation doit être faite au moins %d heures à l'avance", minimumHours));
+        super(String.format("Booking must be made at least %d hours in advance", minimumHours));
         this.minimumHours = minimumHours;
     }
 

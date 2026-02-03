@@ -11,6 +11,6 @@ public record ValidationErrorResponse(
 
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime timestamp,
-        Map<String, String> erros
+        Map<String, String> errors
 ) {
 }

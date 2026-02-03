@@ -7,6 +7,6 @@ public class SlotNotAvailableException extends BookingException {
     }
 
     public SlotNotAvailableException() {
-        super("Ce créneau n'est plus disponible");
+        super("Time slot is no longer available");
     }
 }

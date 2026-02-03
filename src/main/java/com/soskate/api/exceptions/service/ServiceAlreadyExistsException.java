@@ -13,10 +13,10 @@ import lombok.Getter;
 public class ServiceAlreadyExistsException extends RuntimeException {
 
     public ServiceAlreadyExistsException(String name) {
-        super(String.format("Un service avec le nom '%s' existe déjà", name));
+        super(String.format("Service with %s already exists", name));
     }
     public ServiceAlreadyExistsException(String name, boolean withSuggestion) {
-        super(String.format("Un service avec le nom '%s' existe déjà. Veuillez choisir un autre nom.", name));
+        super(String.format("Service with name '%s' already exists. Please choose another name.", name));
     }
 
 }

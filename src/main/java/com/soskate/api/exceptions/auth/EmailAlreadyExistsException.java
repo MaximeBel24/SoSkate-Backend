@@ -23,6 +23,6 @@ public class EmailAlreadyExistsException extends RuntimeException {
      * @param email l'email qui existe déjà
      */
     public EmailAlreadyExistsException(String email, boolean isEmail) {
-        super(String.format("Un compte avec l'email '%s' existe déjà", email));
+        super(String.format("An account with email '%s' already exists", email));
     }
 }

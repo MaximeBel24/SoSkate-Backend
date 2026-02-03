@@ -7,6 +7,6 @@ public class CancellationNotAllowedException extends BookingException {
     }
 
     public CancellationNotAllowedException() {
-        super("L'annulation n'est pas autorisée pour cette réservation");
+        super("Cancellation is not allowed for this booking");
     }
 }
