@@ -19,6 +19,11 @@ public interface InstructorSpotRepository extends JpaRepository<InstructorSpotEn
 
     void deleteByInstructorIdAndSpotId(Long instructorId, Long spotId);
 
-    @Query("SELECT is.instructor FROM InstructorSpotEntity is WHERE is.spot.id = :spotId AND is.instructor.status = 'ACTIVE'")
+    @Query("""
+        SELECT is.instructor FROM InstructorSpotEntity is
+        WHERE is.spot.id = :spotId
+        AND is.instructor.status = 'ACTIVE'
+        AND is.instructor.deleted = false
+    """)
     List<InstructorEntity> findActiveInstructorsBySpotId(@Param("spotId") Long spotId);
 }
