@@ -35,8 +35,8 @@ public class EventEntity {
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
-    @Column(name = "stop_time")
-    private LocalDateTime stopTime;
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
 
     @Column(name = "max_participants")
     private Integer maxParticipants;
@@ -45,28 +45,24 @@ public class EventEntity {
     @JoinColumn(name = "instructor_id")
     private InstructorEntity instructor;
 
-    @ManyToMany
-    @JoinTable(
-            name = "event_participants",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "customer_id")
-    )
-    private List<CustomerEntity> participants = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<BookingEntity> bookings = new ArrayList<>();
-
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<CustomerEventEntity> customerEvents = new ArrayList<>();
 
-    public EventEntity(Long id, String title, String description, SpotEntity spot, LocalDateTime startTime, LocalDateTime stopTime, Integer maxParticipants, InstructorEntity instructor) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.spot = spot;
-        this.startTime = startTime;
-        this.stopTime = stopTime;
-        this.maxParticipants = maxParticipants;
-        this.instructor = instructor;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
     }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
 }

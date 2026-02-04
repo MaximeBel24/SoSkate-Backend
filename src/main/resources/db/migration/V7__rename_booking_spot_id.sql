@@ -1,0 +1,1 @@
+ALTER TABLE bookings RENAME COLUMN sport_id TO spot_id;

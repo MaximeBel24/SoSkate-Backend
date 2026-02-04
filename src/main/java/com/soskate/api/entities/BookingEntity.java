@@ -32,7 +32,7 @@ public class BookingEntity {
     private ServiceEntity service;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sport_id")
+    @JoinColumn(name = "spot_id")
     private SpotEntity spot;
 
     @Column(name = "start_time")
@@ -42,6 +42,7 @@ public class BookingEntity {
     private LocalDateTime endTime;
 
     @Column(name = "duration_minutes", nullable = false)
+    @Builder.Default
     private Integer durationMinutes = 60;
 
     @Column(name = "max_participants", nullable = false)
@@ -69,7 +70,6 @@ public class BookingEntity {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate

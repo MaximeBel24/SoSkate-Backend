@@ -1,0 +1,1 @@
+ALTER TABLE events RENAME COLUMN stop_time TO end_time;

@@ -6,11 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.*;  // Version simplifiée
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -26,13 +22,10 @@ import java.util.List;
 @SuperBuilder
 public class InstructorEntity extends UserEntity {
 
-    // ==================== Account Status ====================
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private InstructorStatus status;
-
-    // ==================== Activation Token ====================
 
     /**
      * Unique token sent to the instructor for account activation.
@@ -49,8 +42,6 @@ public class InstructorEntity extends UserEntity {
     @Column(name = "activation_token_expiry")
     private LocalDateTime activationTokenExpiry;
 
-    // ==================== Audit Fields ====================
-
     /**
      * Timestamp when the invitation was sent to the instructor.
      */
@@ -62,8 +53,6 @@ public class InstructorEntity extends UserEntity {
      */
     @Column(name = "activated_at")
     private LocalDateTime activatedAt;
-
-    // ==================== Profile Information ====================
 
     /**
      * Instructor's biography/description visible to customers.

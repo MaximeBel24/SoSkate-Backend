@@ -2,8 +2,6 @@ package com.soskate.api.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -47,37 +45,23 @@ public class SpotEntity {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<EventEntity> events = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    public SpotEntity(String name, String description, String address, String city, String zipCode, BigDecimal latitude, BigDecimal longitude, Boolean isIndoor, Boolean isActive) {
-        this.name = name;
-        this.description = description;
-        this.address = address;
-        this.city = city;
-        this.zipCode = zipCode;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.isIndoor = isIndoor;
-        this.isActive = isActive;
     }
 }

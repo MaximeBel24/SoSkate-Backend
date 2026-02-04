@@ -51,8 +51,6 @@ public class PhotoEntity {
     @Column(name = "photo_type", nullable = false, length = 20)
     private PhotoType photoType;
 
-    // === S3 URLs ===
-
     @NotBlank(message = "Photo URL is required")
     @Column(nullable = false, length = 500)
     private String url;
@@ -60,8 +58,6 @@ public class PhotoEntity {
     @NotBlank(message = "Thumbnail URL is required")
     @Column(name = "thumbnail_url", nullable = false, length = 500)
     private String thumbnailUrl;
-
-    // === File metadata ===
 
     @Column(name = "original_file_name", length = 255)
     private String originalFileName;
@@ -82,13 +78,9 @@ public class PhotoEntity {
     @Column(nullable = false)
     private Integer height;
 
-    // === Display order (for galleries) ===
-
     @Builder.Default
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder = 0;
-
-    // === Audit fields ===
 
     @Column(name = "uploaded_by")
     private Long uploadedBy; // User ID who uploaded
@@ -96,8 +88,6 @@ public class PhotoEntity {
     @CreationTimestamp
     @Column(name = "uploaded_at", nullable = false, updatable = false)
     private LocalDateTime uploadedAt;
-
-    // === Soft delete ===
 
     @Builder.Default
     @Column(nullable = false)
@@ -108,8 +98,6 @@ public class PhotoEntity {
 
     @Column(name = "deleted_by")
     private Long deletedBy;
-
-    // === Business methods ===
 
     /**
      * Soft delete this photo.

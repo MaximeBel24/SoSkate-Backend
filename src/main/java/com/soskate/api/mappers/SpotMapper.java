@@ -25,17 +25,17 @@ public class SpotMapper {
             return null;
         }
 
-        return new SpotEntity(
-                request.name(),
-                request.description(),
-                request.address(),
-                request.city(),
-                request.zipCode(),
-                request.latitude(),
-                request.longitude(),
-                request.isIndoor(),
-                request.isActive()
-        );
+        return SpotEntity.builder()
+                .name(request.name())
+                .description(request.description())
+                .address(request.address())
+                .city(request.city())
+                .zipCode(request.zipCode())
+                .latitude(request.latitude())
+                .longitude(request.longitude())
+                .isIndoor(request.isIndoor())
+                .isActive(request.isActive())
+                .build();
     }
 
     /**

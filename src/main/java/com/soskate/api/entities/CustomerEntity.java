@@ -16,13 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class CustomerEntity extends UserEntity{
+public class CustomerEntity extends UserEntity {
 
     @Column(name = "birth_date")
     private LocalDate birthDate;
-
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CustomerBookingEntity> bookings = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CommentEntity> comments = new ArrayList<>();
