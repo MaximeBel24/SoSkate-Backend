@@ -35,12 +35,12 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
     boolean existsByEmail(String email);
 
     /**
-     * Checks if an email exists for another customer (excluding the given ID).
-     * Used for email uniqueness validation during profile updates.
+     * Vérifie si un email existe pour un autre customer (excluant l'ID donné).
+     * Utilisé pour la validation d'unicité lors des mises à jour de profil.
      *
-     * @param email the email to check
-     * @param id the customer ID to exclude from the search
-     * @return true if another customer has this email
+     * @param email l'email à vérifier
+     * @param id l'ID du customer à exclure de la recherche
+     * @return true si un autre customer possède cet email
      */
     boolean existsByEmailAndIdNot(String email, Long id);
 }

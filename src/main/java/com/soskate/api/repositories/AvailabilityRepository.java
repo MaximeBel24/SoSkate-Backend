@@ -8,16 +8,38 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * Repository pour la gestion des disponibilités des instructeurs.
+ * Gère les créneaux horaires pendant lesquels un instructeur peut recevoir des réservations.
+ *
+ * @author SoSkate Team
+ * @version 1.0
+ */
 @Repository
 public interface AvailabilityRepository extends JpaRepository<AvailabilityEntity, Long> {
 
+    /**
+     * Trouve les disponibilités d'un instructeur avec un statut donné.
+     *
+     * @param instructorId l'ID de l'instructeur
+     * @param status le statut recherché
+     * @return liste des disponibilités correspondantes
+     */
     List<AvailabilityEntity> findByInstructorIdAndStatus(
             Long instructorId,
             AvailabilityStatus status
     );
 
+    /**
+     * Trouve les disponibilités actives d'un instructeur pour une date donnée.
+     *
+     * @param instructorId l'ID de l'instructeur
+     * @param date la date recherchée
+     * @return liste des disponibilités triées par heure de début
+     */
     @Query("""
         SELECT a FROM AvailabilityEntity a
         WHERE a.instructor.id = :instructorId
@@ -31,12 +53,12 @@ public interface AvailabilityRepository extends JpaRepository<AvailabilityEntity
     );
 
     /**
-     * Récupère les disponibilités d'un instructeur pour une plage de dates
+     * Récupère les disponibilités d'un instructeur pour une plage de dates.
      *
-     * @param instructorId ID de l'instructeur
-     * @param startDate Date de début (incluse)
-     * @param endDate Date de fin (incluse) - peut être égale à startDate pour une date unique
-     * @return Liste des disponibilités triées par date et heure de début
+     * @param instructorId l'ID de l'instructeur
+     * @param startDate date de début (incluse)
+     * @param endDate date de fin (incluse)
+     * @return liste des disponibilités triées par date et heure de début
      */
     @Query("""
         SELECT a FROM AvailabilityEntity a
@@ -52,6 +74,16 @@ public interface AvailabilityRepository extends JpaRepository<AvailabilityEntity
             @Param("endDate") LocalDate endDate
     );
 
+    /**
+     * Vérifie si une disponibilité chevauche une plage horaire existante.
+     * Utilisé pour éviter les doublons lors de la création de disponibilités.
+     *
+     * @param instructorId l'ID de l'instructeur
+     * @param date la date à vérifier
+     * @param startTime l'heure de début du créneau
+     * @param endTime l'heure de fin du créneau
+     * @return true si un chevauchement existe
+     */
     @Query("""
         SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END
         FROM AvailabilityEntity a
@@ -64,7 +96,7 @@ public interface AvailabilityRepository extends JpaRepository<AvailabilityEntity
     boolean existsOverlapping(
             @Param("instructorId") Long instructorId,
             @Param("date") LocalDate date,
-            @Param("startTime") java.time.LocalTime startTime,
-            @Param("endTime") java.time.LocalTime endTime
+            @Param("startTime") LocalTime startTime,
+            @Param("endTime") LocalTime endTime
     );
 }

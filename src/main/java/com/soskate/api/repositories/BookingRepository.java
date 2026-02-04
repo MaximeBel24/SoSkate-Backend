@@ -1,7 +1,6 @@
 package com.soskate.api.repositories;
 
 import com.soskate.api.entities.BookingEntity;
-import com.soskate.api.enums.BookingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,11 +10,32 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Repository pour la gestion des réservations (bookings).
+ * Fournit les requêtes pour le planning des instructeurs et les réservations clients.
+ *
+ * @author SoSkate Team
+ * @version 1.0
+ */
 @Repository
 public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
 
+    /**
+     * Trouve toutes les réservations d'un instructeur.
+     *
+     * @param instructorId l'ID de l'instructeur
+     * @return liste de toutes les réservations
+     */
     List<BookingEntity> findByInstructorId(Long instructorId);
 
+    /**
+     * Trouve les réservations non annulées d'un instructeur pour une date donnée.
+     * Utilisé pour la validation des conflits lors de la création de booking.
+     *
+     * @param instructorId l'ID de l'instructeur
+     * @param date la date recherchée
+     * @return liste des réservations non annulées
+     */
     @Query("SELECT b FROM BookingEntity b WHERE b.instructor.id = :instructorId " +
             "AND DATE(b.startTime) = :date " +
             "AND b.status != 'CANCELLED'")
@@ -24,6 +44,14 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
             @Param("date") LocalDate date
     );
 
+    /**
+     * Trouve les réservations à venir d'un instructeur.
+     * Inclut les statuts OPEN, FULL et CONFIRMED.
+     *
+     * @param instructorId l'ID de l'instructeur
+     * @param now la date/heure actuelle
+     * @return liste des réservations futures triées par date
+     */
     @Query("""
         SELECT b FROM BookingEntity b
         WHERE b.instructor.id = :instructorId
@@ -36,6 +64,13 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
             @Param("now") LocalDateTime now
     );
 
+    /**
+     * Trouve les réservations passées et complétées d'un instructeur.
+     *
+     * @param instructorId l'ID de l'instructeur
+     * @param now la date/heure actuelle
+     * @return liste des réservations passées triées par date
+     */
     @Query("""
         SELECT b FROM BookingEntity b
         WHERE b.instructor.id = :instructorId
@@ -52,10 +87,10 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
      * Récupère les bookings non annulés d'un instructeur pour une période donnée.
      * Utilisé pour calculer les créneaux réellement disponibles (planning et réservation).
      *
-     * @param instructorId ID de l'instructeur
-     * @param start Début de la période (inclus)
-     * @param end Fin de la période (exclus) - pour une date unique, utiliser date.atStartOfDay() et date.plusDays(1).atStartOfDay()
-     * @return Liste des bookings triés par heure de début
+     * @param instructorId l'ID de l'instructeur
+     * @param start début de la période (inclus)
+     * @param end fin de la période (exclus)
+     * @return liste des bookings triés par heure de début
      */
     @Query("""
         SELECT b FROM BookingEntity b
@@ -72,7 +107,11 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     );
 
     /**
-     * Récupère les bookings qui sont passés mais qui n'ont pas le status COMPLETED
+     * Récupère les bookings passés qui n'ont pas encore été marqués comme COMPLETED.
+     * Utilisé par les jobs de mise à jour automatique des statuts.
+     *
+     * @param now la date/heure actuelle
+     * @return liste des bookings à mettre à jour
      */
     @Query("""
         SELECT b FROM BookingEntity b
