@@ -6,6 +6,7 @@ import com.soskate.api.entities.CustomerEntity;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 import com.soskate.api.mappers.CustomerMapper;
 import com.soskate.api.repositories.CustomerRepository;
+import com.soskate.api.services.common.EmailValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class CustomerAuthServiceImpl implements CustomerAuthService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final EmailValidationService emailValidationService;
 
     /**
      * Inscrit un nouveau customer.
@@ -39,10 +41,7 @@ public class CustomerAuthServiceImpl implements CustomerAuthService {
     public CustomerResponse registerCustomer(CustomerRegisterRequest customerToRegister) {
         log.info("Tentative d'inscription pour l'email : {}", customerToRegister.email());
 
-        if (customerRepository.existsByEmail(customerToRegister.email())) {
-            log.warn("Tentative d'inscription avec un email déjà existant : {}", customerToRegister.email());
-            throw new EmailAlreadyExistsException(customerToRegister.email(), true);
-        }
+        emailValidationService.validateEmailUnique(customerToRegister.email());
 
         // TODO: Implémenter le hashage avec BCrypt en production
 //        String hashedPassword = passwordEncoder.encode(customerToRegister.password());

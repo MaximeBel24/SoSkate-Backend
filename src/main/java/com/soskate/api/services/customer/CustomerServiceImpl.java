@@ -78,6 +78,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CustomerResponse getCustomerById(Long customerId) {
         log.debug("Récupération du profil pour le customer ID: {}", customerId);
 
