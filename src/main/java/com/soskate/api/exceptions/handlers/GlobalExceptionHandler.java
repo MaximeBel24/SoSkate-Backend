@@ -1,6 +1,7 @@
 package com.soskate.api.exceptions.handlers;
 
 import com.soskate.api.exceptions.common.ErrorResponse;
+import com.soskate.api.exceptions.common.PlatformSettingsNotFoundException;
 import com.soskate.api.exceptions.common.ValidationErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -25,6 +26,15 @@ import java.util.Map;
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(PlatformSettingsNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePlatformSettingsNotFound(PlatformSettingsNotFoundException ex) {
+        log.warn("Platform settings not found: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "PLATFORM_SETTINGS_NOT_FOUND", ex.getMessage()));
+    }
 
     /**
      * Handles Bean Validation errors (@NotBlank, @Email, @Pattern, etc.).
