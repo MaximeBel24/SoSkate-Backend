@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ import java.util.List;
  * @author SoSkate Team
  * @version 1.0
  */
+@Tag(name = "Services", description = "Gestion des services et cours de skateboard")
 @RestController
 @RequestMapping("/services")
 @RequiredArgsConstructor
@@ -27,12 +30,10 @@ public class ServiceController {
 
     private final ServiceService serviceService;
 
-    /**
-     * Crée un nouveau service.
-     *
-     * @param requestDTO les données du service
-     * @return le service créé avec statut 201 CREATED
-     */
+    @Operation(
+            summary = "Créer un service",
+            description = "Crée un nouveau service/cours"
+    )
     @PostMapping
     public ResponseEntity<ServiceResponse> createService(
             @Valid @RequestBody ServiceRequest requestDTO) {
@@ -44,11 +45,10 @@ public class ServiceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service);
     }
 
-    /**
-     * Récupère tous les services.
-     *
-     * @return liste de tous les services
-     */
+    @Operation(
+            summary = "Lister tous les services",
+            description = "Récupère tous les services"
+    )
     @GetMapping
     public ResponseEntity<List<ServiceResponse>> getAllServices() {
         log.info("Requête GET /api/services - Récupération de tous les services");
@@ -60,11 +60,10 @@ public class ServiceController {
         return ResponseEntity.ok(services);
     }
 
-    /**
-     * Récupère uniquement les services actifs.
-     *
-     * @return liste des services actifs
-     */
+    @Operation(
+            summary = "Lister les services actifs",
+            description = "Récupère uniquement les services actifs"
+    )
     @GetMapping("/active")
     public ResponseEntity<List<ServiceResponse>> getActiveServices() {
         log.info("Requête GET /api/services/active - Récupération des services actifs");
@@ -74,12 +73,10 @@ public class ServiceController {
         return ResponseEntity.ok(services);
     }
 
-    /**
-     * Récupère un service par son ID.
-     *
-     * @param id l'identifiant du service
-     * @return le service trouvé
-     */
+    @Operation(
+            summary = "Récupérer un service",
+            description = "Récupère un service par son ID"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<ServiceResponse> getServiceById(@PathVariable Long id) {
         log.info("Requête GET /api/services/{} - Récupération du service", id);
@@ -89,12 +86,10 @@ public class ServiceController {
         return ResponseEntity.ok(service);
     }
 
-    /**
-     * Récupère les services par type.
-     *
-     * @param type le type de service (LESSON, RENTAL)
-     * @return liste des services de ce type
-     */
+    @Operation(
+            summary = "Filtrer par type",
+            description = "Récupère les services par type (LESSON, RENTAL)"
+    )
     @GetMapping("/type/{type}")
     public ResponseEntity<List<ServiceResponse>> getServicesByType(@PathVariable ServiceType type) {
         log.info("Requête GET /api/services/type/{} - Récupération par type", type);
@@ -104,13 +99,10 @@ public class ServiceController {
         return ResponseEntity.ok(services);
     }
 
-    /**
-     * Met à jour un service existant.
-     *
-     * @param id l'identifiant du service
-     * @param requestDTO les nouvelles données
-     * @return le service mis à jour
-     */
+    @Operation(
+            summary = "Modifier un service",
+            description = "Met à jour un service existant"
+    )
     @PutMapping("/{id}")
     public ResponseEntity<ServiceResponse> updateService(
             @PathVariable Long id,
@@ -123,12 +115,10 @@ public class ServiceController {
         return ResponseEntity.ok(service);
     }
 
-    /**
-     * Désactive un service (soft delete).
-     *
-     * @param id l'identifiant du service
-     * @return statut 204 NO CONTENT
-     */
+    @Operation(
+            summary = "Désactiver un service",
+            description = "Désactive un service (soft delete)"
+    )
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivateService(@PathVariable Long id) {
         log.info("Requête PATCH /api/services/{}/deactivate - Désactivation", id);
@@ -138,12 +128,10 @@ public class ServiceController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Supprime définitivement un service.
-     *
-     * @param id l'identifiant du service
-     * @return statut 204 NO CONTENT
-     */
+    @Operation(
+            summary = "Supprimer un service",
+            description = "Supprime définitivement un service"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteService(@PathVariable Long id) {
         log.info("Requête DELETE /api/services/{} - Suppression", id);

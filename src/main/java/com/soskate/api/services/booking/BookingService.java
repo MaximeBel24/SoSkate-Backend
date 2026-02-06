@@ -13,11 +13,10 @@ public interface BookingService {
     /**
      * Creates a new booking.
      *
-     * @param customerId The customer creating the booking
      * @param request    The booking details
      * @return The created booking
      */
-    BookingResponse createBooking(Long customerId, BookingCreateRequest request);
+    BookingResponse createBooking(BookingCreateRequest request);
 
     /**
      * Gets a booking by ID.

@@ -10,16 +10,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
+@Tag(name = "Instructor Spots", description = "Association instructeurs-spots")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/instructors/{instructorId}")
 public class InstructorSpotController {
 
     private final InstructorSpotService instructorSpotService;
 
-    @PostMapping("/instructors/{instructorId}/spots")
+    @Operation(
+            summary = "Ajouter un spot",
+            description = "Associe un spot à un instructeur"
+    )
+    @PostMapping("/spots")
     public ResponseEntity<InstructorSpotResponse> addSpotToInstructor(
             @PathVariable Long instructorId,
             @Valid @RequestBody InstructorSpotRequest request
@@ -28,7 +36,11 @@ public class InstructorSpotController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/instructors/{instructorId}/spots")
+    @Operation(
+            summary = "Lister les spots",
+            description = "Récupère les spots associés à un instructeur"
+    )
+    @GetMapping("/spots")
     public ResponseEntity<List<InstructorSpotResponse>> getSpotsByInstructor(
             @PathVariable Long instructorId
     ) {
@@ -36,13 +48,11 @@ public class InstructorSpotController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/spots/{spotId}/instructors")
-    public ResponseEntity<List<InstructorSummary>> getInstructorsBySpot(@PathVariable Long spotId) {
-        List<InstructorSummary> instructors = instructorSpotService.getInstructorsBySpot(spotId);
-        return ResponseEntity.ok(instructors);
-    }
-
-    @DeleteMapping("/instructors/{instructorId}/spots/{spotId}")
+    @Operation(
+            summary = "Retirer un spot",
+            description = "Supprime l'association entre un instructeur et un spot"
+    )
+    @DeleteMapping("/spots/{spotId}")
     public ResponseEntity<Void> removeSpotFromInstructor(
             @PathVariable Long instructorId,
             @PathVariable Long spotId

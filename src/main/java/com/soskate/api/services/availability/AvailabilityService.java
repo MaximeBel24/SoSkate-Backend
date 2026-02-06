@@ -29,11 +29,6 @@ public interface AvailabilityService {
     List<AvailabilityResponse> getAvailabilityByInstructorAndDateRange(Long instructorId, LocalDate startDate, LocalDate endDate);
 
     /**
-     * Gets an availability by ID.
-     */
-    AvailabilityResponse getAvailabilityById(Long id);
-
-    /**
      * Updates an availability.
      */
     AvailabilityResponse updateAvailability(Long instructorId, Long id, AvailabilityUpdateRequest request);

@@ -89,12 +89,6 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         return availabilityMapper.toResponseList(availabilities);
     }
 
-    public AvailabilityResponse getAvailabilityById(Long id) {
-        AvailabilityEntity availability = availabilityRepository.findById(id)
-                .orElseThrow(() -> new AvailabilityNotFoundException("Disponibilité non trouvée"));
-        return availabilityMapper.toResponse(availability);
-    }
-
     @Transactional
     public AvailabilityResponse updateAvailability(Long instructorId, Long id, AvailabilityUpdateRequest request) {
         AvailabilityEntity availability = availabilityRepository.findById(id)

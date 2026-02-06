@@ -24,9 +24,9 @@ public class BookingContextLoader {
     private final ServiceRepository serviceRepository;
     private final PlatformSettingsRepository settingsRepository;
 
-    public BookingContext loadForCreation(Long customerId, BookingCreateRequest request) {
-        CustomerEntity customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+    public BookingContext loadForCreation(BookingCreateRequest request) {
+        CustomerEntity customer = customerRepository.findById(request.customerId())
+                .orElseThrow(() -> new CustomerNotFoundException(request.customerId()));
 
         InstructorEntity instructor = instructorRepository.findById(request.instructorId())
                 .orElseThrow(() -> new InstructorNotFoundException(request.instructorId()));

@@ -6,6 +6,10 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public record BookingCreateRequest(
+
+        @NotNull(message = "Le client est obligatoire")
+        Long customerId,
+
         @NotNull(message = "L'instructeur est obligatoire")
         Long instructorId,
 

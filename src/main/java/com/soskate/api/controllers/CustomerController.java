@@ -31,12 +31,10 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    /**
-     * Récupère le profil d'un customer.
-     *
-     * @param customerId l'ID du customer
-     * @return le profil du customer
-     */
+    @Operation(
+            summary = "Récupérer le profil",
+            description = "Récupère le profil d'un client"
+    )
     @GetMapping("/{customerId}")
     public ResponseEntity<CustomerResponse> getCustomerById(
             @Parameter(description = "ID du customer")
@@ -49,14 +47,10 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Met à jour le profil d'un customer.
-     * Seuls les champs fournis sont mis à jour (mise à jour partielle).
-     *
-     * @param customerId l'ID du customer à mettre à jour
-     * @param request les données à mettre à jour
-     * @return le customer mis à jour
-     */
+    @Operation(
+            summary = "Mettre à jour le profil",
+            description = "Met à jour le profil d'un client (partiel)"
+    )
     @PutMapping("/{customerId}")
     public ResponseEntity<CustomerResponse> updateCustomer(
             @Parameter(description = "ID du customer")

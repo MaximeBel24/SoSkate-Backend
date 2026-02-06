@@ -1,7 +1,9 @@
 package com.soskate.api.controllers;
 
+import com.soskate.api.dto.booking.BookingResponse;
 import com.soskate.api.dto.instructor.*;
 import com.soskate.api.enums.SkateSpecialty;
+import com.soskate.api.services.booking.BookingService;
 import com.soskate.api.services.instructor.InstructorActivationService;
 import com.soskate.api.services.instructor.InstructorQueryService;
 import jakarta.validation.Valid;
@@ -9,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +23,7 @@ import java.util.Map;
  * - Public listing of active instructors (for customers)
  * - Account activation (for invited instructors)
  */
+@Tag(name = "Instructors", description = "Consultation et activation des instructeurs")
 @RestController
 @RequestMapping("/instructors")
 @RequiredArgsConstructor
@@ -27,45 +32,44 @@ public class InstructorController {
 
     private final InstructorQueryService queryService;
     private final InstructorActivationService activationService;
+    private final BookingService bookingService;
 
     // ==================== Public Listing ====================
 
-    /**
-     * Gets all active instructors.
-     * Used by customers to browse available instructors.
-     */
+    @Operation(
+            summary = "Lister les instructeurs actifs",
+            description = "Récupère tous les instructeurs actifs pour les clients"
+    )
     @GetMapping
     public ResponseEntity<List<InstructorSummary>> getActiveInstructors() {
         log.info("GET /api/instructors - Fetching active instructors");
         return ResponseEntity.ok(queryService.getActiveInstructors());
     }
 
-    /**
-     * Gets an active instructor by ID.
-     * Returns full profile for public viewing.
-     * GET /api/instructors/{id}
-     */
+    @Operation(
+            summary = "Récupérer un instructeur",
+            description = "Récupère le profil public d'un instructeur"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<InstructorResponse> getInstructorById(@PathVariable Long id) {
         log.info("GET /api/instructors/{} - Fetching instructor profile", id);
         return ResponseEntity.ok(queryService.getInstructorById(id));
     }
 
-    /**
-     * Gets instructors filtered by specialty.
-     * GET /api/instructors/specialty/{specialty}
-     */
+    @Operation(
+            summary = "Filtrer par spécialité",
+            description = "Récupère les instructeurs par spécialité de skate"
+    )
     @GetMapping("/specialty/{specialty}")
     public ResponseEntity<List<InstructorSummary>> getInstructorsBySpecialty(@PathVariable SkateSpecialty specialty) {
         log.info("GET /api/instructors/specialty/{} - Fetching instructors by specialty", specialty);
         return ResponseEntity.ok(queryService.getInstructorsBySpecialty(specialty));
     }
 
-    /**
-     * Validates an activation token.
-     * Used by frontend to check if a token is valid before showing the form.
-     * GET /api/instructors/activate/validate?token=...
-     */
+    @Operation(
+            summary = "Valider un token d'activation",
+            description = "Vérifie si un token d'activation est valide"
+    )
     @GetMapping("/activate/validate")
     public ResponseEntity<Map<String, Boolean>> validateActivationToken(@RequestParam("token") String token) {
         log.info("GET /api/instructors/activate/validate - Validating token");
@@ -73,27 +77,43 @@ public class InstructorController {
         return ResponseEntity.ok(Map.of("valid", isValid));
     }
 
-    /**
-     * Activates an instructor account.
-     * Called when the instructor submits the activation form with their new password.
-     * POST /api/instructors/activate
-     */
+    @Operation(
+            summary = "Activer un compte instructeur",
+            description = "Active le compte avec le mot de passe choisi"
+    )
     @PostMapping("/activate")
     public ResponseEntity<InstructorResponse> activateAccount(@Valid @RequestBody InstructorActivateRequest request) {
         log.info("POST /api/instructors/activate - Activating account");
         return ResponseEntity.ok(activationService.activateAccount(request));
     }
 
-    /**
-     * Updates the authenticated instructor's profile.
-     * PUT /api/instructors/{id}/profile
-     * TODO: Replace {id} with authentication context when Spring Security is implemented
-     */
+    @Operation(
+            summary = "Mettre à jour le profil",
+            description = "Met à jour le profil de l'instructeur"
+    )
     @PutMapping("/{id}")
     public ResponseEntity<InstructorResponse> updateInstructor(
             @PathVariable Long id,
             @Valid @RequestBody InstructorUpdateRequest request) {
         log.info("PUT /api/instructors/{}/profile - Updating instructor profile", id);
         return ResponseEntity.ok(queryService.updateInstructor(id, request));
+    }
+
+    @Operation(
+            summary = "Récupérer les réservations",
+            description = "Récupère les réservations d'un instructeur (filtre: upcoming, passed)"
+    )
+    @GetMapping("/{instructorId}/bookings")
+    public ResponseEntity<List<BookingResponse>> getBookingsByInstructor(
+            @PathVariable Long instructorId,
+            @RequestParam(required = false) String filter
+    ) {
+        List<BookingResponse> response = switch(filter) {
+            case "upcoming" -> bookingService.getUpcomingBookingsByInstructor(instructorId);
+            case "passed" -> bookingService.getPassedBookingsByInstructor(instructorId);
+            case null, default -> bookingService.getBookingsByInstructor(instructorId);
+        };
+
+        return ResponseEntity.ok(response);
     }
 }

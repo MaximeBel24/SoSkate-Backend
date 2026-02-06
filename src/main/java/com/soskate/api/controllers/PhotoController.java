@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * REST Controller for photo management.
  * Handles photo upload, retrieval, update, and deletion.
  */
+@Tag(name = "Photos", description = "Upload et gestion des photos")
 @RestController
 @RequestMapping("/photos")
 @RequiredArgsConstructor
@@ -35,19 +38,10 @@ public class PhotoController {
 
     // ========== UPLOAD PHOTO ==========
 
-    /**
-     * Upload a new photo.
-     *
-     * POST /api/photos
-     * Content-Type: multipart/form-data
-     *
-     * @param file File to upload
-     * @param entityType Entity type (SPOT, CUSTOMER, INSTRUCTOR, EVENT)
-     * @param entityId Entity ID
-     * @param photoType Photo type (AVATAR, COVER, GALLERY, TRICK)
-     * @param displayOrder Display order (optional, default 0)
-     * @return Uploaded photo details
-     */
+    @Operation(
+            summary = "Uploader une photo",
+            description = "Upload une nouvelle photo (multipart/form-data)"
+    )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PhotoResponse> uploadPhoto(
             @RequestParam("file") MultipartFile file,
@@ -74,16 +68,10 @@ public class PhotoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // ========== GET PHOTO BY ID ==========
-
-    /**
-     * Get a photo by ID.
-     *
-     * GET /api/photos/{id}
-     *
-     * @param id Photo ID
-     * @return Photo details
-     */
+    @Operation(
+            summary = "Récupérer une photo",
+            description = "Récupère une photo par son ID"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<PhotoResponse> getPhotoById(@PathVariable Long id) {
         log.info("GET /api/photos/{}", id);
@@ -92,16 +80,10 @@ public class PhotoController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Get all photos for a specific entity.
-     *
-     * GET /api/photos?entityType=SPOT&entityId=123
-     *
-     * @param entityType Entity type
-     * @param entityId Entity ID
-     * @param photoType Photo type (optional filter)
-     * @return List of photos
-     */
+    @Operation(
+            summary = "Photos d'une entité",
+            description = "Récupère les photos d'une entité (spot, customer, instructor, event)"
+    )
     @GetMapping
     public ResponseEntity<List<PhotoResponse>> getPhotosByEntity(
             @RequestParam PhotoEntityType entityType,
@@ -123,10 +105,10 @@ public class PhotoController {
 
     // ========== CONVENIENCE ENDPOINTS FOR SPECIFIC ENTITIES ==========
 
-    /**
-     * Get all photos for a Spot.
-     * GET /api/photos/spots/{spotId}
-     */
+    @Operation(
+            summary = "Photos d'un spot",
+            description = "Récupère toutes les photos d'un spot"
+    )
     @GetMapping("/spots/{spotId}")
     public ResponseEntity<List<PhotoResponse>> getSpotPhotos(@PathVariable Long spotId) {
         log.info("GET /api/photos/spots/{}", spotId);
@@ -135,10 +117,10 @@ public class PhotoController {
         return ResponseEntity.ok(photos);
     }
 
-    /**
-     * Get avatar for a Customer.
-     * GET /api/photos/customers/{customerId}/avatar
-     */
+    @Operation(
+            summary = "Avatar d'un client",
+            description = "Récupère l'avatar d'un client"
+    )
     @GetMapping("/customers/{customerId}/avatar")
     public ResponseEntity<PhotoResponse> getCustomerAvatar(@PathVariable Long customerId) {
         log.info("GET /api/photos/customers/{}/avatar", customerId);
@@ -152,10 +134,10 @@ public class PhotoController {
         return ResponseEntity.ok(avatar);
     }
 
-    /**
-     * Get avatar for an Instructor.
-     * GET /api/photos/instructors/{instructorId}/avatar
-     */
+    @Operation(
+            summary = "Avatar d'un instructeur",
+            description = "Récupère l'avatar d'un instructeur"
+    )
     @GetMapping("/instructors/{instructorId}/avatar")
     public ResponseEntity<PhotoResponse> getInstructorAvatar(@PathVariable Long instructorId) {
         log.info("GET /api/photos/instructors/{}/avatar", instructorId);
@@ -169,10 +151,10 @@ public class PhotoController {
         return ResponseEntity.ok(avatar);
     }
 
-    /**
-     * Get trick/course photos for an Instructor.
-     * GET /api/photos/instructors/{instructorId}/tricks
-     */
+    @Operation(
+            summary = "Photos de tricks",
+            description = "Récupère les photos de tricks d'un instructeur"
+    )
     @GetMapping("/instructors/{instructorId}/tricks")
     public ResponseEntity<List<PhotoResponse>> getInstructorTricks(@PathVariable Long instructorId) {
         log.info("GET /api/photos/instructors/{}/tricks", instructorId);
@@ -184,10 +166,10 @@ public class PhotoController {
         return ResponseEntity.ok(tricks);
     }
 
-    /**
-     * Get cover photo for an Event.
-     * GET /api/photos/events/{eventId}/cover
-     */
+    @Operation(
+            summary = "Cover d'un event",
+            description = "Récupère la photo de couverture d'un événement"
+    )
     @GetMapping("/events/{eventId}/cover")
     public ResponseEntity<PhotoResponse> getEventCover(@PathVariable Long eventId) {
         log.info("GET /api/photos/events/{}/cover", eventId);
@@ -201,10 +183,10 @@ public class PhotoController {
         return ResponseEntity.ok(cover);
     }
 
-    /**
-     * Get gallery photos for an Event.
-     * GET /api/photos/events/{eventId}/gallery
-     */
+    @Operation(
+            summary = "Galerie d'un event",
+            description = "Récupère les photos de galerie d'un événement"
+    )
     @GetMapping("/events/{eventId}/gallery")
     public ResponseEntity<List<PhotoResponse>> getEventGallery(@PathVariable Long eventId) {
         log.info("GET /api/photos/events/{}/gallery", eventId);
@@ -216,16 +198,10 @@ public class PhotoController {
         return ResponseEntity.ok(gallery);
     }
 
-    // ========== UPDATE PHOTO ==========
-
-    /**
-     * Update photo metadata (display order).
-     * PATCH /api/photos/{id}
-     *
-     * @param id Photo ID
-     * @param request Update request
-     * @return Updated photo details
-     */
+    @Operation(
+            summary = "Modifier une photo",
+            description = "Met à jour les métadonnées d'une photo"
+    )
     @PatchMapping("/{id}")
     public ResponseEntity<PhotoResponse> updatePhoto(
             @PathVariable Long id,
@@ -237,17 +213,10 @@ public class PhotoController {
         return ResponseEntity.ok(response);
     }
 
-    // ========== DELETE PHOTO ==========
-
-    /**
-     * Delete a photo (soft delete).
-     *
-     * DELETE /api/photos/{id}
-     *
-     * @param id Photo ID
-     * @param deletedBy User ID who deletes (optional, from auth context)
-     * @return No content
-     */
+    @Operation(
+            summary = "Supprimer une photo",
+            description = "Supprime une photo (soft delete)"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePhoto(
             @PathVariable Long id,
@@ -261,18 +230,10 @@ public class PhotoController {
         return ResponseEntity.noContent().build();
     }
 
-    // ========== ADMIN ENDPOINTS ==========
-
-    /**
-     * Get all photos with pagination (admin).
-     *
-     * GET /api/photos/all?page=0&size=20&sort=uploadedAt,desc
-     *
-     * @param page Page number (default 0)
-     * @param size Page size (default 20)
-     * @param sort Sort field (default uploadedAt,desc)
-     * @return Paginated photo list
-     */
+    @Operation(
+            summary = "Lister toutes les photos (admin)",
+            description = "Récupère toutes les photos avec pagination"
+    )
     @GetMapping("/all")
     public ResponseEntity<PhotoListResponse> getAllPhotos(
             @RequestParam(defaultValue = "0") int page,
@@ -298,14 +259,10 @@ public class PhotoController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Get photos uploaded by a specific user.
-     *
-     * GET /api/photos/uploader/{userId}
-     *
-     * @param userId User ID
-     * @return List of photos
-     */
+    @Operation(
+            summary = "Photos par uploader",
+            description = "Récupère les photos uploadées par un utilisateur"
+    )
     @GetMapping("/uploader/{userId}")
     public ResponseEntity<List<PhotoResponse>> getPhotosByUploader(@PathVariable Long userId) {
         log.info("GET /api/photos/uploader/{}", userId);
@@ -314,14 +271,10 @@ public class PhotoController {
         return ResponseEntity.ok(photos);
     }
 
-    /**
-     * Cleanup old deleted photos (admin/batch job).
-     *
-     * POST /api/photos/cleanup?daysOld=7
-     *
-     * @param daysOld Number of days since deletion
-     * @return Number of photos cleaned
-     */
+    @Operation(
+            summary = "Nettoyage des photos (admin)",
+            description = "Supprime définitivement les photos soft-deleted"
+    )
     @PostMapping("/cleanup")
     public ResponseEntity<String> cleanupDeletedPhotos(
             @RequestParam(defaultValue = "7") int daysOld

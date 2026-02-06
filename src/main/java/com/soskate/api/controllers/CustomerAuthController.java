@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Contrôleur REST pour l'authentification des customers.
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * @author SoSkate Team
  * @version 1.0
  */
+@Tag(name = "Customer Auth", description = "Inscription et authentification des clients")
 @RestController
 @RequestMapping("/customer/auth")
 @RequiredArgsConstructor
@@ -31,6 +34,10 @@ public class CustomerAuthController {
      * @param customerToRegister les données d'inscription (validées automatiquement)
      * @return le customer créé avec le statut 201 CREATED
      */
+    @Operation(
+            summary = "Inscrire un client",
+            description = "Crée un nouveau compte client"
+    )
     @PostMapping("/register")
     public ResponseEntity<CustomerResponse> register(@Valid @RequestBody CustomerRegisterRequest customerToRegister) {
 
@@ -50,6 +57,10 @@ public class CustomerAuthController {
      * @param email l'email à vérifier
      * @return true si l'email existe déjà
      */
+    @Operation(
+            summary = "Vérifier si un email existe",
+            description = "Vérifie si un email est déjà utilisé par un client"
+    )
     @GetMapping("/email-exists")
     public ResponseEntity<Boolean> emailExists(@RequestParam String email) {
         log.debug("Vérification de l'existence de l'email : {}", email);

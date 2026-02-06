@@ -37,11 +37,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponse createBooking(Long customerId, BookingCreateRequest request) {
-        log.info("Creating booking for customer {} with instructor {}", customerId, request.instructorId());
+    public BookingResponse createBooking(BookingCreateRequest request) {
+        log.info("Creating booking for customer {} with instructor {}", request.customerId(), request.instructorId());
 
         // 1. Load context (all required entities)
-        BookingContext context = contextLoader.loadForCreation(customerId, request);
+        BookingContext context = contextLoader.loadForCreation(request);
 
         // 2. Validate all business rules
         validationService.validateForCreation(context, request);

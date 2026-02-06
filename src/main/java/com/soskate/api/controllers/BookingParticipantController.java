@@ -6,18 +6,26 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
+@Tag(name = "Participations", description = "Gestion des participations aux réservations")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/customers/{customerId}")
 public class BookingParticipantController {
 
     private final BookingParticipantService participantService;
 
     // ==================== Annulation ====================
 
-    @PostMapping("/customers/{customerId}/participations/{participantId}/cancel")
+    @Operation(
+            summary = "Annuler une participation",
+            description = "Annule la participation d'un client à une réservation"
+    )
+    @PostMapping("/participations/{participantId}/cancel")
     public ResponseEntity<ParticipantResponse> cancel(
             @PathVariable Long customerId,
             @PathVariable Long participantId,
@@ -29,10 +37,11 @@ public class BookingParticipantController {
 
     // ==================== Consultation ====================
 
-    /**
-     * Récupère toutes les réservations d'un customer (pour "Mes réservations")
-     */
-    @GetMapping("/customers/{customerId}/my-bookings")
+    @Operation(
+            summary = "Mes réservations",
+            description = "Récupère toutes les réservations d'un client"
+    )
+    @GetMapping("/my-bookings")
     public ResponseEntity<List<MyBookingResponse>> getMyBookings(
             @PathVariable Long customerId
     ) {
@@ -40,10 +49,11 @@ public class BookingParticipantController {
         return ResponseEntity.ok(bookings);
     }
 
-    /**
-     * Modifie les notes d'une réservation
-     */
-    @PatchMapping("/customers/{customerId}/participations/{participationId}/notes")
+    @Operation(
+            summary = "Modifier les notes",
+            description = "Met à jour les notes d'une participation"
+    )
+    @PatchMapping("/participations/{participationId}/notes")
     public ResponseEntity<MyBookingResponse> updateNotes(
             @PathVariable Long customerId,
             @PathVariable Long participationId,

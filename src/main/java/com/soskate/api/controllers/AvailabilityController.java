@@ -13,18 +13,26 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Tag(name = "Availabilities", description = "Gestion des disponibilités des instructeurs")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/instructors/{instructorId}")
 public class AvailabilityController {
 
     private final AvailabilityService availabilityService;
     private final SlotCalculationService slotCalculationService;
 
-    @PostMapping("/instructors/{instructorId}/availabilities")
+    @Operation(
+            summary = "Créer une disponibilité",
+            description = "Ajoute une plage de disponibilité pour un instructeur"
+    )
+    @PostMapping("/availabilities")
     public ResponseEntity<AvailabilityResponse> createAvailability(
             @PathVariable Long instructorId,
             @Valid @RequestBody AvailabilityCreateRequest request
@@ -33,7 +41,11 @@ public class AvailabilityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/instructors/{instructorId}/availabilities")
+    @Operation(
+            summary = "Lister les disponibilités",
+            description = "Récupère les disponibilités d'un instructeur (optionnel: plage de dates)"
+    )
+    @GetMapping("/availabilities")
     public ResponseEntity<List<AvailabilityResponse>> getAvailabilityByInstructor(
             @PathVariable Long instructorId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
@@ -50,13 +62,11 @@ public class AvailabilityController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/availabilities/{id}")
-    public ResponseEntity<AvailabilityResponse> getAvailabilityById(@PathVariable Long id) {
-        AvailabilityResponse response = availabilityService.getAvailabilityById(id);
-        return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("/instructors/{instructorId}/availabilities/{id}")
+    @Operation(
+            summary = "Modifier une disponibilité",
+            description = "Met à jour une disponibilité existante"
+    )
+    @PutMapping("/availabilities/{id}")
     public ResponseEntity<AvailabilityResponse> updateAvailability(
             @PathVariable Long instructorId,
             @PathVariable Long id,
@@ -66,7 +76,11 @@ public class AvailabilityController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/instructors/{instructorId}/availabilities/{id}")
+    @Operation(
+            summary = "Supprimer une disponibilité",
+            description = "Supprime une disponibilité"
+    )
+    @DeleteMapping("/availabilities/{id}")
     public ResponseEntity<Void> deleteAvailability(
             @PathVariable Long instructorId,
             @PathVariable Long id
@@ -75,18 +89,11 @@ public class AvailabilityController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Récupère les plages horaires disponibles d'un instructeur sur une période.
-     * Usage : Vue planning/calendrier pour l'instructeur.
-     * Retourne des créneaux continus (plages horaires) après soustraction des bookings existants.
-     * Ne prend pas en compte les spots ni les buffers de déplacement.
-     *
-     * @param instructorId ID de l'instructeur
-     * @param from Date de début de la période
-     * @param to Date de fin de la période
-     * @return Liste des plages horaires disponibles (availabilityId, date, startTime, endTime)
-     */
-    @GetMapping("/instructors/{instructorId}/available")
+    @Operation(
+            summary = "Récupérer les créneaux libres",
+            description = "Retourne les créneaux disponibles sur une période"
+    )
+    @GetMapping("/available")
     public ResponseEntity<List<AvailableSlotResponse>> getAvailableSlots(
             @PathVariable Long instructorId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
@@ -96,19 +103,11 @@ public class AvailabilityController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Récupère les créneaux réservables pour une date, un spot et une durée donnés.
-     * Usage : Processus de réservation pour le client.
-     * Retourne des créneaux discrets de durée fixe (tous les 30 min) avec leur statut (libre/occupé).
-     * Prend en compte le buffer de déplacement entre spots (temps de trajet).
-     *
-     * @param instructorId ID de l'instructeur
-     * @param spotId ID du spot où se déroulera la session
-     * @param date Date souhaitée pour la réservation
-     * @param durationMinutes Durée souhaitée de la session en minutes
-     * @return Liste des créneaux avec statut libre/occupé (startTime, endTime, isFree)
-     */
-    @GetMapping("/instructors/{instructorId}/bookable")
+    @Operation(
+            summary = "Récupérer les créneaux réservables",
+            description = "Calcule les créneaux réservables pour un spot et une durée donnés"
+    )
+    @GetMapping("/bookable")
     public ResponseEntity<AvailableSlotsResponse> getBookableSlots(
             @PathVariable Long instructorId,
             @RequestParam Long spotId,
