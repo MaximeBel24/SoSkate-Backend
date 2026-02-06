@@ -7,6 +7,7 @@ import com.soskate.api.dto.instructor.InstructorSummary;
 import com.soskate.api.services.instructor.InstructorSpotService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/instructors/{instructorId}")
+@Slf4j
 public class InstructorSpotController {
 
     private final InstructorSpotService instructorSpotService;
@@ -32,6 +34,7 @@ public class InstructorSpotController {
             @PathVariable Long instructorId,
             @Valid @RequestBody InstructorSpotRequest request
     ) {
+        log.info("POST /api/instructors/{}/spots - Association d'un spot", instructorId);
         InstructorSpotResponse response = instructorSpotService.addSpotToInstructor(instructorId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -44,6 +47,7 @@ public class InstructorSpotController {
     public ResponseEntity<List<InstructorSpotResponse>> getSpotsByInstructor(
             @PathVariable Long instructorId
     ) {
+        log.info("GET /api/instructors/{}/spots - Récupération des spots", instructorId);
         List<InstructorSpotResponse> response = instructorSpotService.getSpotsByInstructor(instructorId);
         return ResponseEntity.ok(response);
     }
@@ -57,6 +61,7 @@ public class InstructorSpotController {
             @PathVariable Long instructorId,
             @PathVariable Long spotId
     ) {
+        log.info("DELETE /api/instructors/{}/spots/{} - Suppression de l'association", instructorId, spotId);
         instructorSpotService.removeSpotFromInstructor(instructorId, spotId);
         return ResponseEntity.noContent().build();
     }

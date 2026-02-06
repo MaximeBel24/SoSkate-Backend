@@ -19,6 +19,7 @@ import com.soskate.api.repositories.AvailabilityRepository;
 import com.soskate.api.repositories.BookingRepository;
 import com.soskate.api.repositories.InstructorRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AvailabilityServiceImpl implements AvailabilityService {
 
     private final AvailabilityRepository availabilityRepository;
@@ -43,6 +45,8 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Transactional
     public AvailabilityResponse createAvailability(Long instructorId, AvailabilityCreateRequest request) {
+        log.info("Création d'une disponibilité pour l'instructeur {} : {} de {} à {}",
+                instructorId, request.date(), request.startTime(), request.endTime());
         InstructorEntity instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new InstructorNotFoundException("Instructeur non trouvé"));
 
@@ -59,6 +63,8 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         );
 
         if (hasOverlap) {
+            log.warn("Chevauchement détecté pour l'instructeur {} le {} de {} à {}",
+                    instructorId, request.date(), request.startTime(), request.endTime());
             throw new AvailabilityOverlapException();
         }
 
@@ -71,10 +77,12 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                 .build();
 
         AvailabilityEntity saved = availabilityRepository.save(availability);
+        log.info("Disponibilité créée avec succès : ID {}", saved.getId());
         return availabilityMapper.toResponse(saved);
     }
 
     public List<AvailabilityResponse> getAvailabilityByInstructor(Long instructorId) {
+        log.debug("Récupération des disponibilités pour l'instructeur {}", instructorId);
         List<AvailabilityEntity> availabilities = availabilityRepository
                 .findByInstructorIdAndStatus(instructorId, AvailabilityStatus.AVAILABLE);
         return availabilityMapper.toResponseList(availabilities);
@@ -85,12 +93,14 @@ public class AvailabilityServiceImpl implements AvailabilityService {
             LocalDate startDate,
             LocalDate endDate
     ) {
+        log.debug("Récupération des disponibilités pour l'instructeur {} du {} au {}", instructorId, startDate, endDate);
         List<AvailabilityEntity> availabilities = availabilityRepository.findAvailableByInstructorAndDateRange(instructorId, startDate, endDate);
         return availabilityMapper.toResponseList(availabilities);
     }
 
     @Transactional
     public AvailabilityResponse updateAvailability(Long instructorId, Long id, AvailabilityUpdateRequest request) {
+        log.info("Mise à jour de la disponibilité {} pour l'instructeur {}", id, instructorId);
         AvailabilityEntity availability = availabilityRepository.findById(id)
                 .orElseThrow(() -> new AvailabilityNotFoundException("Disponibilité non trouvée"));
 
@@ -114,6 +124,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Transactional
     public void deleteAvailability(Long instructorId, Long id) {
+        log.info("Suppression de la disponibilité {} pour l'instructeur {}", id, instructorId);
         AvailabilityEntity availability = availabilityRepository.findById(id)
                 .orElseThrow(() -> new AvailabilityNotFoundException("Disponibilité non trouvée"));
 
@@ -131,6 +142,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
             LocalDate startDate,
             LocalDate endDate
     ) {
+        log.debug("Calcul des créneaux libres pour l'instructeur {} du {} au {}", instructorId, startDate, endDate);
         // 1. Récupérer les disponibilités
         List<AvailabilityEntity> availabilities = availabilityRepository.findAvailableByInstructorAndDateRange(instructorId, startDate, endDate);
 

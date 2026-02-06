@@ -11,6 +11,7 @@ import com.soskate.api.repositories.BookingRepository;
 import com.soskate.api.repositories.InstructorSpotRepository;
 import com.soskate.api.services.availability.BufferCalculationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import java.util.Set;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class BookingValidationService {
 
     private static final Set<Integer> VALID_DURATIONS = Set.of(60, 90, 120, 180, 240);
@@ -35,6 +37,8 @@ public class BookingValidationService {
     private final BufferCalculationService bufferCalculationService;
 
     public void validateForCreation(BookingContext context, BookingCreateRequest request) {
+        log.debug("Validation de la réservation : instructeur={}, spot={}, début={}",
+                context.instructor().getId(), context.spot().getId(), request.startTime());
         validateDuration(request.durationMinutes());
         validateInstructorActive(context);
         validateInstructorAtSpot(context);
@@ -46,6 +50,7 @@ public class BookingValidationService {
 
     public void validateDuration(Integer durationMinutes) {
         if (durationMinutes == null || !VALID_DURATIONS.contains(durationMinutes)) {
+            log.warn("Durée invalide : {}", durationMinutes);
             throw new BookingException(
                     "Durée invalide. Valeurs autorisées : 60, 90, 120, 180, 240 minutes"
             );
@@ -57,6 +62,7 @@ public class BookingValidationService {
      */
     private void validateInstructorActive(BookingContext context) {
         if (context.instructor().getStatus() != InstructorStatus.ACTIVE) {
+            log.warn("Instructeur {} non actif (statut={})", context.instructor().getId(), context.instructor().getStatus());
             throw new BookingException("L'instructeur n'est pas disponible pour des réservations");
         }
     }
@@ -71,6 +77,7 @@ public class BookingValidationService {
         );
 
         if (!teachesAtSpot) {
+            log.warn("L'instructeur {} n'enseigne pas au spot {}", context.instructor().getId(), context.spot().getId());
             throw new InstructorNotAtSpotException();
         }
     }
@@ -83,6 +90,7 @@ public class BookingValidationService {
         LocalDateTime minBookingTime = LocalDateTime.now().plusHours(minHoursInAdvance);
 
         if (request.startTime().isBefore(minBookingTime)) {
+            log.warn("Réservation trop proche : demandé={}, minimum={}", request.startTime(), minBookingTime);
             throw new BookingTooSoonException(minHoursInAdvance);
         }
     }
@@ -102,6 +110,7 @@ public class BookingValidationService {
                 .anyMatch(a -> !startTime.isBefore(a.getStartTime()) && !endTime.isAfter(a.getEndTime()));
 
         if (!isWithinAvailability) {
+            log.warn("Instructeur {} non disponible le {} de {} à {}", context.instructor().getId(), date, startTime, endTime);
             throw new InstructorNotAvailableException();
         }
     }
@@ -131,6 +140,7 @@ public class BookingValidationService {
             boolean overlaps = startTime.isBefore(blockedEnd) && endTime.isAfter(blockedStart);
 
             if (overlaps) {
+                log.warn("Conflit avec la réservation existante {} (buffer={}min)", existing.getId(), buffer);
                 throw new SlotNotAvailableException();
             }
         }
@@ -141,6 +151,8 @@ public class BookingValidationService {
      */
     private void validateParticipantCount(BookingContext context, BookingCreateRequest request) {
         if (request.numberOfParticipants() > context.service().getMaxParticipants()) {
+            log.warn("Nombre de participants ({}) dépasse la capacité ({})",
+                    request.numberOfParticipants(), context.service().getMaxParticipants());
             throw new BookingException("Le nombre de participants dépasse la capacité du service");
         }
     }

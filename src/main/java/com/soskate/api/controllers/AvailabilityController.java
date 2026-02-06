@@ -9,6 +9,7 @@ import com.soskate.api.services.availability.SlotCalculationService;
 import com.soskate.api.services.availability.AvailabilityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/instructors/{instructorId}")
+@Slf4j
 public class AvailabilityController {
 
     private final AvailabilityService availabilityService;
@@ -37,6 +39,7 @@ public class AvailabilityController {
             @PathVariable Long instructorId,
             @Valid @RequestBody AvailabilityCreateRequest request
     ) {
+        log.info("POST /api/instructors/{}/availabilities - Création d'une disponibilité", instructorId);
         AvailabilityResponse response = availabilityService.createAvailability(instructorId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -51,6 +54,7 @@ public class AvailabilityController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
+        log.info("GET /api/instructors/{}/availabilities - Récupération des disponibilités", instructorId);
         List<AvailabilityResponse> response;
 
         if (from != null && to != null) {
@@ -72,6 +76,7 @@ public class AvailabilityController {
             @PathVariable Long id,
             @Valid @RequestBody AvailabilityUpdateRequest request
     ) {
+        log.info("PUT /api/instructors/{}/availabilities/{} - Mise à jour", instructorId, id);
         AvailabilityResponse response = availabilityService.updateAvailability(instructorId, id, request);
         return ResponseEntity.ok(response);
     }
@@ -85,6 +90,7 @@ public class AvailabilityController {
             @PathVariable Long instructorId,
             @PathVariable Long id
     ) {
+        log.info("DELETE /api/instructors/{}/availabilities/{} - Suppression", instructorId, id);
         availabilityService.deleteAvailability(instructorId, id);
         return ResponseEntity.noContent().build();
     }
@@ -99,6 +105,7 @@ public class AvailabilityController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
+        log.info("GET /api/instructors/{}/available - Créneaux libres du {} au {}", instructorId, from, to);
         List<AvailableSlotResponse> response = availabilityService.getAvailableSlots(instructorId, from, to);
         return ResponseEntity.ok(response);
     }
@@ -114,6 +121,8 @@ public class AvailabilityController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @RequestParam Integer durationMinutes
     ) {
+        log.info("GET /api/instructors/{}/bookable - Créneaux réservables pour spotId={}, date={}, durée={}min",
+                instructorId, spotId, date, durationMinutes);
         AvailableSlotsResponse response = slotCalculationService.calculateAvailableSlots(
                 instructorId,
                 spotId,

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/bookings")
+@Slf4j
 public class BookingController {
 
     private final BookingService bookingService;
@@ -27,6 +29,7 @@ public class BookingController {
     public ResponseEntity<BookingResponse> createBooking(
             @Valid @RequestBody BookingCreateRequest request
     ) {
+        log.info("POST /api/bookings - Création d'une réservation");
         BookingResponse response = bookingService.createBooking(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -37,6 +40,7 @@ public class BookingController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<BookingResponse> getBookingById(@PathVariable Long id) {
+        log.info("GET /api/bookings/{} - Récupération de la réservation", id);
         BookingResponse response = bookingService.getBookingById(id);
         return ResponseEntity.ok(response);
     }
@@ -52,6 +56,7 @@ public class BookingController {
             @RequestParam Long instructorId,
             @PathVariable Long bookingId
     ) {
+        log.info("PATCH /api/bookings/{}/cancel - Annulation par instructeur {}", bookingId, instructorId);
         BookingResponse response = bookingService.cancelBooking(instructorId, bookingId);
         return ResponseEntity.ok(response);
     }

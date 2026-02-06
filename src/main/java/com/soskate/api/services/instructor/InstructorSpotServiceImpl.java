@@ -17,6 +17,7 @@ import com.soskate.api.repositories.InstructorRepository;
 import com.soskate.api.repositories.InstructorSpotRepository;
 import com.soskate.api.repositories.SpotRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class InstructorSpotServiceImpl implements InstructorSpotService {
 
     private final InstructorSpotRepository instructorSpotRepository;
@@ -39,6 +41,7 @@ public class InstructorSpotServiceImpl implements InstructorSpotService {
 
     @Transactional
     public InstructorSpotResponse addSpotToInstructor(Long instructorId, InstructorSpotRequest request) {
+        log.info("Association du spot {} à l'instructeur {}", request.spotId(), instructorId);
         InstructorEntity instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Instructeur non trouvé"));
 
@@ -50,6 +53,7 @@ public class InstructorSpotServiceImpl implements InstructorSpotService {
                 .orElseThrow(() -> new ResourceNotFoundException("Spot non trouvé"));
 
         if (instructorSpotRepository.existsByInstructorIdAndSpotId(instructorId, request.spotId())) {
+            log.warn("L'instructeur {} est déjà associé au spot {}", instructorId, request.spotId());
             throw new IllegalStateException("L'instructeur enseigne déjà sur ce spot");
         }
 
@@ -63,11 +67,13 @@ public class InstructorSpotServiceImpl implements InstructorSpotService {
     }
 
     public List<InstructorSpotResponse> getSpotsByInstructor(Long instructorId) {
+        log.debug("Récupération des spots pour l'instructeur {}", instructorId);
         List<InstructorSpotEntity> instructorSpots = instructorSpotRepository.findByInstructorId(instructorId);
         return instructorSpotMapper.toResponseList(instructorSpots);
     }
 
     public List<InstructorSummary> getInstructorsBySpot(Long spotId) {
+        log.debug("Récupération des instructeurs pour le spot {}", spotId);
         List<InstructorEntity> instructors = instructorSpotRepository.findActiveInstructorsBySpotId(spotId);
 
         return instructors.stream()
@@ -77,10 +83,12 @@ public class InstructorSpotServiceImpl implements InstructorSpotService {
 
     @Transactional
     public void removeSpotFromInstructor(Long instructorId, Long spotId) {
+        log.info("Suppression de l'association instructeur {} / spot {}", instructorId, spotId);
         if (!instructorSpotRepository.existsByInstructorIdAndSpotId(instructorId, spotId)) {
             throw new ResourceNotFoundException("Association non trouvée");
         }
         instructorSpotRepository.deleteByInstructorIdAndSpotId(instructorId, spotId);
+        log.info("Association instructeur {} / spot {} supprimée avec succès", instructorId, spotId);
     }
 
     public boolean instructorTeachesAtSpot(Long instructorId, Long spotId) {

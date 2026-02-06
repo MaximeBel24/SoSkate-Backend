@@ -10,6 +10,7 @@ import com.soskate.api.repositories.AvailabilityRepository;
 import com.soskate.api.repositories.BookingRepository;
 import com.soskate.api.repositories.SpotRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SlotCalculationServiceImpl implements SlotCalculationService {
 
     private final AvailabilityRepository availabilityRepository;
@@ -39,6 +41,8 @@ public class SlotCalculationServiceImpl implements SlotCalculationService {
             LocalDate date,
             Integer durationMinutes
     ) {
+        log.debug("Calcul des créneaux réservables : instructeur={}, spot={}, date={}, durée={}min",
+                instructorId, spotId, date, durationMinutes);
         SpotEntity requestedSpot = spotRepository.findById(spotId)
                 .orElseThrow(() -> new SpotNotFoundException("Spot non trouvé"));
 
@@ -75,6 +79,7 @@ public class SlotCalculationServiceImpl implements SlotCalculationService {
             }
         }
 
+        log.debug("{} créneau(x) calculé(s) pour l'instructeur {} le {}", slots.size(), instructorId, date);
         return new AvailableSlotsResponse(
                 instructorId,
                 spotId,
