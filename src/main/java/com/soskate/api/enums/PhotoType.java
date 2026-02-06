@@ -1,9 +1,12 @@
 package com.soskate.api.enums;
 
+import lombok.Getter;
+
 /**
  * Defines the purpose or category of a photo.
  * Allows different handling for avatars, covers, gallery images, etc.
  */
+@Getter
 public enum PhotoType {
     AVATAR("Profile picture - unique per user", 1),
     COVER("Cover photo - main visual for events", 1),
@@ -18,16 +21,4 @@ public enum PhotoType {
         this.maxPerEntity = maxPerEntity;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Maximum number of photos of this type allowed per entity.
-     * 1 = unique (avatar, cover)
-     * 999 = unlimited for practical purposes
-     */
-    public int getMaxPerEntity() {
-        return maxPerEntity;
-    }
 }
