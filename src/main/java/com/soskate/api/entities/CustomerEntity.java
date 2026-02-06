@@ -11,7 +11,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "customers")
-@Data
+@Getter
+@Setter
+@ToString
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,9 +23,11 @@ public class CustomerEntity extends UserEntity {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CommentEntity> comments = new ArrayList<>();
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CustomerEventEntity> events = new ArrayList<>();
 

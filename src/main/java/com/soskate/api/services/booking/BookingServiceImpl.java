@@ -7,8 +7,7 @@ import com.soskate.api.entities.BookingParticipantEntity;
 import com.soskate.api.enums.BookingStatus;
 import com.soskate.api.enums.InvitedBy;
 import com.soskate.api.enums.ParticipantStatus;
-import com.soskate.api.exceptions.booking.BookingException;
-import com.soskate.api.exceptions.common.ResourceNotFoundException;
+import com.soskate.api.exceptions.booking.BookingNotFoundException;
 import com.soskate.api.mappers.BookingMapper;
 import com.soskate.api.repositories.BookingParticipantRepository;
 import com.soskate.api.repositories.BookingRepository;
@@ -149,14 +148,14 @@ public class BookingServiceImpl implements BookingService {
 
     private BookingEntity findBookingById(Long id) {
         return bookingRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Réservation non trouvée"));
+                .orElseThrow(() -> new BookingNotFoundException("Réservation non trouvée"));
     }
 
     private BookingEntity findBookingByIdAndInstructor(Long bookingId, Long instructorId) {
         BookingEntity booking = findBookingById(bookingId);
 
         if (!booking.getInstructor().getId().equals(instructorId)) {
-            throw new ResourceNotFoundException("Réservation non trouvée");
+            throw new BookingNotFoundException("Réservation non trouvée");
         }
 
         return booking;

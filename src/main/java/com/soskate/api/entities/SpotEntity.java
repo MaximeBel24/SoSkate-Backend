@@ -10,7 +10,10 @@ import java.util.List;
 
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "spots")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,6 +22,7 @@ public class SpotEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -51,6 +55,7 @@ public class SpotEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<EventEntity> events = new ArrayList<>();

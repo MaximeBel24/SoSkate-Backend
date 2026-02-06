@@ -1,10 +1,7 @@
 package com.soskate.api.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,7 +9,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "events")
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -20,6 +20,7 @@ public class EventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
@@ -45,6 +46,7 @@ public class EventEntity {
     @JoinColumn(name = "instructor_id")
     private InstructorEntity instructor;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<CustomerEventEntity> customerEvents = new ArrayList<>();

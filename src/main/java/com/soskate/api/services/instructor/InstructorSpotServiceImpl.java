@@ -43,14 +43,14 @@ public class InstructorSpotServiceImpl implements InstructorSpotService {
     public InstructorSpotResponse addSpotToInstructor(Long instructorId, InstructorSpotRequest request) {
         log.info("Association du spot {} à l'instructeur {}", request.spotId(), instructorId);
         InstructorEntity instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructeur non trouvé"));
+                .orElseThrow(() -> new InstructorNotFoundException("Instructeur non trouvé"));
 
         if (instructor.getStatus() != InstructorStatus.ACTIVE) {
             throw new BookingException("L'instructeur doit être actif pour ajouter un spot");
         }
 
         SpotEntity spot = spotRepository.findById(request.spotId())
-                .orElseThrow(() -> new ResourceNotFoundException("Spot non trouvé"));
+                .orElseThrow(() -> new SpotNotFoundException("Spot non trouvé"));
 
         if (instructorSpotRepository.existsByInstructorIdAndSpotId(instructorId, request.spotId())) {
             log.warn("L'instructeur {} est déjà associé au spot {}", instructorId, request.spotId());

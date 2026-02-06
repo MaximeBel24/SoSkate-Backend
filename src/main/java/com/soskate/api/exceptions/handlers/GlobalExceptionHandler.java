@@ -2,6 +2,7 @@ package com.soskate.api.exceptions.handlers;
 
 import com.soskate.api.exceptions.common.ErrorResponse;
 import com.soskate.api.exceptions.common.PlatformSettingsNotFoundException;
+import com.soskate.api.exceptions.common.ResourceNotFoundException;
 import com.soskate.api.exceptions.common.ValidationErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -34,6 +35,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "PLATFORM_SETTINGS_NOT_FOUND", ex.getMessage()));
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
+        log.warn("Resource not found: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse.of(HttpStatus.NOT_FOUND.value(), "RESOURCE_NOT_FOUND", ex.getMessage()));
     }
 
     /**

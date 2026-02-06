@@ -15,7 +15,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "instructors")
-@Data
+@Getter
+@Setter
+@ToString
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -95,9 +97,11 @@ public class InstructorEntity extends UserEntity {
 
     // ==================== Relationships ====================
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<EventEntity> events = new ArrayList<>();
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookingEntity> bookings = new ArrayList<>();
 

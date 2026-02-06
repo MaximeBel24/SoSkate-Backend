@@ -23,6 +23,14 @@ public class BookingExceptionHandler {
                 .body(ErrorResponse.of(HttpStatus.CONFLICT.value(), "SLOT_NOT_AVAILABLE", ex.getMessage()));
     }
 
+    @ExceptionHandler(BookingNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBookingNotFound(BookingNotFoundException ex) {
+        log.warn("Booking not found: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse.of(HttpStatus.NOT_FOUND.value(), "BOOKING_NOT_FOUND", ex.getMessage()));
+    }
+
     @ExceptionHandler(BookingTooSoonException.class)
     public ResponseEntity<ErrorResponse> handleBookingTooSoon(BookingTooSoonException ex) {
         log.warn("Booking too soon: {}", ex.getMessage());

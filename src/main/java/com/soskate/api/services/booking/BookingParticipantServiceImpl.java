@@ -5,7 +5,6 @@ import com.soskate.api.entities.*;
 import com.soskate.api.enums.BookingStatus;
 import com.soskate.api.enums.ParticipantStatus;
 import com.soskate.api.exceptions.booking.*;
-import com.soskate.api.exceptions.common.ResourceNotFoundException;
 import com.soskate.api.mappers.BookingParticipantMapper;
 import com.soskate.api.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +32,10 @@ public class BookingParticipantServiceImpl implements BookingParticipantService 
     @Transactional
     public ParticipantResponse cancel(Long customerId, Long participantId, ParticipantCancelRequest request) {
         BookingParticipantEntity participant = participantRepository.findById(participantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Participation non trouvée"));
+                .orElseThrow(() -> new ParticipationNotFoundException("Participation non trouvée"));
 
         if (!participant.getCustomer().getId().equals(customerId)) {
-            throw new ResourceNotFoundException("Participation non trouvée");
+            throw new ParticipationNotFoundException("Participation non trouvée");
         }
 
         if (!participant.canBeCancelled()) {
