@@ -12,6 +12,7 @@ import com.soskate.api.repositories.InstructorRepository;
 import com.soskate.api.services.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ public class InstructorActivationServiceImpl implements InstructorActivationServ
     private final InstructorRepository instructorRepository;
     private final InstructorMapper instructorMapper;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Activates an instructor account using the activation token.
@@ -52,8 +54,9 @@ public class InstructorActivationServiceImpl implements InstructorActivationServ
             throw new InvalidAccountStateException("Account has already been activated");
         }
 
-        // TODO: Implement spring security to encode the password
-        instructor.setPassword(request.password());
+        String hashedPassword = passwordEncoder.encode(request.password());
+
+        instructor.setPassword(hashedPassword);
 
         instructor.setActivationToken(null);
         instructor.setActivationTokenExpiry(null);

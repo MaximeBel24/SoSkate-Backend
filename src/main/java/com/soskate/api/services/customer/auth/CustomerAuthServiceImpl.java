@@ -9,6 +9,7 @@ import com.soskate.api.repositories.CustomerRepository;
 import com.soskate.api.services.common.EmailValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,10 +28,10 @@ public class CustomerAuthServiceImpl implements CustomerAuthService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final EmailValidationService emailValidationService;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Inscrit un nouveau customer.
-     * Version simplifiée : le password n'est PAS hashé (phase de dev uniquement).
      *
      * @param customerToRegister les données d'inscription
      * @return le customer créé
@@ -43,11 +44,10 @@ public class CustomerAuthServiceImpl implements CustomerAuthService {
 
         emailValidationService.validateEmailUnique(customerToRegister.email());
 
-        // TODO: Implémenter le hashage avec BCrypt en production
-//        String hashedPassword = passwordEncoder.encode(customerToRegister.password());
-//        log.debug("Mot de passe hashé avec succès");
+        String hashedPassword = passwordEncoder.encode(customerToRegister.password());
+        log.debug("Mot de passe hashé avec succès");
 
-        CustomerEntity customer = customerMapper.toEntity(customerToRegister, customerToRegister.password());
+        CustomerEntity customer = customerMapper.toEntity(customerToRegister, hashedPassword);
 
         CustomerEntity savedCustomer = customerRepository.save(customer);
         log.info("Customer créé avec succès : ID {}, Email {}",

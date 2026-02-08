@@ -11,6 +11,7 @@ import com.soskate.api.repositories.InstructorRepository;
 import com.soskate.api.services.common.EmailValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,8 +35,9 @@ public class AuthServiceImpl implements AuthService {
 
     private final CustomerRepository customerRepository;
     private final InstructorRepository instructorRepository;
-
     private final EmailValidationService emailValidationService;
+    private final PasswordEncoder passwordEncoder;
+
 
     // Message d'erreur générique pour ne pas révéler si l'email existe
     private static final String BAD_CREDENTIALS_MESSAGE = "Email ou mot de passe incorrect";
@@ -55,8 +57,7 @@ public class AuthServiceImpl implements AuthService {
             log.debug("Utilisateur trouvé comme Customer : {}", email);
 
             // Vérification du mot de passe
-            // TODO: Remplacer par BCrypt en production
-            if (!password.equals(customer.getPassword())) {
+            if (!passwordEncoder.matches(loginRequest.password(), customer.getPassword())) {
                 log.warn("Mot de passe incorrect pour le Customer : {}", email);
                 throw new BadCredentialsException(BAD_CREDENTIALS_MESSAGE);
             }
@@ -91,8 +92,7 @@ public class AuthServiceImpl implements AuthService {
             }
 
             // Vérification du mot de passe
-            // TODO: Remplacer par BCrypt en production
-            if (!password.equals(instructor.getPassword())) {
+            if (!passwordEncoder.matches(loginRequest.password(), instructor.getPassword())) {
                 log.warn("Mot de passe incorrect pour l'Instructor : {}", email);
                 throw new BadCredentialsException(BAD_CREDENTIALS_MESSAGE);
             }

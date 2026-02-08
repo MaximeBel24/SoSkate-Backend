@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nrefactor\\(entities\\): clean up and standardize entity layer\n\n- Fix typo sport_id -> spot_id in BookingEntity\n- Add @Builder.Default on fields with default values\n- Remove redundant timestamp handling \\(keep @PrePersist/@PreUpdate\\)\n- Remove unnecessary custom constructors\n- Rename stopTime -> endTime for consistency\n- Add createdAt/updatedAt audit fields to EventEntity, CustomerEventEntity, CommentEntity\n- Remove dead code: CustomerBookingEntity, event_participants relation\n- Fix formatting issues\nEOF\n\\)\")",
+      "Bash(grep:*)",
+      "Bash(xargs:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nrefactor\\(controllers\\): add OpenAPI documentation and standardize REST conventions\n\n- Add @RequestMapping to AvailabilityController, BookingParticipantController, InstructorSpotController\n- Add @Tag and @Operation annotations to all 12 controllers \\(~75 endpoints\\)\n- Fix HTTP verbs: POST to PATCH for cancel, suspend, reactivate, resend\n- Move customerId to BookingCreateRequest DTO\n- Move getInstructorsBySpot to SpotController\n- Remove unused getAvailabilityById method\n- Fix incorrect log messages \\(POST -> PATCH\\)\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(wc -l:*)",
+      "Bash(find:*)",
+      "Bash(./mvnw compile:*)"
+    ]
+  }
+}
