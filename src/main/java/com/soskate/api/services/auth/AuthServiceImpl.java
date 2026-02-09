@@ -45,7 +45,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         String email = loginRequest.email();
-        String password = loginRequest.password();
 
         log.info("Tentative de connexion pour l'email : {}", email);
 
