@@ -25,6 +25,7 @@ public record LoginResponse(
         String firstName,
         String lastName,
         String phone,
+        String token,
 
         // === Rôle ===
         UserRole role,
@@ -50,16 +51,18 @@ public record LoginResponse(
             String email,
             String firstName,
             String lastName,
-            String phone
+            String phone,
+            String token
     ) {
         return new LoginResponse(
                 userId,
                 customerId,
-                null,  // instructorId
+                null,
                 email,
                 firstName,
                 lastName,
                 phone,
+                token,
                 UserRole.CUSTOMER,
                 "Connexion réussie"
         );
@@ -74,7 +77,8 @@ public record LoginResponse(
             String email,
             String firstName,
             String lastName,
-            String phone
+            String phone,
+            String token
     ) {
         return new LoginResponse(
                 userId,
@@ -84,6 +88,7 @@ public record LoginResponse(
                 firstName,
                 lastName,
                 phone,
+                token,
                 UserRole.INSTRUCTOR,
                 "Connexion réussie"
         );

@@ -8,9 +8,12 @@ import com.soskate.api.enums.InstructorStatus;
 import com.soskate.api.exceptions.auth.BadCredentialsException;
 import com.soskate.api.repositories.CustomerRepository;
 import com.soskate.api.repositories.InstructorRepository;
+import com.soskate.api.security.CustomUserDetailsService;
+import com.soskate.api.security.JwtService;
 import com.soskate.api.services.common.EmailValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +40,8 @@ public class AuthServiceImpl implements AuthService {
     private final InstructorRepository instructorRepository;
     private final EmailValidationService emailValidationService;
     private final PasswordEncoder passwordEncoder;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final JwtService jwtService;
 
 
     // Message d'erreur générique pour ne pas révéler si l'email existe
@@ -61,6 +66,9 @@ public class AuthServiceImpl implements AuthService {
                 throw new BadCredentialsException(BAD_CREDENTIALS_MESSAGE);
             }
 
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(customer.getEmail());
+            String jwtToken = jwtService.generateToken(userDetails);
+
             log.info("Connexion réussie pour le Customer : {} (ID: {})", email, customer.getId());
 
             return LoginResponse.forCustomer(
@@ -69,7 +77,9 @@ public class AuthServiceImpl implements AuthService {
                     customer.getEmail(),
                     customer.getFirstName(),
                     customer.getLastName(),
-                    customer.getPhone()
+                    customer.getPhone(),
+                    jwtToken
+
             );
         }
 
@@ -96,6 +106,9 @@ public class AuthServiceImpl implements AuthService {
                 throw new BadCredentialsException(BAD_CREDENTIALS_MESSAGE);
             }
 
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(instructor.getEmail());
+            String jwtToken = jwtService.generateToken(userDetails);
+
             log.info("Connexion réussie pour l'Instructor : {} (ID: {})", email, instructor.getId());
 
             return LoginResponse.forInstructor(
@@ -104,7 +117,8 @@ public class AuthServiceImpl implements AuthService {
                     instructor.getEmail(),
                     instructor.getFirstName(),
                     instructor.getLastName(),
-                    instructor.getPhone()
+                    instructor.getPhone(),
+                    jwtToken
             );
         }
 

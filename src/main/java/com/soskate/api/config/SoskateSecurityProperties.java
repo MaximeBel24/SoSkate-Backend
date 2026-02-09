@@ -37,4 +37,8 @@ public class SoskateSecurityProperties {
     @Min(value = 12, message = "Generated password length must be at least 12")
     @Max(value = 32, message = "Generated password length cannot exceed 32")
     private int generatedPasswordLength = 16;
+
+    private String jwtSecret;
+
+    private Long jwtExpiration;
 }
