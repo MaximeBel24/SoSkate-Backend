@@ -41,20 +41,20 @@ public class InstructorSpotServiceImpl implements InstructorSpotService {
 
     @Transactional
     public InstructorSpotResponse addSpotToInstructor(Long instructorId, InstructorSpotRequest request) {
-        log.info("Association du spot {} à l'instructeur {}", request.spotId(), instructorId);
+        log.info("Associating spot {} with instructor {}", request.spotId(), instructorId);
         InstructorEntity instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new InstructorNotFoundException("Instructeur non trouvé"));
+                .orElseThrow(() -> new InstructorNotFoundException("Instructor not found"));
 
         if (instructor.getStatus() != InstructorStatus.ACTIVE) {
-            throw new BookingException("L'instructeur doit être actif pour ajouter un spot");
+            throw new BookingException("Instructor must be active to add a spot");
         }
 
         SpotEntity spot = spotRepository.findById(request.spotId())
-                .orElseThrow(() -> new SpotNotFoundException("Spot non trouvé"));
+                .orElseThrow(() -> new SpotNotFoundException("Spot not found"));
 
         if (instructorSpotRepository.existsByInstructorIdAndSpotId(instructorId, request.spotId())) {
-            log.warn("L'instructeur {} est déjà associé au spot {}", instructorId, request.spotId());
-            throw new IllegalStateException("L'instructeur enseigne déjà sur ce spot");
+            log.warn("Instructor {} is already associated with spot {}", instructorId, request.spotId());
+            throw new IllegalStateException("Instructor already teaches at this spot");
         }
 
         InstructorSpotEntity instructorSpot = InstructorSpotEntity.builder()
@@ -67,13 +67,13 @@ public class InstructorSpotServiceImpl implements InstructorSpotService {
     }
 
     public List<InstructorSpotResponse> getSpotsByInstructor(Long instructorId) {
-        log.debug("Récupération des spots pour l'instructeur {}", instructorId);
+        log.debug("Retrieving spots for instructor {}", instructorId);
         List<InstructorSpotEntity> instructorSpots = instructorSpotRepository.findByInstructorId(instructorId);
         return instructorSpotMapper.toResponseList(instructorSpots);
     }
 
     public List<InstructorSummary> getInstructorsBySpot(Long spotId) {
-        log.debug("Récupération des instructeurs pour le spot {}", spotId);
+        log.debug("Retrieving instructors for spot {}", spotId);
         List<InstructorEntity> instructors = instructorSpotRepository.findActiveInstructorsBySpotId(spotId);
 
         return instructors.stream()
@@ -83,12 +83,12 @@ public class InstructorSpotServiceImpl implements InstructorSpotService {
 
     @Transactional
     public void removeSpotFromInstructor(Long instructorId, Long spotId) {
-        log.info("Suppression de l'association instructeur {} / spot {}", instructorId, spotId);
+        log.info("Removing instructor {} / spot {} association", instructorId, spotId);
         if (!instructorSpotRepository.existsByInstructorIdAndSpotId(instructorId, spotId)) {
-            throw new ResourceNotFoundException("Association non trouvée");
+            throw new ResourceNotFoundException("Association not found");
         }
         instructorSpotRepository.deleteByInstructorIdAndSpotId(instructorId, spotId);
-        log.info("Association instructeur {} / spot {} supprimée avec succès", instructorId, spotId);
+        log.info("Instructor {} / spot {} association removed successfully", instructorId, spotId);
     }
 
     public boolean instructorTeachesAtSpot(Long instructorId, Long spotId) {

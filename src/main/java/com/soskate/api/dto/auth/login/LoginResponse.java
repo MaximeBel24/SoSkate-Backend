@@ -3,11 +3,11 @@ package com.soskate.api.dto.auth.login;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * DTO de réponse unifié après connexion réussie.
- * Supporte à la fois les Customers et les Instructors.
+ * Unified response DTO after successful login.
+ * Supports both Customers and Instructors.
  *
- * Le champ `role` permet au frontend de déterminer le type d'utilisateur
- * et d'adapter l'interface en conséquence.
+ * The `role` field allows the frontend to determine the user type
+ * and adapt the interface accordingly.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -15,19 +15,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record LoginResponse(
 
-        // === Identifiants ===
-        Long id,                    // ID de l'entité User (parent)
-        Long customerId,            // ID spécifique si Customer (null sinon)
-        Long instructorId,          // ID spécifique si Instructor (null sinon)
+        // === Identifiers ===
+        Long id,                    // User entity ID (parent)
+        Long customerId,            // Specific ID if Customer (null otherwise)
+        Long instructorId,          // Specific ID if Instructor (null otherwise)
 
-        // === Infos utilisateur ===
+        // === User info ===
         String email,
         String firstName,
         String lastName,
         String phone,
         String token,
 
-        // === Rôle ===
+        // === Role ===
         UserRole role,
 
         // === Message ===
@@ -35,7 +35,7 @@ public record LoginResponse(
 ) {
 
     /**
-     * Enum pour identifier le type d'utilisateur.
+     * Enum to identify the user type.
      */
     public enum UserRole {
         CUSTOMER,
@@ -43,7 +43,7 @@ public record LoginResponse(
     }
 
     /**
-     * Factory method pour créer une réponse Customer.
+     * Factory method to create a Customer response.
      */
     public static LoginResponse forCustomer(
             Long userId,
@@ -64,12 +64,12 @@ public record LoginResponse(
                 phone,
                 token,
                 UserRole.CUSTOMER,
-                "Connexion réussie"
+                "Login successful"
         );
     }
 
     /**
-     * Factory method pour créer une réponse Instructor.
+     * Factory method to create an Instructor response.
      */
     public static LoginResponse forInstructor(
             Long userId,
@@ -90,7 +90,7 @@ public record LoginResponse(
                 phone,
                 token,
                 UserRole.INSTRUCTOR,
-                "Connexion réussie"
+                "Login successful"
         );
     }
 }

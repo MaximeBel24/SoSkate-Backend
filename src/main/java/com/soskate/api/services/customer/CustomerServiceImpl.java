@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implémentation du service de gestion du profil Customer.
+ * Implementation of the Customer profile management service.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -30,49 +30,49 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public CustomerResponse updateCustomer(Long customerId, CustomerUpdateRequest request) {
-        log.info("Mise à jour du profil pour le client ID: {}", customerId);
+        log.info("Updating profile for customer ID: {}", customerId);
 
-        // 1. Récupérer le customer existant
+        // 1. Retrieve the existing customer
         CustomerEntity customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> {
-                    log.warn("Client non trouvé avec l'ID: {}", customerId);
-                    return new CustomerNotFoundException("Client non trouvé avec l'id : " + customerId);
+                    log.warn("Customer not found with ID: {}", customerId);
+                    return new CustomerNotFoundException("Customer not found with id: " + customerId);
                 });
 
-        // 2. Vérifier l'unicité de l'email si modifié
+        // 2. Check email uniqueness if modified
         if (request.email() != null && !request.email().equalsIgnoreCase(customer.getEmail())) {
             emailValidationService.validateEmailUniqueForUpdate(request.email(), customerId, true);
         }
 
-        // 3. Mise à jour partielle (seuls les champs non-null)
+        // 3. Partial update (only non-null fields)
         if (request.firstname() != null) {
             customer.setFirstName(request.firstname());
-            log.debug("Prénom mis à jour: {}", request.firstname());
+            log.debug("First name updated: {}", request.firstname());
         }
 
         if (request.lastname() != null) {
             customer.setLastName(request.lastname());
-            log.debug("Nom mis à jour: {}", request.lastname());
+            log.debug("Last name updated: {}", request.lastname());
         }
 
         if (request.email() != null) {
             customer.setEmail(request.email());
-            log.debug("Email mis à jour: {}", request.email());
+            log.debug("Email updated: {}", request.email());
         }
 
         if (request.phone() != null) {
             customer.setPhone(request.phone());
-            log.debug("Téléphone mis à jour: {}", request.phone());
+            log.debug("Phone updated: {}", request.phone());
         }
 
         if (request.birthDate() != null) {
             customer.setBirthDate(request.birthDate());
-            log.debug("Date de naissance mise à jour: {}", request.birthDate());
+            log.debug("Birth date updated: {}", request.birthDate());
         }
 
-        // 4. Sauvegarder et retourner
+        // 4. Save and return
         CustomerEntity updatedCustomer = customerRepository.save(customer);
-        log.info("Profil mis à jour avec succès pour le customer ID: {}", customerId);
+        log.info("Profile updated successfully for customer ID: {}", customerId);
 
         return customerMapper.toResponse(updatedCustomer);
     }
@@ -80,12 +80,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional(readOnly = true)
     public CustomerResponse getCustomerById(Long customerId) {
-        log.debug("Récupération du profil pour le customer ID: {}", customerId);
+        log.debug("Retrieving profile for customer ID: {}", customerId);
 
         CustomerEntity customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> {
-                    log.warn("Customer non trouvé avec l'ID: {}", customerId);
-                    return new CustomerNotFoundException("Client non trouvé avec l'id : " + customerId);
+                    log.warn("Customer not found with ID: {}", customerId);
+                    return new CustomerNotFoundException("Customer not found with id: " + customerId);
                 });
 
         return customerMapper.toResponse(customer);

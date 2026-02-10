@@ -13,30 +13,30 @@ import jakarta.validation.constraints.Size;
  */
 public record InstructorUpdateRequest(
 
-        @Size(min = 2, max = 50, message = "Le prénom doit contenir entre 2 et 50 caractères")
+        @Size(min = 2, max = 50, message = "First name must contain between 2 and 50 characters")
         String firstname,
 
-        @Size(min = 2, max = 50, message = "Le nom doit contenir entre 2 et 50 caractères")
+        @Size(min = 2, max = 50, message = "Last name must contain between 2 and 50 characters")
         String lastname,
 
-        @Size(max = 15, message = "Le téléphone ne peut pas dépasser 15 caractères")
-        @Pattern(regexp = "^[+]?[0-9\\s-]{0,15}$", message = "Le format du téléphone est invalide")
+        @Size(max = 15, message = "Phone cannot exceed 15 characters")
+        @Pattern(regexp = "^[+]?[0-9\\s-]{0,15}$", message = "Invalid phone format")
         String phone,
 
-        @Size(max = 2000, message = "La bio ne peut pas dépasser 2000 caractères")
+        @Size(max = 2000, message = "Bio cannot exceed 2000 characters")
         String bio,
 
         SkateSpecialty specialty,
 
-        @Min(value = 0, message = "L'expérience ne peut pas être négative")
-        @Max(value = 50, message = "L'expérience ne peut pas dépasser 50 ans")
+        @Min(value = 0, message = "Experience cannot be negative")
+        @Max(value = 50, message = "Experience cannot exceed 50 years")
         Integer yearsOfExperience,
 
-        @Size(max = 30, message = "Le pseudo Instagram ne peut pas dépasser 30 caractères")
-        @Pattern(regexp = "^[a-zA-Z0-9_.]*$", message = "Le pseudo Instagram ne peut contenir que des lettres, chiffres, underscores et points")
+        @Size(max = 30, message = "Instagram handle cannot exceed 30 characters")
+        @Pattern(regexp = "^[a-zA-Z0-9_.]*$", message = "Instagram handle can only contain letters, digits, underscores and dots")
         String instagramHandle,
 
-        @Size(max = 100, message = "La chaîne YouTube ne peut pas dépasser 100 caractères")
+        @Size(max = 100, message = "YouTube channel cannot exceed 100 characters")
         String youtubeChannel
 
 ) {}

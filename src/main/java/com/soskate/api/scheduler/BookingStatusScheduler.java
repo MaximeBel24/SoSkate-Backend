@@ -22,18 +22,18 @@ public class BookingStatusScheduler {
     @Scheduled(cron = "0 0 * * * *")
     @Transactional
     public void markPassedBookAsCompleted() {
-        log.info("Début du job de mise à jour des bookings");
+        log.info("Starting booking status update job");
 
         List<BookingEntity> passedBookings = bookingRepository
                 .findPassedAndNotCompleted(LocalDateTime.now());
 
-        log.info("{} bookings à mettre à jour", passedBookings.size());
+        log.info("{} bookings to update", passedBookings.size());
 
         for (BookingEntity booking : passedBookings) {
             booking.setStatus(BookingStatus.COMPLETED);
         }
 
         bookingRepository.saveAll(passedBookings);
-        log.info("Job terminé avec succès");
+        log.info("Job completed successfully");
     }
 }

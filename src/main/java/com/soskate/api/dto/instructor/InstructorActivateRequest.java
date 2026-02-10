@@ -10,8 +10,8 @@ import jakarta.validation.constraints.Size;
  */
 public record InstructorActivateRequest(
 
-        @NotBlank(message = "Le token d'activation est obligatoire")
-        @Size(min = 36, max = 36, message = "Format du token d'activation invalide")
+        @NotBlank(message = "Activation token is required")
+        @Size(min = 36, max = 36, message = "Invalid activation token format")
         String token,
 
         /**
@@ -23,18 +23,18 @@ public record InstructorActivateRequest(
          * - At least one digit
          * - At least one special character
          */
-        @NotBlank(message = "Le mot de passe est obligatoire")
-        @Size(min = 8, max = 100, message = "Le mot de passe doit contenir entre 8 et 100 caractères")
+        @NotBlank(message = "Password is required")
+        @Size(min = 8, max = 100, message = "Password must contain between 8 and 100 characters")
         @Pattern(
                 regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&.,;:!§+-])[A-Za-z\\d@$!%*?&.,;:!§+-]{8,}$",
-                message = "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial"
+                message = "Password must contain at least one uppercase letter, one lowercase letter, one digit and one special character"
         )
         String password,
 
         /**
          * Password confirmation to prevent typos.
          */
-        @NotBlank(message = "La confirmation du mot de passe est obligatoire")
+        @NotBlank(message = "Password confirmation is required")
         String passwordConfirmation
 
 ) {}

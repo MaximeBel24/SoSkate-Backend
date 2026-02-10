@@ -81,7 +81,7 @@ public class BookingParticipantEntity {
         updatedAt = LocalDateTime.now();
     }
 
-    // Méthodes utilitaires
+    // Utility methods
     public boolean isConfirmed() {
         return status == ParticipantStatus.CONFIRMED;
     }

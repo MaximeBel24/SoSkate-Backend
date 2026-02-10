@@ -16,12 +16,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 /**
- * Contrôleur REST pour la gestion des services/cours de skateboard.
+ * REST controller for skateboard service/lesson management.
  *
  * @author SoSkate Team
  * @version 1.0
  */
-@Tag(name = "Services", description = "Gestion des services et cours de skateboard")
+@Tag(name = "Services", description = "Skateboard service and lesson management")
 @RestController
 @RequestMapping("/services")
 @RequiredArgsConstructor
@@ -31,14 +31,14 @@ public class ServiceController {
     private final ServiceService serviceService;
 
     @Operation(
-            summary = "Créer un service",
-            description = "Crée un nouveau service/cours"
+            summary = "Create a service",
+            description = "Creates a new service/lesson"
     )
     @PostMapping
     public ResponseEntity<ServiceResponse> createService(
             @Valid @RequestBody ServiceRequest requestDTO) {
 
-        log.info("Requête POST /api/services - Création d'un service : {}", requestDTO.name());
+        log.info("POST /api/services - Creating a service: {}", requestDTO.name());
 
         ServiceResponse service = serviceService.createService(requestDTO);
 
@@ -46,27 +46,27 @@ public class ServiceController {
     }
 
     @Operation(
-            summary = "Lister tous les services",
-            description = "Récupère tous les services"
+            summary = "List all services",
+            description = "Retrieves all services"
     )
     @GetMapping
     public ResponseEntity<List<ServiceResponse>> getAllServices() {
-        log.info("Requête GET /api/services - Récupération de tous les services");
+        log.info("GET /api/services - Retrieving all services");
 
         List<ServiceResponse> services = serviceService.getAllServices();
 
-        log.info("{} service(s) trouvé(s)", services.size());
+        log.info("{} service(s) found", services.size());
 
         return ResponseEntity.ok(services);
     }
 
     @Operation(
-            summary = "Lister les services actifs",
-            description = "Récupère uniquement les services actifs"
+            summary = "List active services",
+            description = "Retrieves only active services"
     )
     @GetMapping("/active")
     public ResponseEntity<List<ServiceResponse>> getActiveServices() {
-        log.info("Requête GET /api/services/active - Récupération des services actifs");
+        log.info("GET /api/services/active - Retrieving active services");
 
         List<ServiceResponse> services = serviceService.getActiveServices();
 
@@ -74,12 +74,12 @@ public class ServiceController {
     }
 
     @Operation(
-            summary = "Récupérer un service",
-            description = "Récupère un service par son ID"
+            summary = "Retrieve a service",
+            description = "Retrieves a service by its ID"
     )
     @GetMapping("/{id}")
     public ResponseEntity<ServiceResponse> getServiceById(@PathVariable Long id) {
-        log.info("Requête GET /api/services/{} - Récupération du service", id);
+        log.info("GET /api/services/{} - Retrieving service", id);
 
         ServiceResponse service = serviceService.getServiceById(id);
 
@@ -87,12 +87,12 @@ public class ServiceController {
     }
 
     @Operation(
-            summary = "Filtrer par type",
-            description = "Récupère les services par type (LESSON, RENTAL)"
+            summary = "Filter by type",
+            description = "Retrieves services by type (LESSON, RENTAL)"
     )
     @GetMapping("/type/{type}")
     public ResponseEntity<List<ServiceResponse>> getServicesByType(@PathVariable ServiceType type) {
-        log.info("Requête GET /api/services/type/{} - Récupération par type", type);
+        log.info("GET /api/services/type/{} - Retrieving by type", type);
 
         List<ServiceResponse> services = serviceService.getServicesByType(type);
 
@@ -100,15 +100,15 @@ public class ServiceController {
     }
 
     @Operation(
-            summary = "Modifier un service",
-            description = "Met à jour un service existant"
+            summary = "Update a service",
+            description = "Updates an existing service"
     )
     @PutMapping("/{id}")
     public ResponseEntity<ServiceResponse> updateService(
             @PathVariable Long id,
             @Valid @RequestBody ServiceRequest requestDTO) {
 
-        log.info("Requête PUT /api/services/{} - Mise à jour du service", id);
+        log.info("PUT /api/services/{} - Updating service", id);
 
         ServiceResponse service = serviceService.updateService(id, requestDTO);
 
@@ -116,12 +116,12 @@ public class ServiceController {
     }
 
     @Operation(
-            summary = "Désactiver un service",
-            description = "Désactive un service (soft delete)"
+            summary = "Deactivate a service",
+            description = "Deactivates a service (soft delete)"
     )
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivateService(@PathVariable Long id) {
-        log.info("Requête PATCH /api/services/{}/deactivate - Désactivation", id);
+        log.info("PATCH /api/services/{}/deactivate - Deactivating", id);
 
         serviceService.deactivateService(id);
 
@@ -129,12 +129,12 @@ public class ServiceController {
     }
 
     @Operation(
-            summary = "Supprimer un service",
-            description = "Supprime définitivement un service"
+            summary = "Delete a service",
+            description = "Permanently deletes a service"
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteService(@PathVariable Long id) {
-        log.info("Requête DELETE /api/services/{} - Suppression", id);
+        log.info("DELETE /api/services/{} - Deleting", id);
 
         serviceService.deleteService(id);
 

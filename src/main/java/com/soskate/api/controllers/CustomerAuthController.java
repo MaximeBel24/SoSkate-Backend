@@ -13,13 +13,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
- * Contrôleur REST pour l'authentification des customers.
- * Gère les endpoints d'inscription et de vérification d'email.
+ * REST controller for customer authentication.
+ * Handles registration and email verification endpoints.
  *
  * @author SoSkate Team
  * @version 1.0
  */
-@Tag(name = "Customer Auth", description = "Inscription et authentification des clients")
+@Tag(name = "Customer Auth", description = "Customer registration and authentication")
 @RestController
 @RequestMapping("/customer/auth")
 @RequiredArgsConstructor
@@ -29,41 +29,41 @@ public class CustomerAuthController {
     private final CustomerAuthService customerAuthService;
 
     /**
-     * Endpoint d'inscription d'un nouveau customer.
+     * Registration endpoint for a new customer.
      *
-     * @param customerToRegister les données d'inscription (validées automatiquement)
-     * @return le customer créé avec le statut 201 CREATED
+     * @param customerToRegister the registration data (automatically validated)
+     * @return the created customer with 201 CREATED status
      */
     @Operation(
-            summary = "Inscrire un client",
-            description = "Crée un nouveau compte client"
+            summary = "Register a customer",
+            description = "Creates a new customer account"
     )
     @PostMapping("/register")
     public ResponseEntity<CustomerResponse> register(@Valid @RequestBody CustomerRegisterRequest customerToRegister) {
 
-        log.info("Requête d'inscription reçue pour l'email : {}", customerToRegister.email());
+        log.info("Registration request received for email: {}", customerToRegister.email());
 
         CustomerResponse customer = customerAuthService.registerCustomer(customerToRegister);
 
-        log.info("Inscription réussie pour l'email : {}", customer.email());
+        log.info("Registration successful for email: {}", customer.email());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(customer);
     }
 
     /**
-     * Endpoint pour vérifier si un email existe déjà.
-     * Utile pour la validation côté frontend en temps réel.
+     * Endpoint to check if an email already exists.
+     * Useful for real-time frontend validation.
      *
-     * @param email l'email à vérifier
-     * @return true si l'email existe déjà
+     * @param email the email to check
+     * @return true if the email already exists
      */
     @Operation(
-            summary = "Vérifier si un email existe",
-            description = "Vérifie si un email est déjà utilisé par un client"
+            summary = "Check if an email exists",
+            description = "Checks if an email is already used by a customer"
     )
     @GetMapping("/email-exists")
     public ResponseEntity<Boolean> emailExists(@RequestParam String email) {
-        log.debug("Vérification de l'existence de l'email : {}", email);
+        log.debug("Checking email existence: {}", email);
         boolean exists = customerAuthService.emailExists(email);
         return ResponseEntity.ok(exists);
     }

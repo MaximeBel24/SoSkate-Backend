@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository pour la gestion des instructeurs.
- * Inclut le support du soft delete (les requêtes filtrent par deleted = false).
+ * Repository for instructor management.
+ * Includes soft delete support (queries filter by deleted = false).
  *
  * @author SoSkate Team
  * @version 1.0
@@ -25,65 +25,65 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
     // ==================== Find by Unique Fields ====================
 
     /**
-     * Trouve un instructeur non supprimé par son email.
+     * Finds a non-deleted instructor by email.
      *
-     * @param email l'email de l'instructeur
-     * @return Optional contenant l'instructeur s'il existe
+     * @param email the instructor's email
+     * @return Optional containing the instructor if it exists
      */
     Optional<InstructorEntity> findByEmailAndDeletedFalse(String email);
 
     /**
-     * Trouve un instructeur par son token d'activation.
-     * Ne filtre pas par deleted car utilisé pendant le processus d'activation.
+     * Finds an instructor by activation token.
+     * Does not filter by deleted because it is used during the activation process.
      *
-     * @param activationToken le token d'activation
-     * @return Optional contenant l'instructeur s'il existe
+     * @param activationToken the activation token
+     * @return Optional containing the instructor if it exists
      */
     Optional<InstructorEntity> findByActivationToken(String activationToken);
 
     // ==================== Existence Checks ====================
 
     /**
-     * Vérifie si un instructeur non supprimé existe avec cet email.
+     * Checks if a non-deleted instructor exists with this email.
      *
-     * @param email l'email à vérifier
-     * @return true si l'email existe
+     * @param email the email to check
+     * @return true if the email exists
      */
     boolean existsByEmailAndDeletedFalse(String email);
 
     /**
-     * Vérifie si un email existe pour un autre instructeur (excluant l'ID donné).
-     * Utilisé pour la validation d'unicité lors des mises à jour de profil.
+     * Checks if an email exists for another instructor (excluding the given ID).
+     * Used for uniqueness validation during profile updates.
      *
-     * @param email l'email à vérifier
-     * @param id l'ID de l'instructeur à exclure
-     * @return true si un autre instructeur possède cet email
+     * @param email the email to check
+     * @param id the instructor ID to exclude
+     * @return true if another instructor has this email
      */
     boolean existsByEmailAndIdNotAndDeletedFalse(String email, Long id);
 
     // ==================== Status-based Queries ====================
 
     /**
-     * Trouve tous les instructeurs non supprimés avec un statut spécifique.
+     * Finds all non-deleted instructors with a specific status.
      *
-     * @param status le statut recherché
-     * @return liste des instructeurs correspondants
+     * @param status the requested status
+     * @return list of matching instructors
      */
     List<InstructorEntity> findByStatusAndDeletedFalse(InstructorStatus status);
 
     /**
-     * Trouve tous les instructeurs actifs et non supprimés.
+     * Finds all active and non-deleted instructors.
      *
-     * @return liste des instructeurs actifs
+     * @return list of active instructors
      */
     default List<InstructorEntity> findAllActiveAndDeletedFalse() {
         return findByStatusAndDeletedFalse(InstructorStatus.ACTIVE);
     }
 
     /**
-     * Trouve tous les instructeurs avec des invitations en attente.
+     * Finds all instructors with pending invitations.
      *
-     * @return liste des instructeurs invités
+     * @return list of invited instructors
      */
     default List<InstructorEntity> findAllInvited() {
         return findByStatusAndDeletedFalse(InstructorStatus.INVITED);
@@ -92,19 +92,19 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
     // ==================== Specialty-based Queries ====================
 
     /**
-     * Trouve tous les instructeurs non supprimés avec un statut et une spécialité donnés.
+     * Finds all non-deleted instructors with a given status and specialty.
      *
-     * @param status le statut recherché
-     * @param specialty la spécialité recherchée
-     * @return liste des instructeurs correspondants
+     * @param status the requested status
+     * @param specialty the requested specialty
+     * @return list of matching instructors
      */
     List<InstructorEntity> findByStatusAndSpecialtyAndDeletedFalse(InstructorStatus status, SkateSpecialty specialty);
 
     /**
-     * Trouve tous les instructeurs actifs pour une spécialité donnée.
+     * Finds all active instructors for a given specialty.
      *
-     * @param specialty la spécialité recherchée
-     * @return liste des instructeurs actifs avec cette spécialité
+     * @param specialty the requested specialty
+     * @return list of active instructors with this specialty
      */
     default List<InstructorEntity> findActiveBySpecialty(SkateSpecialty specialty) {
         return findByStatusAndSpecialtyAndDeletedFalse(InstructorStatus.ACTIVE, specialty);
@@ -113,12 +113,12 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
     // ==================== Token Expiration Queries ====================
 
     /**
-     * Trouve les instructeurs avec des tokens d'activation expirés.
-     * Utile pour les jobs de nettoyage ou les notifications.
+     * Finds instructors with expired activation tokens.
+     * Useful for cleanup jobs or notifications.
      *
-     * @param status le statut recherché (généralement INVITED)
-     * @param now la date/heure actuelle
-     * @return liste des instructeurs avec tokens expirés
+     * @param status the requested status (usually INVITED)
+     * @param now the current date/time
+     * @return list of instructors with expired tokens
      */
     @Query("SELECT i FROM InstructorEntity i WHERE i.status = :status AND i.activationTokenExpiry < :now AND i.deleted = false")
     List<InstructorEntity> findByStatusAndActivationTokenExpired(
@@ -127,9 +127,9 @@ public interface InstructorRepository extends JpaRepository<InstructorEntity, Lo
     );
 
     /**
-     * Trouve tous les instructeurs avec des invitations expirées.
+     * Finds all instructors with expired invitations.
      *
-     * @return liste des instructeurs avec invitations expirées
+     * @return list of instructors with expired invitations
      */
     default List<InstructorEntity> findExpiredInvitations() {
         return findByStatusAndActivationTokenExpired(InstructorStatus.INVITED, LocalDateTime.now());

@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
-@Tag(name = "Participations", description = "Gestion des participations aux réservations")
+@Tag(name = "Participations", description = "Booking participation management")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/customers/{customerId}")
@@ -22,11 +22,11 @@ public class BookingParticipantController {
 
     private final BookingParticipantService participantService;
 
-    // ==================== Annulation ====================
+    // ==================== Cancellation ====================
 
     @Operation(
-            summary = "Annuler une participation",
-            description = "Annule la participation d'un client à une réservation"
+            summary = "Cancel a participation",
+            description = "Cancels a customer's participation in a booking"
     )
     @PostMapping("/participations/{participantId}/cancel")
     @PreAuthorize("@userSecurity.isOwner(#customerId) or @userSecurity.isAdmin()")
@@ -35,30 +35,30 @@ public class BookingParticipantController {
             @PathVariable Long participantId,
             @Valid @RequestBody ParticipantCancelRequest request
     ) {
-        log.info("POST /api/customers/{}/participations/{}/cancel - Annulation de participation", customerId, participantId);
+        log.info("POST /api/customers/{}/participations/{}/cancel - Cancelling participation", customerId, participantId);
         ParticipantResponse response = participantService.cancel(customerId, participantId, request);
         return ResponseEntity.ok(response);
     }
 
-    // ==================== Consultation ====================
+    // ==================== Retrieval ====================
 
     @Operation(
-            summary = "Mes réservations",
-            description = "Récupère toutes les réservations d'un client"
+            summary = "My bookings",
+            description = "Retrieves all bookings for a customer"
     )
     @GetMapping("/my-bookings")
     @PreAuthorize("@userSecurity.isOwner(#customerId) or @userSecurity.isAdmin()")
     public ResponseEntity<List<MyBookingResponse>> getMyBookings(
             @PathVariable Long customerId
     ) {
-        log.info("GET /api/customers/{}/my-bookings - Récupération des réservations", customerId);
+        log.info("GET /api/customers/{}/my-bookings - Retrieving bookings", customerId);
         List<MyBookingResponse> bookings = participantService.getMyBookings(customerId);
         return ResponseEntity.ok(bookings);
     }
 
     @Operation(
-            summary = "Modifier les notes",
-            description = "Met à jour les notes d'une participation"
+            summary = "Update notes",
+            description = "Updates the notes of a participation"
     )
     @PatchMapping("/participations/{participationId}/notes")
     @PreAuthorize("@userSecurity.isOwner(#customerId) or @userSecurity.isAdmin()")
@@ -67,7 +67,7 @@ public class BookingParticipantController {
             @PathVariable Long participationId,
             @RequestBody @Valid UpdateNotesRequest request
     ) {
-        log.info("PATCH /api/customers/{}/participations/{}/notes - Mise à jour des notes", customerId, participationId);
+        log.info("PATCH /api/customers/{}/participations/{}/notes - Updating notes", customerId, participationId);
         MyBookingResponse response = participantService.updateNotes(
                 customerId,
                 participationId,

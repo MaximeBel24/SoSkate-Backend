@@ -1,7 +1,7 @@
 package com.soskate.api.exceptions.auth;
 
 /**
- * Exception levée lorsque les identifiants de connexion sont invalides.
+ * Exception thrown when login credentials are invalid.
  *
  * @author SoSkate Team
  * @version 1.0

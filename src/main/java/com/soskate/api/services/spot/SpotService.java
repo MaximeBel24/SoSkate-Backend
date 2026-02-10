@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Service pour la gestion des spots de skateboard.
+ * Service for skateboard spot management.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -15,81 +15,81 @@ import java.util.List;
 public interface SpotService {
 
     /**
-     * Crée un nouveau spot.
+     * Creates a new spot.
      *
-     * @param requestDTO les données du spot à créer
-     * @return le spot créé
+     * @param requestDTO the spot data to create
+     * @return the created spot
      */
     SpotResponse createSpot(SpotRequest requestDTO);
 
     /**
-     * Récupère tous les spots.
+     * Retrieves all spots.
      *
-     * @return liste de tous les spots
+     * @return list of all spots
      */
     List<SpotResponse> getAllSpots();
 
     /**
-     * Récupère uniquement les spots actifs.
+     * Retrieves only active spots.
      *
-     * @return liste des spots actifs
+     * @return list of active spots
      */
     List<SpotResponse> getActiveSpots();
 
     /**
-     * Récupère un spot par son ID.
+     * Retrieves a spot by its ID.
      *
-     * @param id l'identifiant du spot
-     * @return le spot trouvé
+     * @param id the spot identifier
+     * @return the found spot
      */
     SpotResponse getSpotById(Long id);
 
     /**
-     * Récupère les spots par ville.
+     * Retrieves spots by city.
      *
-     * @param city le nom de la ville
-     * @return liste des spots dans cette ville
+     * @param city the city name
+     * @return list of spots in this city
      */
     List<SpotResponse> getSpotsByCity(String city);
 
     /**
-     * Récupère les spots indoor ou outdoor.
+     * Retrieves indoor or outdoor spots.
      *
-     * @param isIndoor true pour indoor, false pour outdoor
-     * @return liste des spots correspondants
+     * @param isIndoor true for indoor, false for outdoor
+     * @return list of matching spots
      */
     List<SpotResponse> getSpotsByType(Boolean isIndoor);
 
     /**
-     * Récupère les spots à proximité d'une position GPS.
+     * Retrieves spots near a GPS position.
      *
-     * @param latitude latitude du point de référence
-     * @param longitude longitude du point de référence
-     * @param radiusKm rayon de recherche en kilomètres
-     * @return liste des spots dans le rayon
+     * @param latitude latitude of the reference point
+     * @param longitude longitude of the reference point
+     * @param radiusKm search radius in kilometers
+     * @return list of spots within the radius
      */
     List<SpotResponse> getSpotsNearby(BigDecimal latitude, BigDecimal longitude, double radiusKm);
 
     /**
-     * Met à jour un spot existant.
+     * Updates an existing spot.
      *
-     * @param id l'identifiant du spot
-     * @param requestDTO les nouvelles données
-     * @return le spot mis à jour
+     * @param id the spot identifier
+     * @param requestDTO the new data
+     * @return the updated spot
      */
     SpotResponse updateSpot(Long id, SpotRequest requestDTO);
 
     /**
-     * Désactive un spot (soft delete).
+     * Deactivates a spot (soft delete).
      *
-     * @param id l'identifiant du spot
+     * @param id the spot identifier
      */
     void deactivateSpot(Long id);
 
     /**
-     * Supprime définitivement un spot.
+     * Permanently deletes a spot.
      *
-     * @param id l'identifiant du spot
+     * @param id the spot identifier
      */
     void deleteSpot(Long id);
 }

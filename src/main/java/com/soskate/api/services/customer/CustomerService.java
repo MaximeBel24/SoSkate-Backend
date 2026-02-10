@@ -6,7 +6,7 @@ import com.soskate.api.exceptions.customer.CustomerNotFoundException;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 
 /**
- * Service pour la gestion du profil Customer.
+ * Service for Customer profile management.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -14,23 +14,23 @@ import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 public interface CustomerService {
 
     /**
-     * Met à jour le profil d'un customer.
-     * Seuls les champs non-null sont mis à jour (mise à jour partielle).
+     * Updates a customer's profile.
+     * Only non-null fields are updated (partial update).
      *
-     * @param customerId l'ID du customer à mettre à jour
-     * @param request les données à mettre à jour
-     * @return le customer mis à jour
-     * @throws CustomerNotFoundException si le customer n'existe pas
-     * @throws EmailAlreadyExistsException si le nouvel email est déjà utilisé
+     * @param customerId the ID of the customer to update
+     * @param request the data to update
+     * @return the updated customer
+     * @throws CustomerNotFoundException if the customer does not exist
+     * @throws EmailAlreadyExistsException if the new email is already in use
      */
     CustomerResponse updateCustomer(Long customerId, CustomerUpdateRequest request);
 
     /**
-     * Récupère le profil d'un customer par son ID.
+     * Retrieves a customer's profile by their ID.
      *
-     * @param customerId l'ID du customer
-     * @return le profil du customer
-     * @throws CustomerNotFoundException si le customer n'existe pas
+     * @param customerId the customer's ID
+     * @return the customer's profile
+     * @throws CustomerNotFoundException if the customer does not exist
      */
     CustomerResponse getCustomerById(Long customerId);
 }

@@ -41,10 +41,10 @@ public class SlotCalculationServiceImpl implements SlotCalculationService {
             LocalDate date,
             Integer durationMinutes
     ) {
-        log.debug("Calcul des créneaux réservables : instructeur={}, spot={}, date={}, durée={}min",
+        log.debug("Calculating available slots: instructor={}, spot={}, date={}, duration={}min",
                 instructorId, spotId, date, durationMinutes);
         SpotEntity requestedSpot = spotRepository.findById(spotId)
-                .orElseThrow(() -> new SpotNotFoundException("Spot non trouvé"));
+                .orElseThrow(() -> new SpotNotFoundException("Spot not found"));
 
         List<AvailabilityEntity> availabilities = availabilityRepository
                 .findAvailableByInstructorAndDateRange(instructorId, date, date);
@@ -79,7 +79,7 @@ public class SlotCalculationServiceImpl implements SlotCalculationService {
             }
         }
 
-        log.debug("{} créneau(x) calculé(s) pour l'instructeur {} le {}", slots.size(), instructorId, date);
+        log.debug("{} slot(s) calculated for instructor {} on {}", slots.size(), instructorId, date);
         return new AvailableSlotsResponse(
                 instructorId,
                 spotId,

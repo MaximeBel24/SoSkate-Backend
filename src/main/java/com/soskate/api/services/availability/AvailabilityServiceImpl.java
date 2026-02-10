@@ -45,16 +45,16 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Transactional
     public AvailabilityResponse createAvailability(Long instructorId, AvailabilityCreateRequest request) {
-        log.info("Création d'une disponibilité pour l'instructeur {} : {} de {} à {}",
+        log.info("Creating availability for instructor {}: {} from {} to {}",
                 instructorId, request.date(), request.startTime(), request.endTime());
         InstructorEntity instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new InstructorNotFoundException("Instructeur non trouvé"));
+                .orElseThrow(() -> new InstructorNotFoundException("Instructor not found"));
 
         if (instructor.getStatus() != InstructorStatus.ACTIVE) {
-            throw new BookingException("L'instructeur doit être actif pour créer une disponibilité");
+            throw new BookingException("Instructor must be active to create an availability");
         }
 
-        // Vérifier pas de chevauchement
+        // Check for overlap
         boolean hasOverlap = availabilityRepository.existsOverlapping(
                 instructorId,
                 request.date(),
@@ -63,7 +63,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         );
 
         if (hasOverlap) {
-            log.warn("Chevauchement détecté pour l'instructeur {} le {} de {} à {}",
+            log.warn("Overlap detected for instructor {} on {} from {} to {}",
                     instructorId, request.date(), request.startTime(), request.endTime());
             throw new AvailabilityOverlapException();
         }
@@ -77,12 +77,12 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                 .build();
 
         AvailabilityEntity saved = availabilityRepository.save(availability);
-        log.info("Disponibilité créée avec succès : ID {}", saved.getId());
+        log.info("Availability created successfully: ID {}", saved.getId());
         return availabilityMapper.toResponse(saved);
     }
 
     public List<AvailabilityResponse> getAvailabilityByInstructor(Long instructorId) {
-        log.debug("Récupération des disponibilités pour l'instructeur {}", instructorId);
+        log.debug("Retrieving availabilities for instructor {}", instructorId);
         List<AvailabilityEntity> availabilities = availabilityRepository
                 .findByInstructorIdAndStatus(instructorId, AvailabilityStatus.AVAILABLE);
         return availabilityMapper.toResponseList(availabilities);
@@ -93,19 +93,19 @@ public class AvailabilityServiceImpl implements AvailabilityService {
             LocalDate startDate,
             LocalDate endDate
     ) {
-        log.debug("Récupération des disponibilités pour l'instructeur {} du {} au {}", instructorId, startDate, endDate);
+        log.debug("Retrieving availabilities for instructor {} from {} to {}", instructorId, startDate, endDate);
         List<AvailabilityEntity> availabilities = availabilityRepository.findAvailableByInstructorAndDateRange(instructorId, startDate, endDate);
         return availabilityMapper.toResponseList(availabilities);
     }
 
     @Transactional
     public AvailabilityResponse updateAvailability(Long instructorId, Long id, AvailabilityUpdateRequest request) {
-        log.info("Mise à jour de la disponibilité {} pour l'instructeur {}", id, instructorId);
+        log.info("Updating availability {} for instructor {}", id, instructorId);
         AvailabilityEntity availability = availabilityRepository.findById(id)
-                .orElseThrow(() -> new AvailabilityNotFoundException("Disponibilité non trouvée"));
+                .orElseThrow(() -> new AvailabilityNotFoundException("Availability not found"));
 
         if (!availability.getInstructor().getId().equals(instructorId)) {
-            throw new AvailabilityNotFoundException("Disponibilité non trouvée");
+            throw new AvailabilityNotFoundException("Availability not found");
         }
 
         if (request.date() != null) {
@@ -124,12 +124,12 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Transactional
     public void deleteAvailability(Long instructorId, Long id) {
-        log.info("Suppression de la disponibilité {} pour l'instructeur {}", id, instructorId);
+        log.info("Deleting availability {} for instructor {}", id, instructorId);
         AvailabilityEntity availability = availabilityRepository.findById(id)
-                .orElseThrow(() -> new AvailabilityNotFoundException("Disponibilité non trouvée"));
+                .orElseThrow(() -> new AvailabilityNotFoundException("Availability not found"));
 
         if (!availability.getInstructor().getId().equals(instructorId)) {
-            throw new AvailabilityNotFoundException("Disponibilité non trouvée");
+            throw new AvailabilityNotFoundException("Availability not found");
         }
 
         availability.setStatus(AvailabilityStatus.CANCELLED);
@@ -142,11 +142,11 @@ public class AvailabilityServiceImpl implements AvailabilityService {
             LocalDate startDate,
             LocalDate endDate
     ) {
-        log.debug("Calcul des créneaux libres pour l'instructeur {} du {} au {}", instructorId, startDate, endDate);
-        // 1. Récupérer les disponibilités
+        log.debug("Calculating free slots for instructor {} from {} to {}", instructorId, startDate, endDate);
+        // 1. Retrieve availabilities
         List<AvailabilityEntity> availabilities = availabilityRepository.findAvailableByInstructorAndDateRange(instructorId, startDate, endDate);
 
-        // 2. Récupérer les bookings
+        // 2. Retrieve bookings
         List<BookingEntity> bookings = bookingRepository
                 .findByInstructorIdAndStartTimeBetween(
                         instructorId,
@@ -154,7 +154,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                         endDate.plusDays(1).atStartOfDay()
                 );
 
-        // 3. Calculer les créneaux réellement disponibles
+        // 3. Calculate actually available slots
         List<AvailableSlotResponse> slots = new ArrayList<>();
 
         for (AvailabilityEntity availability : availabilities) {
@@ -173,7 +173,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         LocalTime availStart = availability.getStartTime();
         LocalTime availEnd = availability.getEndTime();
 
-        // Filtrer les bookings qui chevauchent cette disponibilité
+        // Filter bookings that overlap with this availability
         List<BookingEntity> overlapping = allBookings.stream()
                 .filter(b -> b.getStartTime().toLocalDate().equals(date))
                 .filter(b -> {

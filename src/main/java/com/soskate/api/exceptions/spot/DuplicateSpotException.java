@@ -1,7 +1,7 @@
 package com.soskate.api.exceptions.spot;
 
 /**
- * Exception levée lorsqu'un spot avec le même nom et adresse existe déjà.
+ * Exception thrown when a spot with the same name and address already exists.
  * 
  * @author SoSkate Team
  * @version 1.0

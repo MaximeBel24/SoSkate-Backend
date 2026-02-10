@@ -5,21 +5,21 @@ import jakarta.validation.constraints.*;
 
 public record ServiceRequest(
 
-        @NotBlank(message = "Le nom est obligatoire.")
-        @Size(max = 150, message = "Le nom ne peut excéder 150 caractères.")
+        @NotBlank(message = "Name is required.")
+        @Size(max = 150, message = "Name cannot exceed 150 characters.")
         String name,
 
-        @NotNull(message = "Le type de service est obligatoire.")
+        @NotNull(message = "Service type is required.")
         ServiceType type,
 
-        @Size(max = 10000, message = "La description ne peut excéder 10 000 caractères.")
+        @Size(max = 10000, message = "Description cannot exceed 10,000 characters.")
         String description,
 
-        @NotNull(message = "Le prix de base est obligatoire.")
-        @Min(value = 0, message = "Le prix de base doit être supérieur ou égal à 0.")
+        @NotNull(message = "Base price is required.")
+        @Min(value = 0, message = "Base price must be greater than or equal to 0.")
         Integer basePriceCents,
 
-        @NotNull(message = "Le statut actif/inactif est obligatoire.")
+        @NotNull(message = "Active/inactive status is required.")
         Boolean isActive
 
 ) {

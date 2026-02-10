@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Repository pour la gestion des associations instructeur-spot.
- * Permet de savoir quels instructeurs enseignent sur quels spots.
+ * Repository for managing instructor-spot associations.
+ * Allows querying which instructors teach at which spots.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -20,35 +20,35 @@ import java.util.List;
 public interface InstructorSpotRepository extends JpaRepository<InstructorSpotEntity, Long> {
 
     /**
-     * Trouve toutes les associations pour un instructeur donné.
+     * Finds all associations for a given instructor.
      *
-     * @param instructorId l'ID de l'instructeur
-     * @return liste des associations instructeur-spot
+     * @param instructorId the instructor ID
+     * @return list of instructor-spot associations
      */
     List<InstructorSpotEntity> findByInstructorId(Long instructorId);
 
     /**
-     * Vérifie si une association existe entre un instructeur et un spot.
+     * Checks whether an association exists between an instructor and a spot.
      *
-     * @param instructorId l'ID de l'instructeur
-     * @param spotId l'ID du spot
-     * @return true si l'association existe
+     * @param instructorId the instructor ID
+     * @param spotId the spot ID
+     * @return true if the association exists
      */
     boolean existsByInstructorIdAndSpotId(Long instructorId, Long spotId);
 
     /**
-     * Supprime l'association entre un instructeur et un spot.
+     * Deletes the association between an instructor and a spot.
      *
-     * @param instructorId l'ID de l'instructeur
-     * @param spotId l'ID du spot
+     * @param instructorId the instructor ID
+     * @param spotId the spot ID
      */
     void deleteByInstructorIdAndSpotId(Long instructorId, Long spotId);
 
     /**
-     * Trouve tous les instructeurs actifs et non supprimés qui enseignent sur un spot.
+     * Finds all active and non-deleted instructors who teach at a spot.
      *
-     * @param spotId l'ID du spot
-     * @return liste des instructeurs actifs sur ce spot
+     * @param spotId the spot ID
+     * @return list of active instructors at this spot
      */
     @Query("""
         SELECT is.instructor FROM InstructorSpotEntity is

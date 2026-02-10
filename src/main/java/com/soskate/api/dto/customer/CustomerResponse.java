@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * DTO de réponse pour un customer.
- * Immutable et ne contient JAMAIS le mot de passe.
+ * Response DTO for a customer.
+ * Immutable and NEVER contains the password.
  *
  * @author SoSkate Team
  * @version 1.0

@@ -1,7 +1,7 @@
 package com.soskate.api.exceptions.auth;
 
 /**
- * Exception levée lorsqu'un utilisateur tente de s'inscrire avec un email déjà existant.
+ * Exception thrown when a user attempts to register with an email that already exists.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -9,18 +9,18 @@ package com.soskate.api.exceptions.auth;
 public class EmailAlreadyExistsException extends RuntimeException {
 
     /**
-     * Constructeur avec message personnalisé.
+     * Constructor with a custom message.
      *
-     * @param message le message d'erreur
+     * @param message the error message
      */
     public EmailAlreadyExistsException(String message) {
         super(message);
     }
 
     /**
-     * Constructeur avec email en paramètre.
+     * Constructor with email as parameter.
      *
-     * @param email l'email qui existe déjà
+     * @param email the email that already exists
      */
     public EmailAlreadyExistsException(String email, boolean isEmail) {
         super(String.format("An account with email '%s' already exists", email));

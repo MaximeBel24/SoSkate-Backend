@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
- * Représente un créneau réellement disponible (après soustraction des bookings).
- * Utilisé pour l'affichage du planning instructeur et la réservation côté client.
+ * Represents an actually available time slot (after subtracting bookings).
+ * Used for displaying the instructor schedule and client-side booking.
  */
 public record AvailableSlotResponse(
         Long id,

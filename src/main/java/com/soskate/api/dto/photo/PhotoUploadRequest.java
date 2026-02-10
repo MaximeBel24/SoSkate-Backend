@@ -20,17 +20,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class PhotoUploadRequest {
 
-    @NotNull(message = "Le fichier est requis")
+    @NotNull(message = "File is required")
     private MultipartFile file;
 
-    @NotNull(message = "Le type d'entité est requis")
+    @NotNull(message = "Entity type is required")
     private PhotoEntityType entityType;
 
-    @NotNull(message = "L'ID de l'entité est requis")
-    @Positive(message = "L'ID de l'entité doit être positif")
+    @NotNull(message = "Entity ID is required")
+    @Positive(message = "Entity ID must be positive")
     private Long entityId;
 
-    @NotNull(message = "Le type de photo est requis")
+    @NotNull(message = "Photo type is required")
     private PhotoType photoType;
 
     /**

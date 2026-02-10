@@ -6,7 +6,7 @@ import com.soskate.api.entities.SpotEntity;
 import org.springframework.stereotype.Component;
 
 /**
- * Mapper pour convertir entre SpotEntity et ses DTOs.
+ * Mapper for converting between SpotEntity and its DTOs.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 public class SpotMapper {
 
     /**
-     * Convertit un SpotRequestDTO en SpotEntity.
+     * Converts a SpotRequestDTO to a SpotEntity.
      *
-     * @param request le DTO de requête
-     * @return l'entité Spot
+     * @param request the request DTO
+     * @return the Spot entity
      */
     public SpotEntity toEntity(SpotRequest request) {
         if (request == null) {
@@ -39,10 +39,10 @@ public class SpotMapper {
     }
 
     /**
-     * Convertit une SpotEntity en SpotResponseDTO.
+     * Converts a SpotEntity to a SpotResponseDTO.
      *
-     * @param entity l'entité à convertir
-     * @return le DTO de réponse complet
+     * @param entity the entity to convert
+     * @return the full response DTO
      */
     public SpotResponse toResponse(SpotEntity entity) {
         if (entity == null) {
@@ -66,10 +66,10 @@ public class SpotMapper {
     }
 
     /**
-     * Met à jour une entité existante avec les données d'un DTO.
+     * Updates an existing entity with data from a DTO.
      *
-     * @param entity l'entité à mettre à jour
-     * @param request le DTO contenant les nouvelles valeurs
+     * @param entity the entity to update
+     * @param request the DTO containing the new values
      */
     public void updateEntityFromRequest(SpotEntity entity, SpotRequest request) {
         if (entity == null || request == null) {

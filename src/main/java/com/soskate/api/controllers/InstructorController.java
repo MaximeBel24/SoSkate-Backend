@@ -24,7 +24,7 @@ import java.util.Map;
  * - Public listing of active instructors (for customers)
  * - Account activation (for invited instructors)
  */
-@Tag(name = "Instructors", description = "Consultation et activation des instructeurs")
+@Tag(name = "Instructors", description = "Instructor browsing and activation")
 @RestController
 @RequestMapping("/instructors")
 @RequiredArgsConstructor
@@ -38,8 +38,8 @@ public class InstructorController {
     // ==================== Public Listing ====================
 
     @Operation(
-            summary = "Lister les instructeurs actifs",
-            description = "Récupère tous les instructeurs actifs pour les clients"
+            summary = "List active instructors",
+            description = "Retrieves all active instructors for customers"
     )
     @GetMapping
     public ResponseEntity<List<InstructorSummary>> getActiveInstructors() {
@@ -48,8 +48,8 @@ public class InstructorController {
     }
 
     @Operation(
-            summary = "Récupérer un instructeur",
-            description = "Récupère le profil public d'un instructeur"
+            summary = "Retrieve an instructor",
+            description = "Retrieves an instructor's public profile"
     )
     @GetMapping("/{id}")
     public ResponseEntity<InstructorResponse> getInstructorById(@PathVariable Long id) {
@@ -58,8 +58,8 @@ public class InstructorController {
     }
 
     @Operation(
-            summary = "Filtrer par spécialité",
-            description = "Récupère les instructeurs par spécialité de skate"
+            summary = "Filter by specialty",
+            description = "Retrieves instructors by skate specialty"
     )
     @GetMapping("/specialty/{specialty}")
     public ResponseEntity<List<InstructorSummary>> getInstructorsBySpecialty(@PathVariable SkateSpecialty specialty) {
@@ -68,8 +68,8 @@ public class InstructorController {
     }
 
     @Operation(
-            summary = "Valider un token d'activation",
-            description = "Vérifie si un token d'activation est valide"
+            summary = "Validate an activation token",
+            description = "Checks if an activation token is valid"
     )
     @GetMapping("/activate/validate")
     public ResponseEntity<Map<String, Boolean>> validateActivationToken(@RequestParam("token") String token) {
@@ -79,8 +79,8 @@ public class InstructorController {
     }
 
     @Operation(
-            summary = "Activer un compte instructeur",
-            description = "Active le compte avec le mot de passe choisi"
+            summary = "Activate an instructor account",
+            description = "Activates the account with the chosen password"
     )
     @PostMapping("/activate")
     public ResponseEntity<InstructorResponse> activateAccount(@Valid @RequestBody InstructorActivateRequest request) {
@@ -89,8 +89,8 @@ public class InstructorController {
     }
 
     @Operation(
-            summary = "Mettre à jour le profil",
-            description = "Met à jour le profil de l'instructeur"
+            summary = "Update profile",
+            description = "Updates the instructor's profile"
     )
     @PutMapping("/{id}")
     @PreAuthorize("@userSecurity.isOwner(#id) or @userSecurity.isAdmin()")
@@ -102,8 +102,8 @@ public class InstructorController {
     }
 
     @Operation(
-            summary = "Récupérer les réservations",
-            description = "Récupère les réservations d'un instructeur (filtre: upcoming, passed)"
+            summary = "Retrieve bookings",
+            description = "Retrieves an instructor's bookings (filter: upcoming, passed)"
     )
     @GetMapping("/{instructorId}/bookings")
     public ResponseEntity<List<BookingResponse>> getBookingsByInstructor(

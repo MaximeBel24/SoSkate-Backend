@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * DTO de réponse pour un spot.
+ * Response DTO for a spot.
  *
  * @author SoSkate Team
  * @version 1.0

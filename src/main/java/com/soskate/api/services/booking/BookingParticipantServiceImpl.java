@@ -32,10 +32,10 @@ public class BookingParticipantServiceImpl implements BookingParticipantService 
     @Transactional
     public ParticipantResponse cancel(Long customerId, Long participantId, ParticipantCancelRequest request) {
         BookingParticipantEntity participant = participantRepository.findById(participantId)
-                .orElseThrow(() -> new ParticipationNotFoundException("Participation non trouvée"));
+                .orElseThrow(() -> new ParticipationNotFoundException("Participation not found"));
 
         if (!participant.getCustomer().getId().equals(customerId)) {
-            throw new ParticipationNotFoundException("Participation non trouvée");
+            throw new ParticipationNotFoundException("Participation not found");
         }
 
         if (!participant.canBeCancelled()) {
@@ -54,7 +54,7 @@ public class BookingParticipantServiceImpl implements BookingParticipantService 
             participant.setStatus(ParticipantStatus.REFUNDED);
         } else {
             participant.setStatus(ParticipantStatus.CANCELLED);
-            // Incrémenter le compteur d'annulations tardives
+            // Increment the late cancellation counter
             CustomerEntity customer = participant.getCustomer();
             customer.incrementLateCancellation();
             customerRepository.save(customer);
@@ -65,7 +65,7 @@ public class BookingParticipantServiceImpl implements BookingParticipantService 
 
         BookingParticipantEntity saved = participantRepository.save(participant);
 
-        // Mettre à jour le statut du booking
+        // Update booking status
         updateBookingStatus(booking);
 
         return participantMapper.toResponse(saved);
@@ -84,7 +84,7 @@ public class BookingParticipantServiceImpl implements BookingParticipantService 
     }
 
     /**
-     * Récupère toutes les réservations d'un customer
+     * Retrieves all bookings for a customer
      */
     public List<MyBookingResponse> getMyBookings(Long customerId) {
         List<BookingParticipantEntity> participations =
@@ -96,26 +96,26 @@ public class BookingParticipantServiceImpl implements BookingParticipantService 
     }
 
     /**
-     * Modifie les notes d'une réservation
+     * Updates booking notes
      */
     public MyBookingResponse updateNotes(Long customerId, Long participationId, String notes) {
         BookingParticipantEntity participation = participantRepository
                 .findByIdAndCustomerId(participationId, customerId)
-                .orElseThrow(() -> new ParticipationNotFoundException("Participation non trouvée"));
+                .orElseThrow(() -> new ParticipationNotFoundException("Participation not found"));
 
         BookingEntity booking = participation.getBooking();
 
-        // Vérifier que le cours n'est pas dans moins de 24h
+        // Check that the lesson is not within 24 hours
         if (booking.getStartTime().isBefore(LocalDateTime.now().plusHours(24))) {
             throw new BookingModificationNotAllowedException(
-                    "Impossible de modifier les notes moins de 24h avant le cours"
+                    "Cannot modify notes less than 24 hours before the lesson"
             );
         }
 
-        // Vérifier le statut
+        // Check status
         if (participation.getStatus() == ParticipantStatus.CANCELLED) {
             throw new BookingModificationNotAllowedException(
-                    "Impossible de modifier une participation annulée"
+                    "Cannot modify a cancelled participation"
             );
         }
 

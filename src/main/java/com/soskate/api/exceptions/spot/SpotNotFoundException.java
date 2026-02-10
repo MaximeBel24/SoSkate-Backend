@@ -1,7 +1,7 @@
 package com.soskate.api.exceptions.spot;
 
 /**
- * Exception levée lorsqu'un spot est introuvable.
+ * Exception thrown when a spot is not found.
  * 
  * @author SoSkate Team
  * @version 1.0

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Implémentation du service de gestion des spots.
+ * Implementation of the spot management service.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -34,10 +34,10 @@ public class SpotServiceImpl implements SpotService {
     @Override
     @Transactional
     public SpotResponse createSpot(SpotRequest request) {
-        log.info("Création d'un nouveau spot : {}", request.name());
+        log.info("Creating new spot: {}", request.name());
 
         if (spotRepository.existsByNameAndAddress(request.name(), request.address())) {
-            log.warn("Tentative de création d'un spot déjà existant : {} à {}",
+            log.warn("Attempt to create an already existing spot: {} at {}",
                     request.name(), request.address());
             throw new DuplicateSpotException(request.name(), request.address());
         }
@@ -47,14 +47,14 @@ public class SpotServiceImpl implements SpotService {
         SpotEntity spot = spotMapper.toEntity(request);
         SpotEntity savedSpot = spotRepository.save(spot);
 
-        log.info("Spot créé avec succès : ID {}", savedSpot.getId());
+        log.info("Spot created successfully: ID {}", savedSpot.getId());
 
         return spotMapper.toResponse(savedSpot);
     }
 
     @Override
     public List<SpotResponse> getAllSpots() {
-        log.debug("Récupération de tous les spots");
+        log.debug("Retrieving all spots");
 
         return spotRepository.findAll()
                 .stream()
@@ -64,7 +64,7 @@ public class SpotServiceImpl implements SpotService {
 
     @Override
     public List<SpotResponse> getActiveSpots() {
-        log.debug("Récupération des spots actifs");
+        log.debug("Retrieving active spots");
 
         return spotRepository.findByIsActiveTrue()
                 .stream()
@@ -74,7 +74,7 @@ public class SpotServiceImpl implements SpotService {
 
     @Override
     public SpotResponse getSpotById(Long id) {
-        log.debug("Récupération du spot avec l'ID : {}", id);
+        log.debug("Retrieving spot with ID: {}", id);
 
         SpotEntity spot = spotRepository.findById(id)
                 .orElseThrow(() -> new SpotNotFoundException(id));
@@ -84,7 +84,7 @@ public class SpotServiceImpl implements SpotService {
 
     @Override
     public List<SpotResponse> getSpotsByCity(String city) {
-        log.debug("Récupération des spots dans la ville : {}", city);
+        log.debug("Retrieving spots in city: {}", city);
 
         return spotRepository.findByCityContainingIgnoreCaseAndIsActiveTrue(city)
                 .stream()
@@ -94,7 +94,7 @@ public class SpotServiceImpl implements SpotService {
 
     @Override
     public List<SpotResponse> getSpotsByType(Boolean isIndoor) {
-        log.debug("Récupération des spots {} actifs", isIndoor ? "indoor" : "outdoor");
+        log.debug("Retrieving active {} spots", isIndoor ? "indoor" : "outdoor");
 
         return spotRepository.findByIsIndoorAndIsActiveTrue(isIndoor)
                 .stream()
@@ -104,22 +104,22 @@ public class SpotServiceImpl implements SpotService {
 
     @Override
     public List<SpotResponse> getSpotsNearby(BigDecimal latitude, BigDecimal longitude, double radiusKm) {
-        log.debug("Recherche de spots dans un rayon de {} km autour de ({}, {})",
+        log.debug("Searching for spots within a {} km radius around ({}, {})",
                 radiusKm, latitude, longitude);
 
-        // Valider les coordonnées
+        // Validate coordinates
         validateCoordinates(latitude, longitude);
 
-        // Valider le rayon
+        // Validate radius
         if (radiusKm <= 0 || radiusKm > 100) {
             throw new InvalidCoordinatesException(
-                    "Le rayon de recherche doit être compris entre 0 et 100 km"
+                    "Search radius must be between 0 and 100 km"
             );
         }
 
         List<SpotEntity> spots = spotRepository.findSpotsNearby(latitude, longitude, radiusKm);
 
-        log.info("{} spot(s) trouvé(s) dans un rayon de {} km", spots.size(), radiusKm);
+        log.info("{} spot(s) found within a {} km radius", spots.size(), radiusKm);
 
         return spots.stream()
                 .map(spotMapper::toResponse)
@@ -129,14 +129,14 @@ public class SpotServiceImpl implements SpotService {
     @Override
     @Transactional
     public SpotResponse updateSpot(Long id, SpotRequest request) {
-        log.info("Mise à jour du spot ID : {}", id);
+        log.info("Updating spot ID: {}", id);
 
         SpotEntity spotEntity = spotRepository.findById(id)
                 .orElseThrow(() -> new SpotNotFoundException(id));
 
         if ((!spotEntity.getName().equals(request.name()) || !spotEntity.getAddress().equals(request.address()))
                 && spotRepository.existsByNameAndAddress(request.name(), request.address())) {
-            log.warn("Tentative de modification vers un nom/adresse déjà existant : {} à {}",
+            log.warn("Attempt to update to an already existing name/address: {} at {}",
                     request.name(), request.address());
             throw new DuplicateSpotException(request.name(), request.address());
         }
@@ -146,7 +146,7 @@ public class SpotServiceImpl implements SpotService {
         spotMapper.updateEntityFromRequest(spotEntity, request);
         SpotEntity updatedSpot = spotRepository.save(spotEntity);
 
-        log.info("Spot mis à jour avec succès : ID {}", updatedSpot.getId());
+        log.info("Spot updated successfully: ID {}", updatedSpot.getId());
 
         return spotMapper.toResponse(updatedSpot);
     }
@@ -154,7 +154,7 @@ public class SpotServiceImpl implements SpotService {
     @Override
     @Transactional
     public void deactivateSpot(Long id) {
-        log.info("Désactivation du spot ID : {}", id);
+        log.info("Deactivating spot ID: {}", id);
 
         SpotEntity spot = spotRepository.findById(id)
                 .orElseThrow(() -> new SpotNotFoundException(id));
@@ -162,13 +162,13 @@ public class SpotServiceImpl implements SpotService {
         spot.setIsActive(false);
         spotRepository.save(spot);
 
-        log.info("Spot désactivé avec succès : ID {}", id);
+        log.info("Spot deactivated successfully: ID {}", id);
     }
 
     @Override
     @Transactional
     public void deleteSpot(Long id) {
-        log.info("Suppression du spot ID : {}", id);
+        log.info("Deleting spot ID: {}", id);
 
         if (!spotRepository.existsById(id)) {
             throw new SpotNotFoundException(id);
@@ -176,30 +176,30 @@ public class SpotServiceImpl implements SpotService {
 
         spotRepository.deleteById(id);
 
-        log.info("Spot supprimé avec succès : ID {}", id);
+        log.info("Spot deleted successfully: ID {}", id);
     }
 
     /**
-     * Valide les coordonnées GPS.
+     * Validates GPS coordinates.
      *
-     * @param latitude latitude à valider
-     * @param longitude longitude à valider
-     * @throws InvalidCoordinatesException si les coordonnées sont invalides
+     * @param latitude latitude to validate
+     * @param longitude longitude to validate
+     * @throws InvalidCoordinatesException if coordinates are invalid
      */
     private void validateCoordinates(BigDecimal latitude, BigDecimal longitude) {
         if (latitude == null || longitude == null) {
-            throw new InvalidCoordinatesException("La latitude et la longitude sont obligatoires");
+            throw new InvalidCoordinatesException("Latitude and longitude are required");
         }
 
         if (latitude.compareTo(new BigDecimal("-90")) < 0 || latitude.compareTo(new BigDecimal("90")) > 0) {
             throw new InvalidCoordinatesException(
-                    String.format("La latitude doit être comprise entre -90 et 90 (valeur fournie : %s)", latitude)
+                    String.format("Latitude must be between -90 and 90 (provided value: %s)", latitude)
             );
         }
 
         if (longitude.compareTo(new BigDecimal("-180")) < 0 || longitude.compareTo(new BigDecimal("180")) > 0) {
             throw new InvalidCoordinatesException(
-                    String.format("La longitude doit être comprise entre -180 et 180 (valeur fournie : %s)", longitude)
+                    String.format("Longitude must be between -180 and 180 (provided value: %s)", longitude)
             );
         }
     }

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Implémentation du service de gestion des services/cours.
+ * Implementation of the service/lesson management service.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -33,24 +33,24 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     @Transactional
     public ServiceResponse createService(ServiceRequest request) {
-        log.info("Création d'un nouveau service : {}", request.name());
+        log.info("Creating new service: {}", request.name());
 
         if (serviceRepository.existsByName(request.name())) {
-            log.warn("Tentative de création d'un service avec un nom existant : {}", request.name());
+            log.warn("Attempt to create a service with an existing name: {}", request.name());
             throw new ServiceAlreadyExistsException(request.name(), true);
         }
 
         ServiceEntity service = serviceMapper.toEntity(request);
         ServiceEntity savedService = serviceRepository.save(service);
 
-        log.info("Service créé avec succès : ID {}", savedService.getId());
+        log.info("Service created successfully: ID {}", savedService.getId());
 
         return serviceMapper.toResponse(savedService);
     }
 
     @Override
     public List<ServiceResponse> getAllServices() {
-        log.debug("Récupération de tous les services");
+        log.debug("Retrieving all services");
 
         return serviceRepository.findAll()
                 .stream()
@@ -60,7 +60,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<ServiceResponse> getActiveServices() {
-        log.debug("Récupération des services actifs");
+        log.debug("Retrieving active services");
 
         return serviceRepository.findByIsActiveTrue()
                 .stream()
@@ -70,7 +70,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServiceResponse getServiceById(Long id) {
-        log.debug("Récupération du service avec l'ID : {}", id);
+        log.debug("Retrieving service with ID: {}", id);
 
         ServiceEntity service = serviceRepository.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id));
@@ -80,7 +80,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<ServiceResponse> getServicesByType(ServiceType type) {
-        log.debug("Récupération des services de type : {}", type);
+        log.debug("Retrieving services of type: {}", type);
 
         return serviceRepository.findByType(type)
                 .stream()
@@ -91,21 +91,21 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     @Transactional
     public ServiceResponse updateService(Long id, ServiceRequest request) {
-        log.info("Mise à jour du service ID : {}", id);
+        log.info("Updating service ID: {}", id);
 
         ServiceEntity service = serviceRepository.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id));
 
         if (!service.getName().equals(request.name())
                 && serviceRepository.existsByName(request.name())) {
-            log.warn("Tentative de renommage avec un nom existant : {}", request.name());
+            log.warn("Attempt to rename to an existing name: {}", request.name());
             throw new ServiceAlreadyExistsException(request.name(), true);
         }
 
         serviceMapper.updateEntityFromRequest(service, request);
         ServiceEntity updatedService = serviceRepository.save(service);
 
-        log.info("Service mis à jour avec succès : ID {}", updatedService.getId());
+        log.info("Service updated successfully: ID {}", updatedService.getId());
 
         return serviceMapper.toResponse(updatedService);
     }
@@ -113,7 +113,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     @Transactional
     public void deactivateService(Long id) {
-        log.info("Désactivation du service ID : {}", id);
+        log.info("Deactivating service ID: {}", id);
 
         ServiceEntity service = serviceRepository.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id));
@@ -121,13 +121,13 @@ public class ServiceServiceImpl implements ServiceService {
         service.setIsActive(false);
         serviceRepository.save(service);
 
-        log.info("Service désactivé avec succès : ID {}", id);
+        log.info("Service deactivated successfully: ID {}", id);
     }
 
     @Override
     @Transactional
     public void deleteService(Long id) {
-        log.info("Suppression du service ID : {}", id);
+        log.info("Deleting service ID: {}", id);
 
         if (!serviceRepository.existsById(id)) {
             throw new ServiceNotFoundException(id);
@@ -135,6 +135,6 @@ public class ServiceServiceImpl implements ServiceService {
 
         serviceRepository.deleteById(id);
 
-        log.info("Service supprimé avec succès : ID {}", id);
+        log.info("Service deleted successfully: ID {}", id);
     }
 }

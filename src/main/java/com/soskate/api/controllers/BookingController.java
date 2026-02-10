@@ -2,6 +2,7 @@ package com.soskate.api.controllers;
 
 import com.soskate.api.dto.booking.BookingCreateRequest;
 import com.soskate.api.dto.booking.BookingResponse;
+import com.soskate.api.security.CustomUserDetails;
 import com.soskate.api.services.booking.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Bookings", description = "Gestion des réservations")
+@Tag(name = "Bookings", description = "Booking management")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/bookings")
@@ -22,42 +25,42 @@ public class BookingController {
     private final BookingService bookingService;
 
     @Operation(
-            summary = "Créer une réservation",
-            description = "Crée une nouvelle réservation pour un client"
+            summary = "Create a booking",
+            description = "Creates a new booking for a customer"
     )
     @PostMapping
     public ResponseEntity<BookingResponse> createBooking(
             @Valid @RequestBody BookingCreateRequest request
     ) {
-        log.info("POST /api/bookings - Création d'une réservation");
+        log.info("POST /api/bookings - Creating a booking");
         BookingResponse response = bookingService.createBooking(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(
-            summary = "Récupère une réservation",
-            description = "Récupère une réservation par son identifiant"
+            summary = "Retrieve a booking",
+            description = "Retrieves a booking by its ID"
     )
     @GetMapping("/{id}")
     public ResponseEntity<BookingResponse> getBookingById(@PathVariable Long id) {
-        log.info("GET /api/bookings/{} - Récupération de la réservation", id);
+        log.info("GET /api/bookings/{} - Retrieving booking", id);
         BookingResponse response = bookingService.getBookingById(id);
         return ResponseEntity.ok(response);
     }
 
     @Operation(
-            summary = "Annule une réservation",
-            description = "Annule une réservation par son instructeur"
+            summary = "Cancel a booking",
+            description = "Cancels a booking by its instructor"
     )
     @PatchMapping("/{bookingId}/cancel")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<BookingResponse> cancelByInstructor(
-            // TODO : récupérer instructorId du contexte de sécurité
-
-            @RequestParam Long instructorId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long bookingId
     ) {
-        log.info("PATCH /api/bookings/{}/cancel - Annulation par instructeur {}", bookingId, instructorId);
-        BookingResponse response = bookingService.cancelBooking(instructorId, bookingId);
-        return ResponseEntity.ok(response);
+            Long instructorId = userDetails.getUserEntity().getId();
+            log.info("PATCH /api/bookings/{}/cancel - Cancellation by instructor {}", bookingId, instructorId);
+            BookingResponse response = bookingService.cancelBooking(instructorId, bookingId);
+            return ResponseEntity.ok(response);
     }
 }

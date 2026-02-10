@@ -18,7 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Contrôleur REST pour la gestion du profil Customer.
+ * REST controller for Customer profile management.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -27,22 +27,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/customer")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Customer Profile", description = "Gestion du profil utilisateur Customer")
+@Tag(name = "Customer Profile", description = "Customer profile management")
 public class CustomerController {
 
     private final CustomerService customerService;
 
     @Operation(
-            summary = "Récupérer le profil",
-            description = "Récupère le profil d'un client"
+            summary = "Retrieve profile",
+            description = "Retrieves a customer's profile"
     )
     @GetMapping("/{customerId}")
     @PreAuthorize("@userSecurity.isOwner(#customerId) or @userSecurity.isAdmin()")
     public ResponseEntity<CustomerResponse> getCustomerById(
-            @Parameter(description = "ID du customer")
+            @Parameter(description = "Customer ID")
             @PathVariable Long customerId) {
 
-        log.info("Requête GET profil pour customer ID: {}", customerId);
+        log.info("GET profile request for customer ID: {}", customerId);
 
         CustomerResponse response = customerService.getCustomerById(customerId);
 
@@ -50,21 +50,21 @@ public class CustomerController {
     }
 
     @Operation(
-            summary = "Mettre à jour le profil",
-            description = "Met à jour le profil d'un client (partiel)"
+            summary = "Update profile",
+            description = "Updates a customer's profile (partial)"
     )
     @PutMapping("/{customerId}")
     @PreAuthorize("@userSecurity.isOwner(#customerId) or @userSecurity.isAdmin()")
     public ResponseEntity<CustomerResponse> updateCustomer(
-            @Parameter(description = "ID du customer")
+            @Parameter(description = "Customer ID")
             @PathVariable Long customerId,
             @Valid @RequestBody CustomerUpdateRequest request) {
 
-        log.info("Requête PUT profil pour customer ID: {}", customerId);
+        log.info("PUT profile request for customer ID: {}", customerId);
 
         CustomerResponse response = customerService.updateCustomer(customerId, request);
 
-        log.info("Profil mis à jour avec succès pour customer ID: {}", customerId);
+        log.info("Profile successfully updated for customer ID: {}", customerId);
 
         return ResponseEntity.ok(response);
     }

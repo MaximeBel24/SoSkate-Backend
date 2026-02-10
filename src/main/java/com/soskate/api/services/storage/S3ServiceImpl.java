@@ -55,10 +55,10 @@ public class S3ServiceImpl implements S3Service {
 
         } catch (S3Exception e) {
             log.error("Failed to upload file to S3: {}", e.getMessage(), e);
-            throw new PhotoUploadException("Échec de l'upload sur S3: " + e.awsErrorDetails().errorMessage(), e);
+            throw new PhotoUploadException("S3 upload failed: " + e.awsErrorDetails().errorMessage(), e);
         } catch (Exception e) {
             log.error("Unexpected error during S3 upload: {}", e.getMessage(), e);
-            throw new PhotoUploadException("Erreur inattendue lors de l'upload: " + e.getMessage(), e);
+            throw new PhotoUploadException("Unexpected error during upload: " + e.getMessage(), e);
         }
     }
 
@@ -78,7 +78,7 @@ public class S3ServiceImpl implements S3Service {
 
         } catch (S3Exception e) {
             log.error("Failed to delete file from S3: {}", e.getMessage(), e);
-            throw new PhotoUploadException("Échec de la suppression sur S3: " + e.awsErrorDetails().errorMessage(), e);
+            throw new PhotoUploadException("S3 deletion failed: " + e.awsErrorDetails().errorMessage(), e);
         }
     }
 

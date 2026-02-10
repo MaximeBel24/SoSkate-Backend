@@ -7,7 +7,7 @@ import com.soskate.api.enums.ServiceType;
 import java.util.List;
 
 /**
- * Service pour la gestion des services/cours de skateboard.
+ * Service for skateboard service/lesson management.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -15,63 +15,63 @@ import java.util.List;
 public interface ServiceService {
 
     /**
-     * Crée un nouveau service.
+     * Creates a new service.
      *
-     * @param requestDTO les données du service à créer
-     * @return le service créé
+     * @param requestDTO the service data to create
+     * @return the created service
      */
     ServiceResponse createService(ServiceRequest requestDTO);
 
     /**
-     * Récupère tous les services.
+     * Retrieves all services.
      *
-     * @return liste de tous les services
+     * @return list of all services
      */
     List<ServiceResponse> getAllServices();
 
     /**
-     * Récupère uniquement les services actifs.
+     * Retrieves only active services.
      *
-     * @return liste des services actifs
+     * @return list of active services
      */
     List<ServiceResponse> getActiveServices();
 
     /**
-     * Récupère un service par son ID.
+     * Retrieves a service by its ID.
      *
-     * @param id l'identifiant du service
-     * @return le service trouvé
+     * @param id the service identifier
+     * @return the found service
      */
     ServiceResponse getServiceById(Long id);
 
     /**
-     * Récupère les services par type.
+     * Retrieves services by type.
      *
-     * @param type le type de service (LESSON, RENTAL)
-     * @return liste des services de ce type
+     * @param type the service type (LESSON, RENTAL)
+     * @return list of services of this type
      */
     List<ServiceResponse> getServicesByType(ServiceType type);
 
     /**
-     * Met à jour un service existant.
+     * Updates an existing service.
      *
-     * @param id l'identifiant du service
-     * @param requestDTO les nouvelles données
-     * @return le service mis à jour
+     * @param id the service identifier
+     * @param requestDTO the new data
+     * @return the updated service
      */
     ServiceResponse updateService(Long id, ServiceRequest requestDTO);
 
     /**
-     * Désactive un service (soft delete).
+     * Deactivates a service (soft delete).
      *
-     * @param id l'identifiant du service
+     * @param id the service identifier
      */
     void deactivateService(Long id);
 
     /**
-     * Supprime définitivement un service.
+     * Permanently deletes a service.
      *
-     * @param id l'identifiant du service
+     * @param id the service identifier
      */
     void deleteService(Long id);
 }

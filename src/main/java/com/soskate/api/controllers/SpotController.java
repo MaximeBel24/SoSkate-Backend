@@ -18,12 +18,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Contrôleur REST pour la gestion des spots de skateboard.
+ * REST controller for skateboard spot management.
  *
  * @author SoSkate Team
  * @version 1.0
  */
-@Tag(name = "Spots", description = "Gestion des spots de skateboard")
+@Tag(name = "Spots", description = "Skateboard spot management")
 @RestController
 @RequestMapping("/spots")
 @RequiredArgsConstructor
@@ -34,14 +34,14 @@ public class SpotController {
     private final InstructorSpotService instructorSpotService;
 
     @Operation(
-            summary = "Créer un spot",
-            description = "Crée un nouveau spot de skateboard"
+            summary = "Create a spot",
+            description = "Creates a new skateboard spot"
     )
     @PostMapping
     public ResponseEntity<SpotResponse> createSpot(
             @Valid @RequestBody SpotRequest requestDTO) {
 
-        log.info("Requête POST /api/spots - Création d'un spot : {}", requestDTO.name());
+        log.info("POST /api/spots - Creating a spot: {}", requestDTO.name());
 
         SpotResponse spot = spotService.createSpot(requestDTO);
 
@@ -49,27 +49,27 @@ public class SpotController {
     }
 
     @Operation(
-            summary = "Lister tous les spots",
-            description = "Récupère tous les spots"
+            summary = "List all spots",
+            description = "Retrieves all spots"
     )
     @GetMapping
     public ResponseEntity<List<SpotResponse>> getAllSpots() {
-        log.info("Requête GET /api/spots - Récupération de tous les spots");
+        log.info("GET /api/spots - Retrieving all spots");
 
         List<SpotResponse> spots = spotService.getAllSpots();
 
-        log.info("{} spot(s) trouvé(s)", spots.size());
+        log.info("{} spot(s) found", spots.size());
 
         return ResponseEntity.ok(spots);
     }
 
     @Operation(
-            summary = "Lister les spots actifs",
-            description = "Récupère uniquement les spots actifs"
+            summary = "List active spots",
+            description = "Retrieves only active spots"
     )
     @GetMapping("/active")
     public ResponseEntity<List<SpotResponse>> getActiveSpots() {
-        log.info("Requête GET /api/spots/active - Récupération des spots actifs");
+        log.info("GET /api/spots/active - Retrieving active spots");
 
         List<SpotResponse> spots = spotService.getActiveSpots();
 
@@ -77,12 +77,12 @@ public class SpotController {
     }
 
     @Operation(
-            summary = "Récupérer un spot",
-            description = "Récupère un spot par son ID"
+            summary = "Retrieve a spot",
+            description = "Retrieves a spot by its ID"
     )
     @GetMapping("/{id}")
     public ResponseEntity<SpotResponse> getSpotById(@PathVariable Long id) {
-        log.info("Requête GET /api/spots/{} - Récupération du spot", id);
+        log.info("GET /api/spots/{} - Retrieving spot", id);
 
         SpotResponse spot = spotService.getSpotById(id);
 
@@ -90,12 +90,12 @@ public class SpotController {
     }
 
     @Operation(
-            summary = "Filtrer par ville",
-            description = "Récupère les spots d'une ville"
+            summary = "Filter by city",
+            description = "Retrieves spots in a city"
     )
     @GetMapping("/city/{city}")
     public ResponseEntity<List<SpotResponse>> getSpotsByCity(@PathVariable String city) {
-        log.info("Requête GET /api/spots/city/{} - Récupération par ville", city);
+        log.info("GET /api/spots/city/{} - Retrieving by city", city);
 
         List<SpotResponse> spots = spotService.getSpotsByCity(city);
 
@@ -103,14 +103,14 @@ public class SpotController {
     }
 
     @Operation(
-            summary = "Filtrer par type",
-            description = "Récupère les spots indoor ou outdoor"
+            summary = "Filter by type",
+            description = "Retrieves indoor or outdoor spots"
     )
     @GetMapping("/type")
     public ResponseEntity<List<SpotResponse>> getSpotsByType(
             @RequestParam(name = "indoor") Boolean isIndoor) {
 
-        log.info("Requête GET /api/spots/type?indoor={} - Récupération par type", isIndoor);
+        log.info("GET /api/spots/type?indoor={} - Retrieving by type", isIndoor);
 
         List<SpotResponse> spots = spotService.getSpotsByType(isIndoor);
 
@@ -118,8 +118,8 @@ public class SpotController {
     }
 
     @Operation(
-            summary = "Spots à proximité",
-            description = "Récupère les spots dans un rayon GPS (pour la carte)"
+            summary = "Nearby spots",
+            description = "Retrieves spots within a GPS radius (for the map)"
     )
     @GetMapping("/nearby")
     public ResponseEntity<List<SpotResponse>> getSpotsNearby(
@@ -127,7 +127,7 @@ public class SpotController {
             @RequestParam(name = "lng") BigDecimal lng,
             @RequestParam(name = "radius", defaultValue = "10") double radius) {
 
-        log.info("Requête GET /api/spots/nearby?lat={}&lng={}&radius={}", lat, lng, radius);
+        log.info("GET /api/spots/nearby?lat={}&lng={}&radius={}", lat, lng, radius);
 
         List<SpotResponse> spots = spotService.getSpotsNearby(lat, lng, radius);
 
@@ -135,15 +135,15 @@ public class SpotController {
     }
 
     @Operation(
-            summary = "Modifier un spot",
-            description = "Met à jour un spot existant"
+            summary = "Update a spot",
+            description = "Updates an existing spot"
     )
     @PutMapping("/{id}")
     public ResponseEntity<SpotResponse> updateSpot(
             @PathVariable Long id,
             @Valid @RequestBody SpotRequest requestDTO) {
 
-        log.info("Requête PUT /api/spots/{} - Mise à jour du spot", id);
+        log.info("PUT /api/spots/{} - Updating spot", id);
 
         SpotResponse spot = spotService.updateSpot(id, requestDTO);
 
@@ -151,12 +151,12 @@ public class SpotController {
     }
 
     @Operation(
-            summary = "Désactiver un spot",
-            description = "Désactive un spot (soft delete)"
+            summary = "Deactivate a spot",
+            description = "Deactivates a spot (soft delete)"
     )
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivateSpot(@PathVariable Long id) {
-        log.info("Requête PATCH /api/spots/{}/deactivate - Désactivation", id);
+        log.info("PATCH /api/spots/{}/deactivate - Deactivating", id);
 
         spotService.deactivateSpot(id);
 
@@ -164,12 +164,12 @@ public class SpotController {
     }
 
     @Operation(
-            summary = "Supprimer un spot",
-            description = "Supprime définitivement un spot"
+            summary = "Delete a spot",
+            description = "Permanently deletes a spot"
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSpot(@PathVariable Long id) {
-        log.info("Requête DELETE /api/spots/{} - Suppression", id);
+        log.info("DELETE /api/spots/{} - Deleting", id);
 
         spotService.deleteSpot(id);
 
@@ -177,8 +177,8 @@ public class SpotController {
     }
 
     @Operation(
-            summary = "Instructeurs d'un spot",
-            description = "Récupère les instructeurs associés à un spot"
+            summary = "Instructors of a spot",
+            description = "Retrieves the instructors associated with a spot"
     )
     @GetMapping("/{spotId}/instructors")
     public ResponseEntity<List<InstructorSummary>> getInstructorsBySpot(@PathVariable Long spotId) {

@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
-@Tag(name = "Instructor Spots", description = "Association instructeurs-spots")
+@Tag(name = "Instructor Spots", description = "Instructor-spot association")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/instructors/{instructorId}")
@@ -26,42 +26,42 @@ public class InstructorSpotController {
     private final InstructorSpotService instructorSpotService;
 
     @Operation(
-            summary = "Ajouter un spot",
-            description = "Associe un spot à un instructeur"
+            summary = "Add a spot",
+            description = "Associates a spot with an instructor"
     )
     @PostMapping("/spots")
     public ResponseEntity<InstructorSpotResponse> addSpotToInstructor(
             @PathVariable Long instructorId,
             @Valid @RequestBody InstructorSpotRequest request
     ) {
-        log.info("POST /api/instructors/{}/spots - Association d'un spot", instructorId);
+        log.info("POST /api/instructors/{}/spots - Associating a spot", instructorId);
         InstructorSpotResponse response = instructorSpotService.addSpotToInstructor(instructorId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(
-            summary = "Lister les spots",
-            description = "Récupère les spots associés à un instructeur"
+            summary = "List spots",
+            description = "Retrieves the spots associated with an instructor"
     )
     @GetMapping("/spots")
     public ResponseEntity<List<InstructorSpotResponse>> getSpotsByInstructor(
             @PathVariable Long instructorId
     ) {
-        log.info("GET /api/instructors/{}/spots - Récupération des spots", instructorId);
+        log.info("GET /api/instructors/{}/spots - Retrieving spots", instructorId);
         List<InstructorSpotResponse> response = instructorSpotService.getSpotsByInstructor(instructorId);
         return ResponseEntity.ok(response);
     }
 
     @Operation(
-            summary = "Retirer un spot",
-            description = "Supprime l'association entre un instructeur et un spot"
+            summary = "Remove a spot",
+            description = "Removes the association between an instructor and a spot"
     )
     @DeleteMapping("/spots/{spotId}")
     public ResponseEntity<Void> removeSpotFromInstructor(
             @PathVariable Long instructorId,
             @PathVariable Long spotId
     ) {
-        log.info("DELETE /api/instructors/{}/spots/{} - Suppression de l'association", instructorId, spotId);
+        log.info("DELETE /api/instructors/{}/spots/{} - Removing association", instructorId, spotId);
         instructorSpotService.removeSpotFromInstructor(instructorId, spotId);
         return ResponseEntity.noContent().build();
     }

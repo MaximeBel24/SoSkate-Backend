@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository pour la gestion des participations aux réservations.
- * Gère la relation entre les customers et leurs bookings.
+ * Repository for managing booking participations.
+ * Handles the relationship between customers and their bookings.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -20,19 +20,19 @@ import java.util.Optional;
 public interface BookingParticipantRepository extends JpaRepository<BookingParticipantEntity, Long> {
 
     /**
-     * Trouve toutes les participations pour un booking donné.
+     * Finds all participations for a given booking.
      *
-     * @param bookingId l'ID du booking
-     * @return liste des participations
+     * @param bookingId the booking ID
+     * @return list of participations
      */
     List<BookingParticipantEntity> findByBookingId(Long bookingId);
 
     /**
-     * Compte le nombre total de participants confirmés pour un booking.
-     * Utilise COALESCE pour retourner 0 si aucun participant.
+     * Counts the total number of confirmed participants for a booking.
+     * Uses COALESCE to return 0 if there are no participants.
      *
-     * @param bookingId l'ID du booking
-     * @return nombre total de participants confirmés
+     * @param bookingId the booking ID
+     * @return total number of confirmed participants
      */
     @Query("""
         SELECT COALESCE(SUM(bp.numberOfParticipants), 0)
@@ -43,11 +43,11 @@ public interface BookingParticipantRepository extends JpaRepository<BookingParti
     int countConfirmedParticipants(@Param("bookingId") Long bookingId);
 
     /**
-     * Récupère toutes les participations d'un customer avec les détails complets.
-     * Utilise JOIN FETCH pour éviter les problèmes N+1.
+     * Retrieves all participations for a customer with full details.
+     * Uses JOIN FETCH to avoid N+1 problems.
      *
-     * @param customerId l'ID du customer
-     * @return liste des participations avec booking, instructor, spot et service
+     * @param customerId the customer ID
+     * @return list of participations with booking, instructor, spot, and service
      */
     @Query("SELECT bp FROM BookingParticipantEntity bp " +
             "JOIN FETCH bp.booking b " +
@@ -59,12 +59,12 @@ public interface BookingParticipantRepository extends JpaRepository<BookingParti
     List<BookingParticipantEntity> findAllByCustomerIdWithDetails(@Param("customerId") Long customerId);
 
     /**
-     * Trouve une participation par son ID et l'ID du customer.
-     * Utilisé pour vérifier qu'un customer accède bien à sa propre participation.
+     * Finds a participation by its ID and the customer ID.
+     * Used to verify that a customer is accessing their own participation.
      *
-     * @param id l'ID de la participation
-     * @param customerId l'ID du customer
-     * @return Optional contenant la participation si elle existe et appartient au customer
+     * @param id the participation ID
+     * @param customerId the customer ID
+     * @return Optional containing the participation if it exists and belongs to the customer
      */
     Optional<BookingParticipantEntity> findByIdAndCustomerId(Long id, Long customerId);
 

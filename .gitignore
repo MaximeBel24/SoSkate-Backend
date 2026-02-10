@@ -61,4 +61,5 @@ aws-credentials.txt
 # Base de données
 # =================================
 *.db
-*.sqlite
+*.sqlite.claude
+.claude

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository pour la gestion des paramètres globaux de la plateforme.
- * Les settings sont stockés en base avec un ID fixe (singleton pattern).
+ * Repository for managing global platform settings.
+ * Settings are stored in the database with a fixed ID (singleton pattern).
  *
  * @author SoSkate Team
  * @version 1.0
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Repository;
 public interface PlatformSettingsRepository extends JpaRepository<PlatformSettingsEntity, Long> {
 
     /**
-     * Récupère les paramètres de la plateforme.
-     * Les settings ont toujours l'ID 1 (singleton en base).
+     * Retrieves the platform settings.
+     * Settings always have ID 1 (singleton in database).
      *
-     * @return les paramètres de la plateforme
-     * @throws PlatformSettingsNotFoundException si les settings ne sont pas configurés
+     * @return the platform settings
+     * @throws PlatformSettingsNotFoundException if the settings are not configured
      */
     default PlatformSettingsEntity getSettings() {
         return findById(1L).orElseThrow(() ->

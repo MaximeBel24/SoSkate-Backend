@@ -5,46 +5,46 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 /**
- * DTO pour l'inscription d'un nouveau customer (rider).
- * Immutable et validé via Bean Validation.
+ * DTO for registering a new customer (rider).
+ * Immutable and validated via Bean Validation.
  *
  * @author SoSkate Team
  * @version 1.0
  */
 public record CustomerRegisterRequest(
 
-        @NotBlank(message = "L'email est obligatoire")
-        @Email(message = "L'email doit être valide")
-        @Size(max = 255, message = "L'email ne peut pas dépasser 255 caractères")
+        @NotBlank(message = "Email is required")
+        @Email(message = "Email must be valid")
+        @Size(max = 255, message = "Email cannot exceed 255 characters")
         @Pattern(
                 regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-                message = "Format d'email invalide"
+                message = "Invalid email format"
         )
         String email,
 
-        @NotBlank(message = "Le mot de passe est obligatoire")
-        @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
+        @NotBlank(message = "Password is required")
+        @Size(min = 8, message = "Password must contain at least 8 characters")
         @Pattern(
                 regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,}$",
-                message = "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial"
+                message = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one digit and one special character"
         )
         String password,
 
-        @NotBlank(message = "Le prénom est obligatoire")
-        @Size(min = 2, max = 100, message = "Le prénom doit contenir entre 2 et 100 caractères")
+        @NotBlank(message = "First name is required")
+        @Size(min = 2, max = 100, message = "First name must contain between 2 and 100 characters")
         String firstName,
 
-        @NotBlank(message = "Le nom est obligatoire")
-        @Size(min = 2, max = 100, message = "Le nom doit contenir entre 2 et 100 caractères")
+        @NotBlank(message = "Last name is required")
+        @Size(min = 2, max = 100, message = "Last name must contain between 2 and 100 characters")
         String lastName,
 
         @Pattern(
                 regexp = "^(\\+33|0)[1-9](\\d{8})$",
-                message = "Le numéro de téléphone doit être au format français valide"
+                message = "Phone number must be in a valid French format"
         )
         String phone,
 
-        @Past(message = "La date de naissance doit être dans le passé")
+        @Past(message = "Date of birth must be in the past")
         LocalDate birthDate
 ) {
 }
