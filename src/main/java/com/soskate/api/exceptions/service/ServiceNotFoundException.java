@@ -1,7 +1,7 @@
 package com.soskate.api.exceptions.service;
 
 /**
- * Exception levée lorsqu'un service est introuvable.
+ * Exception thrown when a service is not found.
  *
  * @author SoSkate Team
  * @version 1.0

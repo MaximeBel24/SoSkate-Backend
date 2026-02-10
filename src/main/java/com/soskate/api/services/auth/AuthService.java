@@ -5,11 +5,11 @@ import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.exceptions.auth.BadCredentialsException;
 
 /**
- * Service d'authentification unifié.
- * Gère la connexion pour tous les types d'utilisateurs (Customer et Instructor).
+ * Unified authentication service.
+ * Handles login for all user types (Customer and Instructor).
  *
- * Ce service détecte automatiquement le type d'utilisateur en cherchant
- * d'abord dans les Customers, puis dans les Instructors.
+ * This service automatically detects the user type by searching
+ * first in Customers, then in Instructors.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -17,22 +17,22 @@ import com.soskate.api.exceptions.auth.BadCredentialsException;
 public interface AuthService {
 
     /**
-     * Authentifie un utilisateur (Customer ou Instructor) avec son email et mot de passe.
+     * Authenticates a user (Customer or Instructor) with their email and password.
      *
-     * La méthode cherche d'abord dans les Customers, puis dans les Instructors.
-     * Le rôle retourné permet au frontend d'adapter l'interface.
+     * The method searches first in Customers, then in Instructors.
+     * The returned role allows the frontend to adapt the interface.
      *
      * @param loginRequest email + password
-     * @return les informations de connexion unifiées avec le rôle
-     * @throws BadCredentialsException si email ou password invalide
+     * @return the unified login information with the role
+     * @throws BadCredentialsException if email or password is invalid
      */
     LoginResponse login(LoginRequest loginRequest);
 
     /**
-     * Vérifie si un email existe déjà dans le système (Customer OU Instructor).
+     * Checks if an email already exists in the system (Customer OR Instructor).
      *
-     * @param email l'email à vérifier
-     * @return true si l'email existe déjà
+     * @param email the email to check
+     * @return true if the email already exists
      */
     boolean emailExists(String email);
 }

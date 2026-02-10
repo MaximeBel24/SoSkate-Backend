@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
  * Currently supports only display order updates.
  */
 public record PhotoUpdateRequest(
-        @Min(value = 0, message = "L'ordre d'affichage doit être >= 0")
+        @Min(value = 0, message = "Display order must be >= 0")
         Integer displayOrder
 ) {}

@@ -1,7 +1,7 @@
 package com.soskate.api.mappers;
 
 import com.soskate.api.dto.booking.MyBookingResponse;
-import com.soskate.api.dto.customer.CustomerSummary; // ← Utilise ton existant
+import com.soskate.api.dto.customer.CustomerSummary;
 import com.soskate.api.dto.booking.ParticipantResponse;
 import com.soskate.api.entities.*;
 import org.springframework.stereotype.Component;
@@ -52,7 +52,7 @@ public class BookingParticipantMapper {
         SpotEntity spot = booking.getSpot();
         ServiceEntity service = booking.getService();
 
-        // Calculer le prix total
+        // Calculate the total price
         int totalPriceCents = (service.getBasePriceCents() * booking.getDurationMinutes()) / 60;
 
         return new MyBookingResponse(
@@ -84,7 +84,7 @@ public class BookingParticipantMapper {
                 service.getName(),
                 service.getBasePriceCents(),
 
-                // Prix calculé
+                // Calculated price
                 totalPriceCents
         );
     }

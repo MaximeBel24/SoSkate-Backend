@@ -110,7 +110,7 @@ public class BookingEntity {
     }
 
     /**
-     * Calcule le prix total basé sur la durée et le prix horaire du service.
+     * Calculates the total price based on duration and the service hourly rate.
      */
     public int calculateTotalPriceCents() {
         if (service == null) return 0;

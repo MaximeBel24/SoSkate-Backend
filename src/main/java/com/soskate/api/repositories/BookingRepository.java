@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Repository pour la gestion des réservations (bookings).
- * Fournit les requêtes pour le planning des instructeurs et les réservations clients.
+ * Repository for managing bookings.
+ * Provides queries for instructor scheduling and customer bookings.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -21,20 +21,20 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
 
     /**
-     * Trouve toutes les réservations d'un instructeur.
+     * Finds all bookings for an instructor.
      *
-     * @param instructorId l'ID de l'instructeur
-     * @return liste de toutes les réservations
+     * @param instructorId the instructor ID
+     * @return list of all bookings
      */
     List<BookingEntity> findByInstructorId(Long instructorId);
 
     /**
-     * Trouve les réservations non annulées d'un instructeur pour une date donnée.
-     * Utilisé pour la validation des conflits lors de la création de booking.
+     * Finds non-cancelled bookings for an instructor on a given date.
+     * Used for conflict validation when creating a booking.
      *
-     * @param instructorId l'ID de l'instructeur
-     * @param date la date recherchée
-     * @return liste des réservations non annulées
+     * @param instructorId the instructor ID
+     * @param date the date to search
+     * @return list of non-cancelled bookings
      */
     @Query("SELECT b FROM BookingEntity b WHERE b.instructor.id = :instructorId " +
             "AND DATE(b.startTime) = :date " +
@@ -45,12 +45,12 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     );
 
     /**
-     * Trouve les réservations à venir d'un instructeur.
-     * Inclut les statuts OPEN, FULL et CONFIRMED.
+     * Finds upcoming bookings for an instructor.
+     * Includes statuses OPEN, FULL, and CONFIRMED.
      *
-     * @param instructorId l'ID de l'instructeur
-     * @param now la date/heure actuelle
-     * @return liste des réservations futures triées par date
+     * @param instructorId the instructor ID
+     * @param now the current date/time
+     * @return list of future bookings sorted by date
      */
     @Query("""
         SELECT b FROM BookingEntity b
@@ -65,11 +65,11 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     );
 
     /**
-     * Trouve les réservations passées et complétées d'un instructeur.
+     * Finds past and completed bookings for an instructor.
      *
-     * @param instructorId l'ID de l'instructeur
-     * @param now la date/heure actuelle
-     * @return liste des réservations passées triées par date
+     * @param instructorId the instructor ID
+     * @param now the current date/time
+     * @return list of past bookings sorted by date
      */
     @Query("""
         SELECT b FROM BookingEntity b
@@ -84,13 +84,13 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     );
 
     /**
-     * Récupère les bookings non annulés d'un instructeur pour une période donnée.
-     * Utilisé pour calculer les créneaux réellement disponibles (planning et réservation).
+     * Retrieves non-cancelled bookings for an instructor within a given period.
+     * Used to calculate actually available time slots (scheduling and booking).
      *
-     * @param instructorId l'ID de l'instructeur
-     * @param start début de la période (inclus)
-     * @param end fin de la période (exclus)
-     * @return liste des bookings triés par heure de début
+     * @param instructorId the instructor ID
+     * @param start start of the period (inclusive)
+     * @param end end of the period (exclusive)
+     * @return list of bookings sorted by start time
      */
     @Query("""
         SELECT b FROM BookingEntity b
@@ -107,11 +107,11 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     );
 
     /**
-     * Récupère les bookings passés qui n'ont pas encore été marqués comme COMPLETED.
-     * Utilisé par les jobs de mise à jour automatique des statuts.
+     * Retrieves past bookings that have not yet been marked as COMPLETED.
+     * Used by automatic status update jobs.
      *
-     * @param now la date/heure actuelle
-     * @return liste des bookings à mettre à jour
+     * @param now the current date/time
+     * @return list of bookings to update
      */
     @Query("""
         SELECT b FROM BookingEntity b

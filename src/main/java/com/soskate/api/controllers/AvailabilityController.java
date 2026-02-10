@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import java.util.List;
 
-@Tag(name = "Availabilities", description = "Gestion des disponibilités des instructeurs")
+@Tag(name = "Availabilities", description = "Instructor availability management")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/instructors/{instructorId}")
@@ -31,22 +31,22 @@ public class AvailabilityController {
     private final SlotCalculationService slotCalculationService;
 
     @Operation(
-            summary = "Créer une disponibilité",
-            description = "Ajoute une plage de disponibilité pour un instructeur"
+            summary = "Create an availability",
+            description = "Adds an availability slot for an instructor"
     )
     @PostMapping("/availabilities")
     public ResponseEntity<AvailabilityResponse> createAvailability(
             @PathVariable Long instructorId,
             @Valid @RequestBody AvailabilityCreateRequest request
     ) {
-        log.info("POST /api/instructors/{}/availabilities - Création d'une disponibilité", instructorId);
+        log.info("POST /api/instructors/{}/availabilities - Creating an availability", instructorId);
         AvailabilityResponse response = availabilityService.createAvailability(instructorId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(
-            summary = "Lister les disponibilités",
-            description = "Récupère les disponibilités d'un instructeur (optionnel: plage de dates)"
+            summary = "List availabilities",
+            description = "Retrieves an instructor's availabilities (optional: date range)"
     )
     @GetMapping("/availabilities")
     public ResponseEntity<List<AvailabilityResponse>> getAvailabilityByInstructor(
@@ -54,7 +54,7 @@ public class AvailabilityController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
-        log.info("GET /api/instructors/{}/availabilities - Récupération des disponibilités", instructorId);
+        log.info("GET /api/instructors/{}/availabilities - Retrieving availabilities", instructorId);
         List<AvailabilityResponse> response;
 
         if (from != null && to != null) {
@@ -67,8 +67,8 @@ public class AvailabilityController {
     }
 
     @Operation(
-            summary = "Modifier une disponibilité",
-            description = "Met à jour une disponibilité existante"
+            summary = "Update an availability",
+            description = "Updates an existing availability"
     )
     @PutMapping("/availabilities/{id}")
     public ResponseEntity<AvailabilityResponse> updateAvailability(
@@ -76,28 +76,28 @@ public class AvailabilityController {
             @PathVariable Long id,
             @Valid @RequestBody AvailabilityUpdateRequest request
     ) {
-        log.info("PUT /api/instructors/{}/availabilities/{} - Mise à jour", instructorId, id);
+        log.info("PUT /api/instructors/{}/availabilities/{} - Updating", instructorId, id);
         AvailabilityResponse response = availabilityService.updateAvailability(instructorId, id, request);
         return ResponseEntity.ok(response);
     }
 
     @Operation(
-            summary = "Supprimer une disponibilité",
-            description = "Supprime une disponibilité"
+            summary = "Delete an availability",
+            description = "Deletes an availability"
     )
     @DeleteMapping("/availabilities/{id}")
     public ResponseEntity<Void> deleteAvailability(
             @PathVariable Long instructorId,
             @PathVariable Long id
     ) {
-        log.info("DELETE /api/instructors/{}/availabilities/{} - Suppression", instructorId, id);
+        log.info("DELETE /api/instructors/{}/availabilities/{} - Deleting", instructorId, id);
         availabilityService.deleteAvailability(instructorId, id);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(
-            summary = "Récupérer les créneaux libres",
-            description = "Retourne les créneaux disponibles sur une période"
+            summary = "Retrieve available slots",
+            description = "Returns available slots over a period"
     )
     @GetMapping("/available")
     public ResponseEntity<List<AvailableSlotResponse>> getAvailableSlots(
@@ -105,14 +105,14 @@ public class AvailabilityController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
-        log.info("GET /api/instructors/{}/available - Créneaux libres du {} au {}", instructorId, from, to);
+        log.info("GET /api/instructors/{}/available - Available slots from {} to {}", instructorId, from, to);
         List<AvailableSlotResponse> response = availabilityService.getAvailableSlots(instructorId, from, to);
         return ResponseEntity.ok(response);
     }
 
     @Operation(
-            summary = "Récupérer les créneaux réservables",
-            description = "Calcule les créneaux réservables pour un spot et une durée donnés"
+            summary = "Retrieve bookable slots",
+            description = "Calculates bookable slots for a given spot and duration"
     )
     @GetMapping("/bookable")
     public ResponseEntity<AvailableSlotsResponse> getBookableSlots(
@@ -121,7 +121,7 @@ public class AvailabilityController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @RequestParam Integer durationMinutes
     ) {
-        log.info("GET /api/instructors/{}/bookable - Créneaux réservables pour spotId={}, date={}, durée={}min",
+        log.info("GET /api/instructors/{}/bookable - Bookable slots for spotId={}, date={}, duration={}min",
                 instructorId, spotId, date, durationMinutes);
         AvailableSlotsResponse response = slotCalculationService.calculateAvailableSlots(
                 instructorId,

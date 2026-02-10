@@ -20,13 +20,13 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * Implémentation du service d'authentification unifié.
+ * Implementation of the unified authentication service.
  *
- * Stratégie de recherche :
- * 1. Cherche d'abord dans les Customers
- * 2. Si non trouvé, cherche dans les Instructors
- * 3. Vérifie le mot de passe
- * 4. Pour les Instructors, vérifie que le statut est ACTIVE
+ * Search strategy:
+ * 1. First searches in Customers
+ * 2. If not found, searches in Instructors
+ * 3. Verifies the password
+ * 4. For Instructors, verifies that the status is ACTIVE
  *
  * @author SoSkate Team
  * @version 1.0
@@ -44,36 +44,36 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
 
 
-    // Message d'erreur générique pour ne pas révéler si l'email existe
-    private static final String BAD_CREDENTIALS_MESSAGE = "Email ou mot de passe incorrect";
+    // Generic error message to avoid revealing whether the email exists
+    private static final String BAD_CREDENTIALS_MESSAGE = "Incorrect email or password";
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         String email = loginRequest.email();
 
-        log.info("Tentative de connexion pour l'email : {}", email);
+        log.info("Login attempt for email: {}", email);
 
-        // === 1. Chercher dans les Customers ===
+        // === 1. Search in Customers ===
         Optional<CustomerEntity> customerOpt = customerRepository.findByEmail(email);
 
         if (customerOpt.isPresent()) {
             CustomerEntity customer = customerOpt.get();
-            log.debug("Utilisateur trouvé comme Customer : {}", email);
+            log.debug("User found as Customer: {}", email);
 
-            // Vérification du mot de passe
+            // Password verification
             if (!passwordEncoder.matches(loginRequest.password(), customer.getPassword())) {
-                log.warn("Mot de passe incorrect pour le Customer : {}", email);
+                log.warn("Incorrect password for Customer: {}", email);
                 throw new BadCredentialsException(BAD_CREDENTIALS_MESSAGE);
             }
 
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(customer.getEmail());
             String jwtToken = jwtService.generateToken(userDetails);
 
-            log.info("Connexion réussie pour le Customer : {} (ID: {})", email, customer.getId());
+            log.info("Login successful for Customer: {} (ID: {})", email, customer.getId());
 
             return LoginResponse.forCustomer(
-                    customer.getId(),       // userId (hérité de UserEntity)
-                    customer.getId(),       // customerId (même valeur car JOINED inheritance)
+                    customer.getId(),       // userId (inherited from UserEntity)
+                    customer.getId(),       // customerId (same value due to JOINED inheritance)
                     customer.getEmail(),
                     customer.getFirstName(),
                     customer.getLastName(),
@@ -83,37 +83,37 @@ public class AuthServiceImpl implements AuthService {
             );
         }
 
-        // === 2. Chercher dans les Instructors ===
+        // === 2. Search in Instructors ===
         Optional<InstructorEntity> instructorOpt = instructorRepository.findByEmailAndDeletedFalse(email);
 
         if (instructorOpt.isPresent()) {
             InstructorEntity instructor = instructorOpt.get();
-            log.debug("Utilisateur trouvé comme Instructor : {}", email);
+            log.debug("User found as Instructor: {}", email);
 
-            // Vérification du statut de l'instructeur
+            // Instructor status verification
             if (instructor.getStatus() != InstructorStatus.ACTIVE) {
-                log.warn("Tentative de connexion d'un Instructor non actif : {} (statut: {})",
+                log.warn("Login attempt from inactive Instructor: {} (status: {})",
                         email, instructor.getStatus());
                 throw new BadCredentialsException(
-                        "Votre compte instructeur n'est pas encore activé. " +
-                                "Veuillez vérifier votre email d'invitation."
+                        "Your instructor account is not yet activated. " +
+                                "Please check your invitation email."
                 );
             }
 
-            // Vérification du mot de passe
+            // Password verification
             if (!passwordEncoder.matches(loginRequest.password(), instructor.getPassword())) {
-                log.warn("Mot de passe incorrect pour l'Instructor : {}", email);
+                log.warn("Incorrect password for Instructor: {}", email);
                 throw new BadCredentialsException(BAD_CREDENTIALS_MESSAGE);
             }
 
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(instructor.getEmail());
             String jwtToken = jwtService.generateToken(userDetails);
 
-            log.info("Connexion réussie pour l'Instructor : {} (ID: {})", email, instructor.getId());
+            log.info("Login successful for Instructor: {} (ID: {})", email, instructor.getId());
 
             return LoginResponse.forInstructor(
-                    instructor.getId(),     // userId (hérité de UserEntity)
-                    instructor.getId(),     // instructorId (même valeur car JOINED inheritance)
+                    instructor.getId(),     // userId (inherited from UserEntity)
+                    instructor.getId(),     // instructorId (same value due to JOINED inheritance)
                     instructor.getEmail(),
                     instructor.getFirstName(),
                     instructor.getLastName(),
@@ -122,8 +122,8 @@ public class AuthServiceImpl implements AuthService {
             );
         }
 
-        // === 3. Aucun utilisateur trouvé ===
-        log.warn("Aucun utilisateur trouvé avec l'email : {}", email);
+        // === 3. No user found ===
+        log.warn("No user found with email: {}", email);
         throw new BadCredentialsException(BAD_CREDENTIALS_MESSAGE);
     }
 

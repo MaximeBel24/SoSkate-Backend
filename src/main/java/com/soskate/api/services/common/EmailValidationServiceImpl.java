@@ -21,8 +21,8 @@ public class EmailValidationServiceImpl implements EmailValidationService{
         email = normalizeEmail(email);
 
         if (customerRepository.existsByEmail(email) || instructorRepository.existsByEmailAndDeletedFalse(email)) {
-            log.warn("Email déjà existant: {}", email);
-            throw new EmailAlreadyExistsException("Email déjà existant");
+            log.warn("Email already exists: {}", email);
+            throw new EmailAlreadyExistsException("Email already exists");
         }
     }
 
@@ -33,13 +33,13 @@ public class EmailValidationServiceImpl implements EmailValidationService{
 
         if (isCustomer) {
             if (customerRepository.existsByEmailAndIdNot(email, currentUserId) || instructorRepository.existsByEmailAndDeletedFalse(email)) {
-                log.warn("Email déjà existant: {}", email);
-                throw new EmailAlreadyExistsException("Email déjà existant");
+                log.warn("Email already exists: {}", email);
+                throw new EmailAlreadyExistsException("Email already exists");
             }
         } else {
             if (customerRepository.existsByEmail(email) || instructorRepository.existsByEmailAndIdNotAndDeletedFalse(email, currentUserId)) {
-                log.warn("Email déjà existant: {}", email);
-                throw new EmailAlreadyExistsException("Email déjà existant");
+                log.warn("Email already exists: {}", email);
+                throw new EmailAlreadyExistsException("Email already exists");
             }
         }
     }

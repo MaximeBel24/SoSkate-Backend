@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * Repository pour la gestion des clients (riders) de SoSkate.
- * Contient les méthodes CRUD, de recherche, d'analytics et d'optimisation.
+ * Repository for managing SoSkate customers (riders).
+ * Contains CRUD, search, analytics, and optimization methods.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -17,30 +17,30 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> {
 
     /**
-     * Recherche un client par email.
-     * CRITIQUE pour l'authentification JWT et la validation d'inscription.
+     * Finds a customer by email.
+     * CRITICAL for JWT authentication and registration validation.
      *
-     * @param email l'email du client
-     * @return Optional contenant le client s'il existe
+     * @param email the customer's email
+     * @return Optional containing the customer if it exists
      */
     Optional<CustomerEntity> findByEmail(String email);
 
     /**
-     * Vérifie si un email existe déjà en base.
-     * Utilisé pour éviter les doublons lors de l'inscription.
+     * Checks if an email already exists in the database.
+     * Used to prevent duplicates during registration.
      *
-     * @param email l'email à vérifier
-     * @return true si l'email existe déjà
+     * @param email the email to check
+     * @return true if the email already exists
      */
     boolean existsByEmail(String email);
 
     /**
-     * Vérifie si un email existe pour un autre customer (excluant l'ID donné).
-     * Utilisé pour la validation d'unicité lors des mises à jour de profil.
+     * Checks if an email exists for another customer (excluding the given ID).
+     * Used for uniqueness validation during profile updates.
      *
-     * @param email l'email à vérifier
-     * @param id l'ID du customer à exclure de la recherche
-     * @return true si un autre customer possède cet email
+     * @param email the email to check
+     * @param id the customer ID to exclude from the search
+     * @return true if another customer has this email
      */
     boolean existsByEmailAndIdNot(String email, Long id);
 }

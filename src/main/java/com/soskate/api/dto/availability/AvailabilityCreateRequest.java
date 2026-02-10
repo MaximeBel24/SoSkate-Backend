@@ -5,12 +5,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record AvailabilityCreateRequest(
-        @NotNull(message = "La date est obligatoire")
+        @NotNull(message = "Date is required")
         LocalDate date,
 
-        @NotNull(message = "L'heure de début est obligatoire")
+        @NotNull(message = "Start time is required")
         LocalTime startTime,
 
-        @NotNull(message = "L'heure de fin est obligatoire")
+        @NotNull(message = "End time is required")
         LocalTime endTime
 ) {}

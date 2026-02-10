@@ -5,48 +5,48 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 /**
- * DTO pour créer ou modifier un spot.
+ * DTO for creating or updating a spot.
  *
  * @author SoSkate Team
  * @version 1.0
  */
 public record SpotRequest(
 
-        @NotBlank(message = "Le nom du spot est obligatoire")
-        @Size(max = 150, message = "Le nom ne peut pas dépasser 150 caractères")
+        @NotBlank(message = "Spot name is required")
+        @Size(max = 150, message = "Name cannot exceed 150 characters")
         String name,
 
-        @Size(max = 5000, message = "La description ne peut pas dépasser 5000 caractères")
+        @Size(max = 5000, message = "Description cannot exceed 5000 characters")
         String description,
 
-        @NotBlank(message = "L'adresse est obligatoire")
-        @Size(max = 255, message = "L'adresse ne peut pas dépasser 255 caractères")
+        @NotBlank(message = "Address is required")
+        @Size(max = 255, message = "Address cannot exceed 255 characters")
         String address,
 
-        @NotBlank(message = "La ville est obligatoire")
-        @Size(max = 100, message = "La ville ne peut pas dépasser 100 caractères")
+        @NotBlank(message = "City is required")
+        @Size(max = 100, message = "City cannot exceed 100 characters")
         String city,
 
-        @NotBlank(message = "Le code postal est obligatoire")
+        @NotBlank(message = "Zip code is required")
         @Pattern(
                 regexp = "^\\d{5}$",
-                message = "Le code postal doit être composé de 5 chiffres"
+                message = "Zip code must consist of 5 digits"
         )
         String zipCode,
 
-        @NotNull(message = "La latitude est obligatoire")
-        @DecimalMin(value = "-90.0", message = "La latitude doit être comprise entre -90 et 90")
-        @DecimalMax(value = "90.0", message = "La latitude doit être comprise entre -90 et 90")
+        @NotNull(message = "Latitude is required")
+        @DecimalMin(value = "-90.0", message = "Latitude must be between -90 and 90")
+        @DecimalMax(value = "90.0", message = "Latitude must be between -90 and 90")
         BigDecimal latitude,
 
-        @NotNull(message = "La longitude est obligatoire")
-        @DecimalMin(value = "-180.0", message = "La longitude doit être comprise entre -180 et 180")
-        @DecimalMax(value = "180.0", message = "La longitude doit être comprise entre -180 et 180")
+        @NotNull(message = "Longitude is required")
+        @DecimalMin(value = "-180.0", message = "Longitude must be between -180 and 180")
+        @DecimalMax(value = "180.0", message = "Longitude must be between -180 and 180")
         BigDecimal longitude,
 
-        @NotNull(message = "Le type de spot (intérieur/extérieur) est obligatoire")
+        @NotNull(message = "Spot type (indoor/outdoor) is required")
         Boolean isIndoor,
 
-        @NotNull(message = "Le statut actif/inactif est obligatoire")
+        @NotNull(message = "Active/inactive status is required")
         Boolean isActive
 ) {}

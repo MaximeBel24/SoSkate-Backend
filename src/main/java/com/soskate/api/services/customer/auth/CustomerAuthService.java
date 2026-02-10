@@ -5,8 +5,8 @@ import com.soskate.api.dto.customer.CustomerResponse;
 import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 
 /**
- * Service dédié à l'authentification des customers.
- * Gère l'inscription et la vérification d'email.
+ * Service dedicated to customer authentication.
+ * Handles registration and email verification.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -14,21 +14,21 @@ import com.soskate.api.exceptions.auth.EmailAlreadyExistsException;
 public interface CustomerAuthService {
 
     /**
-     * Inscrit un nouveau customer dans le système.
-     * Vérifie l'unicité de l'email, hash le mot de passe et sauvegarde en base.
+     * Registers a new customer in the system.
+     * Validates email uniqueness, hashes the password, and saves to the database.
      *
-     * @param customerRegisterDto les données d'inscription
-     * @return le customer créé (sans le password)
-     * @throws EmailAlreadyExistsException si l'email existe déjà
+     * @param customerRegisterDto the registration data
+     * @return the created customer (without the password)
+     * @throws EmailAlreadyExistsException if the email already exists
      */
     CustomerResponse registerCustomer(CustomerRegisterRequest customerRegisterDto);
 
     /**
-     * Vérifie si un email existe déjà en base.
-     * Utile pour la validation côté frontend avant soumission du formulaire.
+     * Checks if an email already exists in the database.
+     * Useful for frontend-side validation before form submission.
      *
-     * @param email l'email à vérifier
-     * @return true si l'email existe déjà
+     * @param email the email to check
+     * @return true if the email already exists
      */
     boolean emailExists(String email);
 }

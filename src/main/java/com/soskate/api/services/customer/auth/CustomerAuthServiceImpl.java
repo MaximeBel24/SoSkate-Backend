@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implémentation du service d'authentification des customers.
- * Gère l'inscription avec validation, hashage du mot de passe et sauvegarde en base.
+ * Implementation of the customer authentication service.
+ * Handles registration with validation, password hashing, and database persistence.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -31,26 +31,26 @@ public class CustomerAuthServiceImpl implements CustomerAuthService {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * Inscrit un nouveau customer.
+     * Registers a new customer.
      *
-     * @param customerToRegister les données d'inscription
-     * @return le customer créé
-     * @throws EmailAlreadyExistsException si l'email existe déjà
+     * @param customerToRegister the registration data
+     * @return the created customer
+     * @throws EmailAlreadyExistsException if the email already exists
      */
     @Override
     @Transactional
     public CustomerResponse registerCustomer(CustomerRegisterRequest customerToRegister) {
-        log.info("Tentative d'inscription pour l'email : {}", customerToRegister.email());
+        log.info("Registration attempt for email: {}", customerToRegister.email());
 
         emailValidationService.validateEmailUnique(customerToRegister.email());
 
         String hashedPassword = passwordEncoder.encode(customerToRegister.password());
-        log.debug("Mot de passe hashé avec succès");
+        log.debug("Password hashed successfully");
 
         CustomerEntity customer = customerMapper.toEntity(customerToRegister, hashedPassword);
 
         CustomerEntity savedCustomer = customerRepository.save(customer);
-        log.info("Customer créé avec succès : ID {}, Email {}",
+        log.info("Customer created successfully: ID {}, Email {}",
                 savedCustomer.getId(),
                 savedCustomer.getEmail());
 
@@ -58,15 +58,15 @@ public class CustomerAuthServiceImpl implements CustomerAuthService {
     }
 
     /**
-     * Vérifie si un email existe déjà en base.
-     * Utile pour la validation côté frontend.
+     * Checks if an email already exists in the database.
+     * Useful for frontend-side validation.
      *
-     * @param email l'email à vérifier
-     * @return true si l'email existe déjà
+     * @param email the email to check
+     * @return true if the email already exists
      */
     @Override
     public boolean emailExists(String email) {
-        log.debug("Vérification de l'existence de l'email : {}", email);
+        log.debug("Checking email existence: {}", email);
         return customerRepository.existsByEmail(email);
     }
 }

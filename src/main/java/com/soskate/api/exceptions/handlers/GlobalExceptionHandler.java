@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
 
         ValidationErrorResponse response = new ValidationErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "Erreur(s) de validation des données",
+                "Data validation error(s)",
                 LocalDateTime.now(),
                 errors
         );
@@ -91,15 +91,15 @@ public class GlobalExceptionHandler {
 
         log.warn("HTTP message not readable: {}", ex.getMessage());
 
-        String message = "Le format de la requête est invalide. Vérifiez le JSON envoyé.";
+        String message = "Invalid request format. Check the JSON payload.";
 
         if (ex.getCause() != null) {
             String causeMessage = ex.getCause().getMessage();
             if (causeMessage != null) {
                 if (causeMessage.contains("LocalDate")) {
-                    message = "Format de date invalide. Utilisez le format : yyyy-MM-dd (ex: 1995-06-15)";
+                    message = "Invalid date format. Use format: yyyy-MM-dd (e.g. 1995-06-15)";
                 } else if (causeMessage.contains("JSON")) {
-                    message = "JSON invalide. Vérifiez la syntaxe (virgules, guillemets, accolades)";
+                    message = "Invalid JSON. Check the syntax (commas, quotes, braces)";
                 }
             }
         }
@@ -143,7 +143,7 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.of(
                         HttpStatus.INTERNAL_SERVER_ERROR.value(),
                         "INTERNAL_ERROR",
-                        "Une erreur interne est survenue"
+                        "An internal error occurred"
                 ));
     }
 }

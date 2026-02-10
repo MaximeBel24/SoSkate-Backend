@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 /**
- * Mapper pour convertir entre CustomerEntity et ses DTOs.
+ * Mapper for converting between CustomerEntity and its DTOs.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -16,12 +16,12 @@ import java.time.LocalDateTime;
 public class CustomerMapper {
 
     /**
-     * Convertit un CustomerRegisterDTO en CustomerEntity.
-     * Le mot de passe doit être hashé AVANT d'appeler cette méthode.
+     * Converts a CustomerRegisterDTO to a CustomerEntity.
+     * The password must be hashed BEFORE calling this method.
      *
-     * @param request le DTO d'inscription
-     * @param hashedPassword le mot de passe déjà hashé
-     * @return l'entité CustomerEntity prête à être sauvegardée
+     * @param request the registration DTO
+     * @param hashedPassword the already hashed password
+     * @return the CustomerEntity ready to be saved
      */
     public CustomerEntity toEntity(CustomerRegisterRequest request, String hashedPassword) {
         if (request == null) {
@@ -43,11 +43,11 @@ public class CustomerMapper {
     }
 
     /**
-     * Convertit un CustomerEntity en CustomerResponseDTO.
-     * Ne contient JAMAIS le mot de passe.
+     * Converts a CustomerEntity to a CustomerResponseDTO.
+     * NEVER contains the password.
      *
-     * @param entity l'entité à convertir
-     * @return le DTO de réponse
+     * @param entity the entity to convert
+     * @return the response DTO
      */
     public CustomerResponse toResponse(CustomerEntity entity) {
         if (entity == null) {

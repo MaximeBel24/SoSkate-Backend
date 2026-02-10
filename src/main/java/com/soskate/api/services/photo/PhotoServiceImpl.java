@@ -84,7 +84,7 @@ public class PhotoServiceImpl implements PhotoService {
 
         } catch (IOException e) {
             log.error("Failed to process image: {}", e.getMessage(), e);
-            throw new PhotoUploadException("Erreur lors du traitement de l'image: " + e.getMessage(), e);
+            throw new PhotoUploadException("Error processing image: " + e.getMessage(), e);
         }
     }
 
@@ -103,7 +103,7 @@ public class PhotoServiceImpl implements PhotoService {
         try (InputStream inputStream = new ByteArrayInputStream(imageBytes)) {
             return s3Service.uploadFile(inputStream, fileName, "image/webp", imageBytes.length);
         } catch (IOException e) {
-            throw new PhotoUploadException("Erreur lors de l'upload vers S3", e);
+            throw new PhotoUploadException("Error uploading to S3", e);
         }
     }
 

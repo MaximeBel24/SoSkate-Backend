@@ -6,7 +6,7 @@ import com.soskate.api.entities.ServiceEntity;
 import org.springframework.stereotype.Component;
 
 /**
- * Mapper pour convertir entre ServiceEntity et ses DTOs.
+ * Mapper for converting between ServiceEntity and its DTOs.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 public class ServiceMapper {
 
     /**
-     * Convertit un ServiceRequestDTO en ServiceEntity.
+     * Converts a ServiceRequestDTO to a ServiceEntity.
      *
-     * @param request le DTO de requête
-     * @return l'entité Service
+     * @param request the request DTO
+     * @return the Service entity
      */
     public ServiceEntity toEntity(ServiceRequest request) {
         if (request == null) {
@@ -35,10 +35,10 @@ public class ServiceMapper {
     }
 
     /**
-     * Convertit une ServiceEntity en ServiceResponseDTO.
+     * Converts a ServiceEntity to a ServiceResponseDTO.
      *
-     * @param entity l'entité à convertir
-     * @return le DTO de réponse
+     * @param entity the entity to convert
+     * @return the response DTO
      */
     public ServiceResponse toResponse(ServiceEntity entity) {
         if (entity == null) {
@@ -58,10 +58,10 @@ public class ServiceMapper {
     }
 
     /**
-     * Met à jour une entité existante avec les données d'un DTO.
+     * Updates an existing entity with data from a DTO.
      *
-     * @param serviceToUpdate l'entité à mettre à jour
-     * @param request le DTO contenant les nouvelles valeurs
+     * @param serviceToUpdate the entity to update
+     * @param request the DTO containing the new values
      */
     public void updateEntityFromRequest(ServiceEntity serviceToUpdate, ServiceRequest request) {
         if (serviceToUpdate == null || request == null) {

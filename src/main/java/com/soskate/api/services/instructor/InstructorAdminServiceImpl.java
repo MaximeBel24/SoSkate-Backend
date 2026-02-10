@@ -15,6 +15,7 @@ import com.soskate.api.services.email.EmailService;
 import com.soskate.api.services.token.TokenGeneratorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,7 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
     private final TokenGeneratorService tokenGeneratorService;
     private final EmailService emailService;
     private final SoskateSecurityProperties securityProperties;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Creates a new instructor account and sends an invitation email.
@@ -48,8 +50,8 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
 
         InstructorEntity instructor = instructorMapper.toEntity(request);
 
-        // TODO: Implement spring security to encode the password
-        instructor.setPassword("PENDING_ACTIVATION");
+        String hashedPassword = generateHashedPassword();
+        instructor.setPassword(hashedPassword);
 
         String activationToken = tokenGeneratorService.generateActivationToken();
         instructor.setActivationToken(activationToken);
@@ -84,7 +86,8 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
             throw new InvalidAccountStateException("Cannot resend invitation to an already activated account");
         }
 
-        instructor.setPassword("PENDING_REACTIVATION");
+        String hashedPassword = generateHashedPassword();
+        instructor.setPassword(hashedPassword);
 
         String newActivationToken = tokenGeneratorService.generateActivationToken();
         instructor.setActivationToken(newActivationToken);
@@ -157,7 +160,7 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
 
         InstructorEntity instructor = instructorRepository.getReferenceById(instructorId);
         if (Boolean.TRUE.equals(instructor.getDeleted())) {
-            throw new InstructorAlreadyDeletedException("Cet instructeur est déjà supprimé");
+            throw new InstructorAlreadyDeletedException("This instructor is already deleted");
         }
 
         instructor.markAsDeleted();
@@ -181,5 +184,10 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
     @Transactional(readOnly = true)
     public List<InstructorResponse> getExpiredInvitations() {
         return instructorMapper.toResponseList(instructorRepository.findExpiredInvitations());
+    }
+
+    private String generateHashedPassword() {
+        String password = tokenGeneratorService.generateSecurePassword(12);
+        return passwordEncoder.encode(password);
     }
 }

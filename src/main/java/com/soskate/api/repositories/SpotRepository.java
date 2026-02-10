@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository pour la gestion des spots.
+ * Repository for spot management.
  *
  * @author SoSkate Team
  * @version 1.0
@@ -20,45 +20,45 @@ import java.util.Optional;
 public interface SpotRepository extends JpaRepository<SpotEntity, Long> {
 
     /**
-     * Trouve tous les spots actifs.
+     * Finds all active spots.
      *
-     * @return liste des spots actifs
+     * @return list of active spots
      */
     List<SpotEntity> findByIsActiveTrue();
 
     /**
-     * Trouve les spots par ville et actifs uniquement.
+     * Finds spots by city (active only).
      *
-     * @param city le nom de la ville
-     * @return liste des spots actifs dans cette ville
+     * @param city the city name
+     * @return list of active spots in this city
      */
     List<SpotEntity> findByCityContainingIgnoreCaseAndIsActiveTrue(String city);
 
     /**
-     * Trouve les spots actifs indoor ou outdoor.
+     * Finds active indoor or outdoor spots.
      *
-     * @param isIndoor true pour indoor, false pour outdoor
-     * @return liste des spots actifs correspondants
+     * @param isIndoor true for indoor, false for outdoor
+     * @return list of matching active spots
      */
     List<SpotEntity> findByIsIndoorAndIsActiveTrue(Boolean isIndoor);
 
     /**
-     * Vérifie si un spot existe déjà avec ce nom et cette adresse.
+     * Checks if a spot already exists with this name and address.
      *
-     * @param name le nom du spot
-     * @param address l'adresse du spot
-     * @return true si un spot existe
+     * @param name the spot name
+     * @param address the spot address
+     * @return true if a spot exists
      */
     boolean existsByNameAndAddress(String name, String address);
 
     /**
-     * Trouve les spots à proximité d'une position GPS (rayon en km).
-     * Utilise la formule de Haversine pour calculer la distance.
+     * Finds spots near a GPS position (radius in km).
+     * Uses the Haversine formula to calculate distance.
      *
-     * @param latitude latitude du point de référence
-     * @param longitude longitude du point de référence
-     * @param radiusKm rayon de recherche en kilomètres
-     * @return liste des spots dans le rayon
+     * @param latitude latitude of the reference point
+     * @param longitude longitude of the reference point
+     * @param radiusKm search radius in kilometers
+     * @return list of spots within the radius
      */
     @Query("SELECT s FROM SpotEntity s WHERE " +
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(s.latitude)) * " +

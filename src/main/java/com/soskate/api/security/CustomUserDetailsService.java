@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // 1. Chercher dans les customers
+        // 1. Search in customers
         Optional<CustomerEntity> customerOpt = customerRepository.findByEmail(username);
 
         if (customerOpt.isPresent()) {
@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
 
-        // 2. Chercher dans les instructors
+        // 2. Search in instructors
         Optional<InstructorEntity> instructorOpt = instructorRepository.findByEmailAndDeletedFalse(username);
 
         if (instructorOpt.isPresent()) {
@@ -44,8 +44,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             return new CustomUserDetails(instructor, buildAuthorities(instructor));
         }
 
-        // 3. Aucun utilisateur trouvé
-        throw new UsernameNotFoundException("Aucun utilisateur trouvé avec l'email " + username);
+        // 3. No user found
+        throw new UsernameNotFoundException("No user found with email " + username);
     }
 
     private List<GrantedAuthority> buildAuthorities(UserEntity userEntity) {

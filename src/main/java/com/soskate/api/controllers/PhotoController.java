@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * REST Controller for photo management.
  * Handles photo upload, retrieval, update, and deletion.
  */
-@Tag(name = "Photos", description = "Upload et gestion des photos")
+@Tag(name = "Photos", description = "Photo upload and management")
 @RestController
 @RequestMapping("/photos")
 @RequiredArgsConstructor
@@ -39,8 +39,8 @@ public class PhotoController {
     // ========== UPLOAD PHOTO ==========
 
     @Operation(
-            summary = "Uploader une photo",
-            description = "Upload une nouvelle photo (multipart/form-data)"
+            summary = "Upload a photo",
+            description = "Uploads a new photo (multipart/form-data)"
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PhotoResponse> uploadPhoto(
@@ -69,8 +69,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Récupérer une photo",
-            description = "Récupère une photo par son ID"
+            summary = "Retrieve a photo",
+            description = "Retrieves a photo by its ID"
     )
     @GetMapping("/{id}")
     public ResponseEntity<PhotoResponse> getPhotoById(@PathVariable Long id) {
@@ -81,8 +81,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Photos d'une entité",
-            description = "Récupère les photos d'une entité (spot, customer, instructor, event)"
+            summary = "Photos of an entity",
+            description = "Retrieves the photos of an entity (spot, customer, instructor, event)"
     )
     @GetMapping
     public ResponseEntity<List<PhotoResponse>> getPhotosByEntity(
@@ -106,8 +106,8 @@ public class PhotoController {
     // ========== CONVENIENCE ENDPOINTS FOR SPECIFIC ENTITIES ==========
 
     @Operation(
-            summary = "Photos d'un spot",
-            description = "Récupère toutes les photos d'un spot"
+            summary = "Photos of a spot",
+            description = "Retrieves all photos of a spot"
     )
     @GetMapping("/spots/{spotId}")
     public ResponseEntity<List<PhotoResponse>> getSpotPhotos(@PathVariable Long spotId) {
@@ -118,8 +118,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Avatar d'un client",
-            description = "Récupère l'avatar d'un client"
+            summary = "Customer avatar",
+            description = "Retrieves a customer's avatar"
     )
     @GetMapping("/customers/{customerId}/avatar")
     public ResponseEntity<PhotoResponse> getCustomerAvatar(@PathVariable Long customerId) {
@@ -135,8 +135,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Avatar d'un instructeur",
-            description = "Récupère l'avatar d'un instructeur"
+            summary = "Instructor avatar",
+            description = "Retrieves an instructor's avatar"
     )
     @GetMapping("/instructors/{instructorId}/avatar")
     public ResponseEntity<PhotoResponse> getInstructorAvatar(@PathVariable Long instructorId) {
@@ -152,8 +152,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Photos de tricks",
-            description = "Récupère les photos de tricks d'un instructeur"
+            summary = "Trick photos",
+            description = "Retrieves an instructor's trick photos"
     )
     @GetMapping("/instructors/{instructorId}/tricks")
     public ResponseEntity<List<PhotoResponse>> getInstructorTricks(@PathVariable Long instructorId) {
@@ -167,8 +167,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Cover d'un event",
-            description = "Récupère la photo de couverture d'un événement"
+            summary = "Event cover",
+            description = "Retrieves the cover photo of an event"
     )
     @GetMapping("/events/{eventId}/cover")
     public ResponseEntity<PhotoResponse> getEventCover(@PathVariable Long eventId) {
@@ -184,8 +184,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Galerie d'un event",
-            description = "Récupère les photos de galerie d'un événement"
+            summary = "Event gallery",
+            description = "Retrieves the gallery photos of an event"
     )
     @GetMapping("/events/{eventId}/gallery")
     public ResponseEntity<List<PhotoResponse>> getEventGallery(@PathVariable Long eventId) {
@@ -199,8 +199,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Modifier une photo",
-            description = "Met à jour les métadonnées d'une photo"
+            summary = "Update a photo",
+            description = "Updates a photo's metadata"
     )
     @PatchMapping("/{id}")
     public ResponseEntity<PhotoResponse> updatePhoto(
@@ -214,8 +214,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Supprimer une photo",
-            description = "Supprime une photo (soft delete)"
+            summary = "Delete a photo",
+            description = "Deletes a photo (soft delete)"
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePhoto(
@@ -231,8 +231,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Lister toutes les photos (admin)",
-            description = "Récupère toutes les photos avec pagination"
+            summary = "List all photos (admin)",
+            description = "Retrieves all photos with pagination"
     )
     @GetMapping("/all")
     public ResponseEntity<PhotoListResponse> getAllPhotos(
@@ -260,8 +260,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Photos par uploader",
-            description = "Récupère les photos uploadées par un utilisateur"
+            summary = "Photos by uploader",
+            description = "Retrieves the photos uploaded by a user"
     )
     @GetMapping("/uploader/{userId}")
     public ResponseEntity<List<PhotoResponse>> getPhotosByUploader(@PathVariable Long userId) {
@@ -272,8 +272,8 @@ public class PhotoController {
     }
 
     @Operation(
-            summary = "Nettoyage des photos (admin)",
-            description = "Supprime définitivement les photos soft-deleted"
+            summary = "Photo cleanup (admin)",
+            description = "Permanently deletes soft-deleted photos"
     )
     @PostMapping("/cleanup")
     public ResponseEntity<String> cleanupDeletedPhotos(
@@ -283,6 +283,6 @@ public class PhotoController {
 
         int cleanedCount = photoService.cleanupDeletedPhotos(daysOld);
 
-        return ResponseEntity.ok(String.format("Nettoyage effectué : %d photos supprimées", cleanedCount));
+        return ResponseEntity.ok(String.format("Cleanup completed: %d photos deleted", cleanedCount));
     }
 }

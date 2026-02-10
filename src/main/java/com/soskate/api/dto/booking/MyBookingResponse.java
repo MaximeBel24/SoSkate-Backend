@@ -6,15 +6,15 @@ import com.soskate.api.enums.ParticipantStatus;
 import java.time.LocalDateTime;
 
 /**
- * DTO pour afficher les réservations d'un utilisateur dans "Mes réservations"
- * Combine les infos de la participation + du booking
+ * DTO to display a user's bookings in "My Bookings".
+ * Combines participation info + booking info.
  */
 public record MyBookingResponse(
-        // Infos participation
+        // Participation info
         Long participationId,
         ParticipantStatus participantStatus,  // CONFIRMED, CANCELLED
 
-        // Infos booking
+        // Booking info
         Long bookingId,
         LocalDateTime startTime,
         LocalDateTime endTime,
@@ -22,28 +22,28 @@ public record MyBookingResponse(
         BookingStatus bookingStatus,
         String participantsNotes,
 
-        // Infos instructeur (résumé)
+        // Instructor info (summary)
         Long instructorId,
         String instructorFirstname,
         String instructorLastname,
 
-        // Infos spot (résumé)
+        // Spot info (summary)
         Long spotId,
         String spotName,
         String spotAddress,
         String spotCity,
 
-        // Infos service (résumé)
+        // Service info (summary)
         Long serviceId,
         String serviceName,
         Integer basePriceCents,
 
-        // Prix calculé pour cette participation
+        // Calculated price for this participation
         Integer totalPriceCents
 ) {
 
     /**
-     * Vérifie si la réservation peut être annulée (> 48h avant)
+     * Checks whether the booking can be cancelled (> 48h before start).
      */
     public boolean canCancel() {
         if (participantStatus == ParticipantStatus.CANCELLED) {
@@ -53,7 +53,7 @@ public record MyBookingResponse(
     }
 
     /**
-     * Vérifie si les notes peuvent être modifiées (> 24h avant)
+     * Checks whether the notes can be edited (> 24h before start).
      */
     public boolean canEditNotes() {
         if (participantStatus == ParticipantStatus.CANCELLED ||
@@ -64,7 +64,7 @@ public record MyBookingResponse(
     }
 
     /**
-     * Vérifie si la réservation est passée
+     * Checks whether the booking is in the past.
      */
     public boolean isPast() {
         return startTime.isBefore(LocalDateTime.now());

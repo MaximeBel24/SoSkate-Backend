@@ -11,25 +11,25 @@ import java.util.List;
 public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
     /**
-     * Trouve tous les services actifs.
+     * Finds all active services.
      *
-     * @return liste des services actifs
+     * @return list of active services
      */
     List<ServiceEntity> findByIsActiveTrue();
 
     /**
-     * Trouve les services par type.
+     * Finds services by type.
      *
-     * @param type le type de service (LESSON, RENTAL)
-     * @return liste des services de ce type
+     * @param type the service type (LESSON, RENTAL)
+     * @return list of services of this type
      */
     List<ServiceEntity> findByType(ServiceType type);
 
     /**
-     * Vérifie si un service avec ce nom existe déjà.
+     * Checks if a service with this name already exists.
      *
-     * @param name le nom du service
-     * @return true si le nom existe
+     * @param name the service name
+     * @return true if the name exists
      */
     boolean existsByName(String name);
 }

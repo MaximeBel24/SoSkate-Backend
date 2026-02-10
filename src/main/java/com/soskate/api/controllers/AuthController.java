@@ -15,24 +15,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Authentication", description = "Gestion de la connexion utilisateur")
+@Tag(name = "Authentication", description = "User login management")
 public class AuthController {
 
     private final AuthService authService;
 
     @Operation(
-            summary = "Connexion utilisateur",
-            description = "Authentifie un Customer ou Instructor"
+            summary = "User login",
+            description = "Authenticates a Customer or Instructor"
     )
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody LoginRequest loginRequest) {
 
-        log.info("Requête de connexion unifiée reçue pour l'email : {}", loginRequest.email());
+        log.info("Unified login request received for email: {}", loginRequest.email());
 
         LoginResponse response = authService.login(loginRequest);
 
-        log.info("Connexion réussie - Email: {}, Rôle: {}",
+        log.info("Login successful - Email: {}, Role: {}",
                 loginRequest.email(),
                 response.role());
 
@@ -40,12 +40,12 @@ public class AuthController {
     }
 
     @Operation(
-            summary = "Vérifier si un email existe",
-            description = "Vérifie si un email est déjà utilisé par un Customer ou Instructor"
+            summary = "Check if an email exists",
+            description = "Checks if an email is already used by a Customer or Instructor"
     )
     @GetMapping("/email-exists")
     public ResponseEntity<Boolean> emailExists(@RequestParam String email) {
-        log.debug("Vérification de l'existence de l'email : {}", email);
+        log.debug("Checking email existence: {}", email);
         boolean exists = authService.emailExists(email);
         return ResponseEntity.ok(exists);
     }

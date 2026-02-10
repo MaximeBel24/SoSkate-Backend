@@ -4,7 +4,7 @@ import com.soskate.api.enums.ServiceType;
 import lombok.Getter;
 
 /**
- * Exception levée lorsqu'un service avec le même nom existe déjà.
+ * Exception thrown when a service with the same name already exists.
  *
  * @author SoSkate Team
  * @version 1.0

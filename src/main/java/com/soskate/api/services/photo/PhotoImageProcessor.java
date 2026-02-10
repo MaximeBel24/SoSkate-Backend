@@ -46,12 +46,12 @@ public class PhotoImageProcessor {
      */
     public void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new InvalidPhotoFormatException("Le fichier est vide ou manquant");
+            throw new InvalidPhotoFormatException("File is empty or missing");
         }
 
         if (file.getSize() > photoConfig.getUpload().getMaxFileSize()) {
             throw new InvalidPhotoFormatException(
-                    String.format("Le fichier est trop volumineux. Taille max: %d MB",
+                    String.format("File is too large. Max size: %d MB",
                             photoConfig.getUpload().getMaxFileSize() / (1024 * 1024))
             );
         }
@@ -64,9 +64,9 @@ public class PhotoImageProcessor {
 
             if (!isJfif) {
                 throw new InvalidPhotoFormatException(
-                        "Format de fichier non supporté. Formats acceptés: " +
+                        "Unsupported file format. Accepted formats: " +
                                 String.join(", ", photoConfig.getUpload().getAllowedFormats()) +
-                                " (ou .jfif)"
+                                " (or .jfif)"
                 );
             }
         }
@@ -89,7 +89,7 @@ public class PhotoImageProcessor {
 
         if (currentCount >= limit) {
             throw new PhotoUploadException(
-                    String.format("Limite de photos atteinte pour ce type (%d max)", limit)
+                    String.format("Photo limit reached for this type (%d max)", limit)
             );
         }
     }
@@ -109,7 +109,7 @@ public class PhotoImageProcessor {
             if (image.width < photoConfig.getUpload().getMinWidth() ||
                     image.height < photoConfig.getUpload().getMinHeight()) {
                 throw new InvalidPhotoFormatException(
-                        String.format("Image trop petite. Dimensions minimales: %dx%d",
+                        String.format("Image too small. Minimum dimensions: %dx%d",
                                 photoConfig.getUpload().getMinWidth(),
                                 photoConfig.getUpload().getMinHeight())
                 );
@@ -119,7 +119,7 @@ public class PhotoImageProcessor {
             if (ratio > photoConfig.getUpload().getMaxRatio() ||
                     ratio < 1.0 / photoConfig.getUpload().getMaxRatio()) {
                 throw new InvalidPhotoFormatException(
-                        String.format("Ratio d'image invalide (max %s:1)",
+                        String.format("Invalid image ratio (max %s:1)",
                                 photoConfig.getUpload().getMaxRatio())
                 );
             }

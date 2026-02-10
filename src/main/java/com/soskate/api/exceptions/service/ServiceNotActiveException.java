@@ -1,7 +1,7 @@
 package com.soskate.api.exceptions.service;
 
 /**
- * Exception levée lorsqu'on tente d'utiliser un service désactivé.
+ * Exception thrown when attempting to use a deactivated service.
  *
  * @author SoSkate Team
  * @version 1.0

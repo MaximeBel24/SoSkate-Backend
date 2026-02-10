@@ -148,14 +148,14 @@ public class BookingServiceImpl implements BookingService {
 
     private BookingEntity findBookingById(Long id) {
         return bookingRepository.findById(id)
-                .orElseThrow(() -> new BookingNotFoundException("Réservation non trouvée"));
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
     }
 
     private BookingEntity findBookingByIdAndInstructor(Long bookingId, Long instructorId) {
         BookingEntity booking = findBookingById(bookingId);
 
         if (!booking.getInstructor().getId().equals(instructorId)) {
-            throw new BookingNotFoundException("Réservation non trouvée");
+            throw new BookingNotFoundException("Booking not found");
         }
 
         return booking;

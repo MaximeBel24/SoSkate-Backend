@@ -18,7 +18,7 @@ import java.util.List;
  * REST Controller for admin operations on instructors.
  * TODO: Secure with @PreAuthorize("hasRole('ADMIN')") when Spring Security is implemented
  */
-@Tag(name = "Admin - Instructors", description = "Gestion administrative des instructeurs")
+@Tag(name = "Admin - Instructors", description = "Administrative instructor management")
 @RestController
 @RequestMapping("/admin/instructors")
 @RequiredArgsConstructor
@@ -29,8 +29,8 @@ public class AdminInstructorController {
     private final InstructorQueryService queryService;
 
     @Operation(
-            summary = "Créer un instructeur",
-            description = "Crée un instructeur et envoie un email d'invitation"
+            summary = "Create an instructor",
+            description = "Creates an instructor and sends an invitation email"
     )
     @PostMapping
     public ResponseEntity<InstructorResponse> createInstructor(
@@ -41,8 +41,8 @@ public class AdminInstructorController {
     }
 
     @Operation(
-            summary = "Lister tous les instructeurs",
-            description = "Récupère tous les instructeurs (tous statuts)"
+            summary = "List all instructors",
+            description = "Retrieves all instructors (all statuses)"
     )
     @GetMapping
     public ResponseEntity<List<InstructorResponse>> getAllInstructors() {
@@ -51,8 +51,8 @@ public class AdminInstructorController {
     }
 
     @Operation(
-            summary = "Récupérer un instructeur",
-            description = "Récupère un instructeur par son ID"
+            summary = "Retrieve an instructor",
+            description = "Retrieves an instructor by its ID"
     )
     @GetMapping("/{id}")
     public ResponseEntity<InstructorResponse> getInstructorById(@PathVariable Long id) {
@@ -61,8 +61,8 @@ public class AdminInstructorController {
     }
 
     @Operation(
-            summary = "Lister les invitations en attente",
-            description = "Récupère les instructeurs avec invitations en attente"
+            summary = "List pending invitations",
+            description = "Retrieves instructors with pending invitations"
     )
     @GetMapping("/pending")
     public ResponseEntity<List<InstructorResponse>> getPendingInvitations() {
@@ -71,8 +71,8 @@ public class AdminInstructorController {
     }
 
     @Operation(
-            summary = "Lister les invitations expirées",
-            description = "Récupère les instructeurs avec invitations expirées"
+            summary = "List expired invitations",
+            description = "Retrieves instructors with expired invitations"
     )
     @GetMapping("/expired")
     public ResponseEntity<List<InstructorResponse>> getExpiredInvitations() {
@@ -83,8 +83,8 @@ public class AdminInstructorController {
     // ==================== Update Operations ====================
 
     @Operation(
-            summary = "Renvoyer une invitation",
-            description = "Renvoie l'email d'invitation avec un nouveau token"
+            summary = "Resend an invitation",
+            description = "Resends the invitation email with a new token"
     )
     @PatchMapping("/{id}/resend")
     public ResponseEntity<InstructorResponse> resendInvitation(@PathVariable Long id) {
@@ -93,8 +93,8 @@ public class AdminInstructorController {
     }
 
     @Operation(
-            summary = "Suspendre un instructeur",
-            description = "Suspend le compte d'un instructeur"
+            summary = "Suspend an instructor",
+            description = "Suspends an instructor's account"
     )
     @PatchMapping("/{id}/suspend")
     public ResponseEntity<InstructorResponse> suspendInstructor(@PathVariable Long id) {
@@ -103,8 +103,8 @@ public class AdminInstructorController {
     }
 
     @Operation(
-            summary = "Réactiver un instructeur",
-            description = "Réactive un compte instructeur suspendu"
+            summary = "Reactivate an instructor",
+            description = "Reactivates a suspended instructor account"
     )
     @PatchMapping("/{id}/reactivate")
     public ResponseEntity<InstructorResponse> reactivateInstructor(@PathVariable Long id) {
@@ -115,8 +115,8 @@ public class AdminInstructorController {
     // ==================== Delete Operations ====================
 
     @Operation(
-            summary = "Supprimer un instructeur",
-            description = "Supprime définitivement un instructeur"
+            summary = "Delete an instructor",
+            description = "Permanently deletes an instructor"
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInstructorById(@PathVariable Long id) {

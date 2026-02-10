@@ -1,7 +1,7 @@
 package com.soskate.api.exceptions.spot;
 
 /**
- * Exception levée lorsque les coordonnées GPS sont invalides.
+ * Exception thrown when GPS coordinates are invalid.
  * 
  * @author SoSkate Team
  * @version 1.0
