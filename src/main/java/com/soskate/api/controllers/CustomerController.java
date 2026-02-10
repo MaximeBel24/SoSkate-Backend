@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -36,6 +37,7 @@ public class CustomerController {
             description = "Récupère le profil d'un client"
     )
     @GetMapping("/{customerId}")
+    @PreAuthorize("@userSecurity.isOwner(#customerId) or @userSecurity.isAdmin()")
     public ResponseEntity<CustomerResponse> getCustomerById(
             @Parameter(description = "ID du customer")
             @PathVariable Long customerId) {
@@ -52,6 +54,7 @@ public class CustomerController {
             description = "Met à jour le profil d'un client (partiel)"
     )
     @PutMapping("/{customerId}")
+    @PreAuthorize("@userSecurity.isOwner(#customerId) or @userSecurity.isAdmin()")
     public ResponseEntity<CustomerResponse> updateCustomer(
             @Parameter(description = "ID du customer")
             @PathVariable Long customerId,

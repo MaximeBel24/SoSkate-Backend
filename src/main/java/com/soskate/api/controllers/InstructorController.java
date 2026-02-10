@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -92,6 +93,7 @@ public class InstructorController {
             description = "Met à jour le profil de l'instructeur"
     )
     @PutMapping("/{id}")
+    @PreAuthorize("@userSecurity.isOwner(#id) or @userSecurity.isAdmin()")
     public ResponseEntity<InstructorResponse> updateInstructor(
             @PathVariable Long id,
             @Valid @RequestBody InstructorUpdateRequest request) {

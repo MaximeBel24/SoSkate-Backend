@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +29,7 @@ public class BookingParticipantController {
             description = "Annule la participation d'un client à une réservation"
     )
     @PostMapping("/participations/{participantId}/cancel")
+    @PreAuthorize("@userSecurity.isOwner(#customerId) or @userSecurity.isAdmin()")
     public ResponseEntity<ParticipantResponse> cancel(
             @PathVariable Long customerId,
             @PathVariable Long participantId,
@@ -45,6 +47,7 @@ public class BookingParticipantController {
             description = "Récupère toutes les réservations d'un client"
     )
     @GetMapping("/my-bookings")
+    @PreAuthorize("@userSecurity.isOwner(#customerId) or @userSecurity.isAdmin()")
     public ResponseEntity<List<MyBookingResponse>> getMyBookings(
             @PathVariable Long customerId
     ) {
@@ -58,6 +61,7 @@ public class BookingParticipantController {
             description = "Met à jour les notes d'une participation"
     )
     @PatchMapping("/participations/{participationId}/notes")
+    @PreAuthorize("@userSecurity.isOwner(#customerId) or @userSecurity.isAdmin()")
     public ResponseEntity<MyBookingResponse> updateNotes(
             @PathVariable Long customerId,
             @PathVariable Long participationId,
