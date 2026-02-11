@@ -29,13 +29,11 @@ public class JwtServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Configure le mock : quand JwtService appelle getJwtSecret(), il reçoit cette valeur
         when(securityProperties.getJwtSecret())
                 .thenReturn("dGVzdC1zZWNyZXQta2V5LWZvci11bml0LXRlc3RzLW9ubHktMTIzNDU2Nzg5MA==");
         when(securityProperties.getJwtExpiration())
                 .thenReturn(3600000L);
 
-        // Crée un faux utilisateur pour les tests
         userDetails = User.builder()
                 .username("rider@soskate.com")
                 .password("password")
