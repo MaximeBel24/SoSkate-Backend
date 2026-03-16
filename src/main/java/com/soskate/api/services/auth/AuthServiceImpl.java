@@ -78,8 +78,8 @@ public class AuthServiceImpl implements AuthService {
                     customer.getFirstName(),
                     customer.getLastName(),
                     customer.getPhone(),
-                    jwtToken
-
+                    jwtToken,
+                    customer.getIsAdmin()
             );
         }
 
@@ -118,7 +118,8 @@ public class AuthServiceImpl implements AuthService {
                     instructor.getFirstName(),
                     instructor.getLastName(),
                     instructor.getPhone(),
-                    jwtToken
+                    jwtToken,
+                    instructor.getIsAdmin()
             );
         }
 

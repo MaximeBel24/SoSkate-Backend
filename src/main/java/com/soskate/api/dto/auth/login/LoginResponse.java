@@ -30,6 +30,9 @@ public record LoginResponse(
         // === Role ===
         UserRole role,
 
+        // === Admin ===
+        boolean isAdmin,
+
         // === Message ===
         String message
 ) {
@@ -52,7 +55,8 @@ public record LoginResponse(
             String firstName,
             String lastName,
             String phone,
-            String token
+            String token,
+            boolean isAdmin
     ) {
         return new LoginResponse(
                 userId,
@@ -64,6 +68,7 @@ public record LoginResponse(
                 phone,
                 token,
                 UserRole.CUSTOMER,
+                isAdmin,
                 "Login successful"
         );
     }
@@ -78,7 +83,8 @@ public record LoginResponse(
             String firstName,
             String lastName,
             String phone,
-            String token
+            String token,
+            boolean isAdmin
     ) {
         return new LoginResponse(
                 userId,
@@ -90,6 +96,7 @@ public record LoginResponse(
                 phone,
                 token,
                 UserRole.INSTRUCTOR,
+                isAdmin,
                 "Login successful"
         );
     }
