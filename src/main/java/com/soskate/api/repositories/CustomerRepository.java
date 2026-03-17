@@ -4,6 +4,8 @@ import com.soskate.api.entities.CustomerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -43,4 +45,23 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
      * @return true if another customer has this email
      */
     boolean existsByEmailAndIdNot(String email, Long id);
+
+    /**
+     * Counts customers registered within a given time range.
+     * Used for dashboard KPIs (new customers this month).
+     *
+     * @param start start of the period (inclusive)
+     * @param end end of the period (exclusive)
+     * @return number of customers registered in the period
+     */
+    Long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
+    /**
+     * Retrieves the 10 most recently registered customers.
+     * Used for the admin dashboard's recent registrations feed.
+     *
+     * @return list of the 10 latest customers, sorted by creation date descending
+     */
+    List<CustomerEntity> findTop10ByOrderByCreatedAtDesc();
+
 }
