@@ -1,4 +1,4 @@
-package com.soskate.api.controllers;
+package com.soskate.api.controllers.admin;
 
 import com.soskate.api.dto.instructor.*;
 import com.soskate.api.services.instructor.InstructorAdminService;

@@ -143,7 +143,6 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toResponse(booking);
     }
 
-
     // ========== Private helpers ==========
 
     private BookingEntity findBookingById(Long id) {

@@ -138,4 +138,13 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
      * @return list of the 10 latest bookings, sorted by creation date descending
      */
     List<BookingEntity> findTop10ByOrderByCreatedAtDesc();
+
+
+    /**
+     * Retrieves all bookings ordered by creation date descending.
+     * Used by admin panel for full booking management view.
+     *
+     * @return list of all bookings, most recent first
+     */
+    List<BookingEntity> findAllByOrderByCreatedAtDesc();
 }
