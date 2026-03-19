@@ -1,5 +1,6 @@
 package com.soskate.api.controllers;
 
+import com.soskate.api.dto.auth.ChangePasswordRequest;
 import com.soskate.api.dto.auth.login.LoginRequest;
 import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.services.auth.AuthService;
@@ -9,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,4 +52,19 @@ public class AuthController {
         boolean exists = authService.emailExists(email);
         return ResponseEntity.ok(exists);
     }
+
+    @Operation(
+            summary = "Change password",
+            description = "Changes the password of the authenticated user"
+    )
+    @PatchMapping("/change-password")
+    public ResponseEntity<Void> changePassword(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody ChangePasswordRequest request) {
+
+        log.info("Password change request for: {}", userDetails.getUsername());
+        authService.changePassword(userDetails.getUsername(), request);
+        return ResponseEntity.noContent().build();
+    }
+
 }

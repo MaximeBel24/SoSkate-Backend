@@ -64,4 +64,5 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
      */
     List<CustomerEntity> findTop10ByOrderByCreatedAtDesc();
 
+    Optional<CustomerEntity> findByEmailAndDeletedFalse(String email);
 }
