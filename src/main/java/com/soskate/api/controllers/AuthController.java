@@ -1,6 +1,7 @@
 package com.soskate.api.controllers;
 
 import com.soskate.api.dto.auth.ChangePasswordRequest;
+import com.soskate.api.dto.auth.DeleteAccountRequest;
 import com.soskate.api.dto.auth.login.LoginRequest;
 import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.services.auth.AuthService;
@@ -65,6 +66,20 @@ public class AuthController {
         log.info("Password change request for: {}", userDetails.getUsername());
         authService.changePassword(userDetails.getUsername(), request);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Delete account",
+            description = "Soft-deletes the authenticated user's account"
+    )
+    @PatchMapping("/delete-account")
+    public ResponseEntity<Void> deleteAccount(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody DeleteAccountRequest request
+            ) {
+        log.info("Delete account request for: {}", userDetails.getUsername());
+        authService.deleteAccount(userDetails.getUsername(), request);
+         return ResponseEntity.noContent().build();
     }
 
 }

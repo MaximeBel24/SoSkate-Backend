@@ -1,6 +1,7 @@
 package com.soskate.api.services.auth;
 
 import com.soskate.api.dto.auth.ChangePasswordRequest;
+import com.soskate.api.dto.auth.DeleteAccountRequest;
 import com.soskate.api.dto.auth.login.LoginRequest;
 import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.entities.CustomerEntity;
@@ -133,7 +134,7 @@ public class AuthService {
     }
 
     public void changePassword(String email, ChangePasswordRequest request) {
-        // 1. Chercher l'utilisateur (customer ou instructor)
+
         Optional<CustomerEntity> customerOpt = customerRepository.findByEmailAndDeletedFalse(email);
         if (customerOpt.isPresent()) {
             CustomerEntity customer = customerOpt.get();
@@ -155,6 +156,35 @@ public class AuthService {
             instructor.setPassword(passwordEncoder.encode(request.newPassword()));
             instructorRepository.save(instructor);
             log.info("Password changed for instructor: {}", email);
+            return;
+        }
+
+        throw new BadCredentialsException("Utilisateur non trouvé");
+    }
+
+    public void deleteAccount(String email, DeleteAccountRequest request) {
+
+        Optional<CustomerEntity> customerOpt = customerRepository.findByEmailAndDeletedFalse(email);
+        if (customerOpt.isPresent()) {
+            CustomerEntity customer = customerOpt.get();
+            if (!passwordEncoder.matches(request.password(), customer.getPassword())) {
+                throw new BadCredentialsException("Mot de passe incorrect");
+            }
+            customer.markAsDeleted();
+            customerRepository.save(customer);
+            log.info("Account soft-deleted for customer: {}", email);
+            return;
+        }
+
+        Optional<InstructorEntity> instructorOpt = instructorRepository.findByEmailAndDeletedFalse(email);
+        if (instructorOpt.isPresent()) {
+            InstructorEntity instructor = instructorOpt.get();
+            if (!passwordEncoder.matches(request.password(), instructor.getPassword())) {
+                throw new BadCredentialsException("Mot de passe incorrect");
+            }
+            instructor.markAsDeleted();
+            instructorRepository.save(instructor);
+            log.info("Account soft-deleted for instructor: {}", email);
             return;
         }
 
