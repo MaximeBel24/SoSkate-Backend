@@ -2,6 +2,7 @@ package com.soskate.api.services.auth;
 
 import com.soskate.api.dto.auth.ChangePasswordRequest;
 import com.soskate.api.dto.auth.DeleteAccountRequest;
+import com.soskate.api.dto.auth.VerifyPasswordRequest;
 import com.soskate.api.dto.auth.login.LoginRequest;
 import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.entities.CustomerEntity;
@@ -190,5 +191,20 @@ public class AuthService {
 
         throw new BadCredentialsException("Utilisateur non trouvé");
     }
+
+    public boolean verifyPassword(String email, VerifyPasswordRequest request) {
+        Optional<CustomerEntity> customerOpt = customerRepository.findByEmailAndDeletedFalse(email);
+        if (customerOpt.isPresent()) {
+            return passwordEncoder.matches(request.password(), customerOpt.get().getPassword());
+        }
+
+        Optional<InstructorEntity> instructorOpt = instructorRepository.findByEmailAndDeletedFalse(email);
+        if (instructorOpt.isPresent()) {
+            return passwordEncoder.matches(request.password(), instructorOpt.get().getPassword());
+        }
+
+        return false;
+    }
+
 
 }

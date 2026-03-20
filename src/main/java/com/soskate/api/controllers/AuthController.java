@@ -2,6 +2,7 @@ package com.soskate.api.controllers;
 
 import com.soskate.api.dto.auth.ChangePasswordRequest;
 import com.soskate.api.dto.auth.DeleteAccountRequest;
+import com.soskate.api.dto.auth.VerifyPasswordRequest;
 import com.soskate.api.dto.auth.login.LoginRequest;
 import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.services.auth.AuthService;
@@ -72,7 +73,7 @@ public class AuthController {
             summary = "Delete account",
             description = "Soft-deletes the authenticated user's account"
     )
-    @PatchMapping("/delete-account")
+    @DeleteMapping("/delete-account")
     public ResponseEntity<Void> deleteAccount(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody DeleteAccountRequest request
@@ -81,5 +82,20 @@ public class AuthController {
         authService.deleteAccount(userDetails.getUsername(), request);
          return ResponseEntity.noContent().build();
     }
+
+    @Operation(
+            summary = "Verify password",
+            description = "Verifies the current password of the authenticated user"
+    )
+    @PostMapping("/verify-password")
+    public ResponseEntity<Boolean> verifyPassword(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody VerifyPasswordRequest request) {
+
+        log.info("Password verification request for: {}", userDetails.getUsername());
+        boolean isValid = authService.verifyPassword(userDetails.getUsername(), request);
+        return ResponseEntity.ok(isValid);
+    }
+
 
 }
