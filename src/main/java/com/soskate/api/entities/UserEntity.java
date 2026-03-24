@@ -52,6 +52,12 @@ public class UserEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry")
+    private LocalDateTime resetTokenExpiry;
+
     public void markAsDeleted() {
         this.deleted = true;
         this.deletedAt = LocalDateTime.now();
