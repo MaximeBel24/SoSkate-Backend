@@ -41,6 +41,7 @@ public class SecurityConfig {
 
                         // Public
 
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/auth/email-exists").permitAll()
                         .requestMatchers(HttpMethod.POST, "/customer/auth/register").permitAll()

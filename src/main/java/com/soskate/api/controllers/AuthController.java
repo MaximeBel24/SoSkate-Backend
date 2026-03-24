@@ -1,8 +1,6 @@
 package com.soskate.api.controllers;
 
-import com.soskate.api.dto.auth.ChangePasswordRequest;
-import com.soskate.api.dto.auth.DeleteAccountRequest;
-import com.soskate.api.dto.auth.VerifyPasswordRequest;
+import com.soskate.api.dto.auth.*;
 import com.soskate.api.dto.auth.login.LoginRequest;
 import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.services.auth.AuthService;
@@ -97,5 +95,30 @@ public class AuthController {
         return ResponseEntity.ok(isValid);
     }
 
+    @Operation(
+            summary = "Forgot password",
+            description = "Sends a 6-digit reset code to the user's email"
+    )
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request) {
+
+        log.info("Forgot password request for: {}", request.email());
+        authService.forgotPassword(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Reset password",
+            description = "Resets the password using a valid reset code"
+    )
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request) {
+
+        log.info("Reset password request for: {}", request.email());
+        authService.resetPassword(request);
+        return ResponseEntity.noContent().build();
+    }
 
 }
