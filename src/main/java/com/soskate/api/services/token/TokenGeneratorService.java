@@ -80,4 +80,13 @@ public class TokenGeneratorService {
         }
         return new String(chars);
     }
+
+    /**
+     * Generates a 6-digit numeric code for password reset.
+     * @return A 6-digit string (e.g., "482917")
+     */
+    public String generateResetCode() {
+        int code = 100000 + secureRandom.nextInt(900000);
+        return String.valueOf(code);
+    }
 }

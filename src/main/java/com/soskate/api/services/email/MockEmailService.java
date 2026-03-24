@@ -92,4 +92,27 @@ public class MockEmailService implements EmailService {
         log.info("The SoSkate Team");
         log.info("========================================");
     }
+
+    @Override
+    public void sendPasswordResetEmail(String email, String firstName, String resetCode) {
+        log.info("========================================");
+        log.info("📧 MOCK EMAIL - Password Reset");
+        log.info("========================================");
+        log.info("To: {}", email);
+        log.info("Subject: SoSkate - Réinitialisation de votre mot de passe");
+        log.info("----------------------------------------");
+        log.info("Bonjour {},", firstName);
+        log.info("");
+        log.info("Vous avez demandé la réinitialisation de votre mot de passe.");
+        log.info("");
+        log.info("Votre code de vérification : {}", resetCode);
+        log.info("");
+        log.info("Ce code expire dans 15 minutes.");
+        log.info("");
+        log.info("Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.");
+        log.info("");
+        log.info("L'équipe SoSkate");
+        log.info("========================================");
+    }
+
 }

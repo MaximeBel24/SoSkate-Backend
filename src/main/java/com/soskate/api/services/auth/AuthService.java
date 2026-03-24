@@ -1,8 +1,6 @@
 package com.soskate.api.services.auth;
 
-import com.soskate.api.dto.auth.ChangePasswordRequest;
-import com.soskate.api.dto.auth.DeleteAccountRequest;
-import com.soskate.api.dto.auth.VerifyPasswordRequest;
+import com.soskate.api.dto.auth.*;
 import com.soskate.api.dto.auth.login.LoginRequest;
 import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.entities.CustomerEntity;
@@ -14,12 +12,15 @@ import com.soskate.api.repositories.InstructorRepository;
 import com.soskate.api.security.CustomUserDetailsService;
 import com.soskate.api.security.JwtService;
 import com.soskate.api.services.common.EmailValidationService;
+import com.soskate.api.services.email.EmailService;
+import com.soskate.api.services.token.TokenGeneratorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -45,7 +46,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtService jwtService;
+    private final EmailService emailService;
+    private final TokenGeneratorService tokenGeneratorService;
 
+    private final int RESET_TOKEN_AVAILABILITY = 15;
 
     // Generic error message to avoid revealing whether the email exists
     private static final String BAD_CREDENTIALS_MESSAGE = "Incorrect email or password";
@@ -206,5 +210,84 @@ public class AuthService {
         return false;
     }
 
+    public void forgotPassword(ForgotPasswordRequest request) {
+        String email = request.email();
+        log.info("Password reset requested for: {}", email);
+
+        // === 1. Search in Customers ===
+        Optional<CustomerEntity> customerOpt = customerRepository.findByEmailAndDeletedFalse(email);
+        if (customerOpt.isPresent()) {
+            CustomerEntity customer = customerOpt.get();
+            String code = tokenGeneratorService.generateResetCode();
+            customer.setResetToken(code);
+            customer.setResetTokenExpiry(LocalDateTime.now().plusMinutes(RESET_TOKEN_AVAILABILITY));
+            customerRepository.save(customer);
+            emailService.sendPasswordResetEmail(email, customer.getFirstName(), code);
+            log.info("Reset code generated for customer: {}", email);
+            return;
+        }
+
+        // === 2. Search in Instructors ===
+        Optional<InstructorEntity> instructorOpt = instructorRepository.findByEmailAndDeletedFalse(email);
+        if (instructorOpt.isPresent()) {
+            InstructorEntity instructor = instructorOpt.get();
+            String code = tokenGeneratorService.generateResetCode();
+            instructor.setResetToken(code);
+            instructor.setResetTokenExpiry(LocalDateTime.now().plusMinutes(RESET_TOKEN_AVAILABILITY));
+            instructorRepository.save(instructor);
+            emailService.sendPasswordResetEmail(email, instructor.getFirstName(), code);
+            log.info("Reset code generated for instructor: {}", email);
+            return;
+        }
+
+        // === 3. No user found — silent success (security) ===
+        log.warn("Password reset requested for unknown email: {}", email);
+        // On ne lève pas d'erreur pour ne pas révéler si l'email existe
+    }
+
+    public void resetPassword(ResetPasswordRequest request) {
+        String email = request.email();
+        log.info("Password reset attempt for: {}", email);
+
+        // === 1. Search in Customers ===
+        Optional<CustomerEntity> customerOpt = customerRepository.findByEmailAndDeletedFalse(email);
+        if (customerOpt.isPresent()) {
+            CustomerEntity customer = customerOpt.get();
+            validateAndResetPassword(customer.getResetToken(), customer.getResetTokenExpiry(), request.token());
+            customer.setPassword(passwordEncoder.encode(request.newPassword()));
+            customer.setResetToken(null);
+            customer.setResetTokenExpiry(null);
+            customerRepository.save(customer);
+            log.info("Password successfully reset for customer: {}", email);
+            return;
+        }
+
+        // === 2. Search in Instructors ===
+        Optional<InstructorEntity> instructorOpt = instructorRepository.findByEmailAndDeletedFalse(email);
+        if (instructorOpt.isPresent()) {
+            InstructorEntity instructor = instructorOpt.get();
+            validateAndResetPassword(instructor.getResetToken(), instructor.getResetTokenExpiry(), request.token());
+            instructor.setPassword(passwordEncoder.encode(request.newPassword()));
+            instructor.setResetToken(null);
+            instructor.setResetTokenExpiry(null);
+            instructorRepository.save(instructor);
+            log.info("Password successfully reset for instructor: {}", email);
+            return;
+        }
+
+        throw new BadCredentialsException("Utilisateur non trouvé");
+    }
+
+    private void validateAndResetPassword(String storedToken, LocalDateTime expiry, String providedToken) {
+        if (storedToken == null || expiry == null) {
+            throw new BadCredentialsException("Aucune demande de réinitialisation en cours");
+        }
+        if (expiry.isBefore(LocalDateTime.now())) {
+            throw new BadCredentialsException("Le code a expiré. Veuillez en demander un nouveau.");
+        }
+        if (!storedToken.equals(providedToken)) {
+            throw new BadCredentialsException("Code de vérification incorrect");
+        }
+    }
 
 }
