@@ -42,12 +42,13 @@ public class AdminDashboardService {
                 .map(b -> new RecentBooking(
                         b.getId(),
                         b.getStartTime(),
-                        b.getService().getName(),
-                        b.getInstructor().getFirstName(),
-                        b.getInstructor().getLastName(),
+                        b.getService() != null ? b.getService().getName() : "N/A",
+                        b.getInstructor() != null ? b.getInstructor().getFirstName() : "N/A",
+                        b.getInstructor() != null ? b.getInstructor().getLastName() : "",
                         b.getStatus()
                 ))
                 .toList();
+
 
         List<RecentCustomer> recentCustomers = lastTenCustomersCreated.stream()
                 .map(c -> new RecentCustomer(
