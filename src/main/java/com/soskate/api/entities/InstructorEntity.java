@@ -109,23 +109,6 @@ public class InstructorEntity extends UserEntity {
     @Builder.Default
     private Integer bufferMinutesBetweenBookings = 30;
 
-    // === Soft delete ===
-
-    @Builder.Default
-    @Column(nullable = false)
-    private Boolean deleted = false;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    /**
-     * Soft delete this instructor.
-     */
-    public void markAsDeleted() {
-        this.deleted = true;
-        this.deletedAt = LocalDateTime.now();
-    }
-
     // ==================== Helper Methods ====================
 
     /**

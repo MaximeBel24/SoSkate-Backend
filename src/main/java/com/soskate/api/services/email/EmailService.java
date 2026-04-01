@@ -29,4 +29,14 @@ public interface EmailService {
      * @param instructor The instructor to resend the invitation to
      */
     void sendInvitationResent(InstructorEntity instructor);
+
+    /**
+     * Sends a password reset email with a 6-digit code.
+     *
+     * @param email The recipient email address
+     * @param firstName The user's first name
+     * @param resetCode The 6-digit reset code
+     */
+    void sendPasswordResetEmail(String email, String firstName, String resetCode);
+
 }

@@ -60,6 +60,7 @@ public class InstructorAdminServiceImpl implements InstructorAdminService {
         );
 
         instructor.setStatus(InstructorStatus.INVITED);
+        instructor.setDeleted(false);
         instructor.setInvitedAt(LocalDateTime.now());
         instructor.setCreatedAt(LocalDateTime.now());
         instructor.setUpdatedAt(LocalDateTime.now());

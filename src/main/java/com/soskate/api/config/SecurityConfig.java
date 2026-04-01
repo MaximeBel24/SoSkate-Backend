@@ -41,6 +41,7 @@ public class SecurityConfig {
 
                         // Public
 
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/auth/email-exists").permitAll()
                         .requestMatchers(HttpMethod.POST, "/customer/auth/register").permitAll()
@@ -51,6 +52,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/spots", "/spots/active", "/spots/{id}", "/spots/city/{city}", "/spots/type", "/spots/nearby", "/spots/{spotId}/instructors").permitAll()
                         .requestMatchers(HttpMethod.GET, "/services", "/services/active", "/services/{id}", "/services/type/{type}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/photos/**").permitAll()
+                        .requestMatchers("/instructors/{instructorId}/availabilities/**").permitAll()
+
 
                         // Admin
 
@@ -65,11 +68,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/spots/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/photos/all").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/photos/cleanup").hasRole("ADMIN")
+                        .requestMatchers("/bookings").permitAll()
 
                         // Instructor
 
                         .requestMatchers(HttpMethod.PUT, "/instructors/{id}").hasRole("INSTRUCTOR")
-                        .requestMatchers("/instructors/{instructorId}/availabilities/**").hasRole("INSTRUCTOR")
                         .requestMatchers("/instructors/{instructorId}/spots/**").hasRole("INSTRUCTOR")
                         .requestMatchers(HttpMethod.GET, "/instructors/{instructorId}/bookings").hasRole("INSTRUCTOR")
                         .requestMatchers(HttpMethod.POST, "/bookings").hasRole("INSTRUCTOR")
@@ -77,7 +80,7 @@ public class SecurityConfig {
 
                         // Customer
 
-                        .requestMatchers("/customer/{customerId}").hasRole("CUSTOMER")
+                        .requestMatchers("/customer/{customerId}").permitAll()
                         .requestMatchers("/customers/{customerId}/**").hasRole("CUSTOMER")
 
                         // Authenticated

@@ -120,4 +120,31 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
         AND b.status != 'CANCELLED'
     """)
     List<BookingEntity> findPassedAndNotCompleted(@Param("now") LocalDateTime now);
+
+    /**
+     * Counts bookings created within a given time range.
+     * Used for dashboard KPIs (today's bookings, monthly bookings).
+     *
+     * @param start start of the period (inclusive)
+     * @param end end of the period (exclusive)
+     * @return number of bookings created in the period
+     */
+    Long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
+    /**
+     * Retrieves the 10 most recently created bookings.
+     * Used for the admin dashboard's recent activity feed.
+     *
+     * @return list of the 10 latest bookings, sorted by creation date descending
+     */
+    List<BookingEntity> findTop10ByOrderByCreatedAtDesc();
+
+
+    /**
+     * Retrieves all bookings ordered by creation date descending.
+     * Used by admin panel for full booking management view.
+     *
+     * @return list of all bookings, most recent first
+     */
+    List<BookingEntity> findAllByOrderByCreatedAtDesc();
 }

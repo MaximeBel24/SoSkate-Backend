@@ -1,5 +1,6 @@
 package com.soskate.api.controllers;
 
+import com.soskate.api.dto.auth.*;
 import com.soskate.api.dto.auth.login.LoginRequest;
 import com.soskate.api.dto.auth.login.LoginResponse;
 import com.soskate.api.services.auth.AuthService;
@@ -9,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,4 +52,73 @@ public class AuthController {
         boolean exists = authService.emailExists(email);
         return ResponseEntity.ok(exists);
     }
+
+    @Operation(
+            summary = "Change password",
+            description = "Changes the password of the authenticated user"
+    )
+    @PatchMapping("/change-password")
+    public ResponseEntity<Void> changePassword(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody ChangePasswordRequest request) {
+
+        log.info("Password change request for: {}", userDetails.getUsername());
+        authService.changePassword(userDetails.getUsername(), request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Delete account",
+            description = "Soft-deletes the authenticated user's account"
+    )
+    @DeleteMapping("/delete-account")
+    public ResponseEntity<Void> deleteAccount(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody DeleteAccountRequest request
+            ) {
+        log.info("Delete account request for: {}", userDetails.getUsername());
+        authService.deleteAccount(userDetails.getUsername(), request);
+         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Verify password",
+            description = "Verifies the current password of the authenticated user"
+    )
+    @PostMapping("/verify-password")
+    public ResponseEntity<Boolean> verifyPassword(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody VerifyPasswordRequest request) {
+
+        log.info("Password verification request for: {}", userDetails.getUsername());
+        boolean isValid = authService.verifyPassword(userDetails.getUsername(), request);
+        return ResponseEntity.ok(isValid);
+    }
+
+    @Operation(
+            summary = "Forgot password",
+            description = "Sends a 6-digit reset code to the user's email"
+    )
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request) {
+
+        log.info("Forgot password request for: {}", request.email());
+        authService.forgotPassword(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Reset password",
+            description = "Resets the password using a valid reset code"
+    )
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request) {
+
+        log.info("Reset password request for: {}", request.email());
+        authService.resetPassword(request);
+        return ResponseEntity.noContent().build();
+    }
+
 }
