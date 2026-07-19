@@ -50,7 +50,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/instructors", "/instructors/{id}", "/instructors/specialty/{specialty}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/spots", "/spots/active", "/spots/{id}", "/spots/city/{city}", "/spots/type", "/spots/nearby", "/spots/{spotId}/instructors").permitAll()
                         .requestMatchers(HttpMethod.GET, "/services", "/services/active", "/services/{id}", "/services/type/{type}").permitAll()
+                        .requestMatchers("/instructors/{instructorId}/availabilities/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/photos/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/bookings").permitAll()
 
                         // Admin
 
@@ -69,10 +71,8 @@ public class SecurityConfig {
                         // Instructor
 
                         .requestMatchers(HttpMethod.PUT, "/instructors/{id}").hasRole("INSTRUCTOR")
-                        .requestMatchers("/instructors/{instructorId}/availabilities/**").hasRole("INSTRUCTOR")
                         .requestMatchers("/instructors/{instructorId}/spots/**").hasRole("INSTRUCTOR")
                         .requestMatchers(HttpMethod.GET, "/instructors/{instructorId}/bookings").hasRole("INSTRUCTOR")
-                        .requestMatchers(HttpMethod.POST, "/bookings").hasRole("INSTRUCTOR")
                         .requestMatchers(HttpMethod.PATCH, "/bookings/{bookingId}/cancel").hasRole("INSTRUCTOR")
 
                         // Customer
