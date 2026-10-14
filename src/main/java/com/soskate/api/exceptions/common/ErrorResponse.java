@@ -1,33 +1,33 @@
 package com.soskate.api.exceptions.common;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.Map;
 
 /**
- * Standard error response for the API.
- * Used by all exception handlers for consistent error format.
+ * Body of every error response sent by the API.
+ *
+ * @param status    HTTP status, repeated for clients that only read the body
+ * @param code      stable error code, see {@link ErrorCode}
+ * @param message   human-readable explanation
+ * @param timestamp when the error occurred
+ * @param errors    invalid fields and their message, only for {@link ErrorCode#VALIDATION_FAILED}
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ErrorResponse(
         int status,
         String code,
         String message,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        LocalDateTime timestamp
+        Instant timestamp,
+        Map<String, String> errors
 ) {
-    /**
-     * Creates an ErrorResponse without an error code.
-     */
-    public static ErrorResponse of(int status, String message) {
-        return new ErrorResponse(status, null, message, LocalDateTime.now());
+
+    public static ErrorResponse of(ErrorCode code, String message) {
+        return of(code, message, null);
     }
 
-    /**
-     * Creates an ErrorResponse with an error code.
-     */
-    public static ErrorResponse of(int status, String code, String message) {
-        return new ErrorResponse(status, code, message, LocalDateTime.now());
+    public static ErrorResponse of(ErrorCode code, String message, Map<String, String> errors) {
+        return new ErrorResponse(code.getStatus().value(), code.name(), message, Instant.now(), errors);
     }
 }

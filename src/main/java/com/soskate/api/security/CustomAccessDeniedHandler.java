@@ -1,6 +1,7 @@
 package com.soskate.api.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.soskate.api.exceptions.common.ErrorCode;
 import com.soskate.api.exceptions.common.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json");
-        ErrorResponse errorResponse = ErrorResponse.of(403, "FORBIDDEN", "Access denied");
+        ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.ACCESS_DENIED, "Access denied");
         String errorResponseJson = objectMapper.writeValueAsString(errorResponse);
         response.getWriter().write(errorResponseJson);
     }
