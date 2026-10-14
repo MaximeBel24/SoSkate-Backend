@@ -1,7 +1,10 @@
 package com.soskate.api.exceptions.instructor;
 
-public class InstructorAlreadyDeletedException extends RuntimeException {
+import com.soskate.api.exceptions.common.ApiException;
+import com.soskate.api.exceptions.common.ErrorCode;
+
+public class InstructorAlreadyDeletedException extends ApiException {
     public InstructorAlreadyDeletedException(String message) {
-        super(message);
+        super(ErrorCode.INSTRUCTOR_ALREADY_DELETED, message);
     }
 }

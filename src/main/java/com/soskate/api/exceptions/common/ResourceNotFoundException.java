@@ -1,7 +1,7 @@
 package com.soskate.api.exceptions.common;
 
-public class ResourceNotFoundException extends RuntimeException {
+public class ResourceNotFoundException extends ApiException {
     public ResourceNotFoundException(String message) {
-        super(message);
+        super(ErrorCode.RESOURCE_NOT_FOUND, message);
     }
 }

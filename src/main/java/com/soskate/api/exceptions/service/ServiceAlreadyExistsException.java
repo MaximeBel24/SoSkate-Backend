@@ -1,6 +1,8 @@
 package com.soskate.api.exceptions.service;
 
 import com.soskate.api.enums.ServiceType;
+import com.soskate.api.exceptions.common.ApiException;
+import com.soskate.api.exceptions.common.ErrorCode;
 import lombok.Getter;
 
 /**
@@ -10,13 +12,13 @@ import lombok.Getter;
  * @version 1.0
  */
 @Getter
-public class ServiceAlreadyExistsException extends RuntimeException {
+public class ServiceAlreadyExistsException extends ApiException {
 
     public ServiceAlreadyExistsException(String name) {
-        super(String.format("Service with %s already exists", name));
+        super(ErrorCode.SERVICE_EXISTS, String.format("Service with %s already exists", name));
     }
     public ServiceAlreadyExistsException(String name, boolean withSuggestion) {
-        super(String.format("Service with name '%s' already exists. Please choose another name.", name));
+        super(ErrorCode.SERVICE_EXISTS, String.format("Service with name '%s' already exists. Please choose another name.", name));
     }
 
 }
