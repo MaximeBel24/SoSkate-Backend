@@ -8,6 +8,8 @@ import com.soskate.api.entities.InstructorSpotEntity;
 import com.soskate.api.entities.SpotEntity;
 import com.soskate.api.enums.InstructorStatus;
 import com.soskate.api.exceptions.booking.BookingException;
+import com.soskate.api.exceptions.common.ApiException;
+import com.soskate.api.exceptions.common.ErrorCode;
 import com.soskate.api.exceptions.common.ResourceNotFoundException;
 import com.soskate.api.exceptions.instructor.InstructorNotFoundException;
 import com.soskate.api.exceptions.spot.SpotNotFoundException;
@@ -54,7 +56,7 @@ public class InstructorSpotServiceImpl implements InstructorSpotService {
 
         if (instructorSpotRepository.existsByInstructorIdAndSpotId(instructorId, request.spotId())) {
             log.warn("Instructor {} is already associated with spot {}", instructorId, request.spotId());
-            throw new IllegalStateException("Instructor already teaches at this spot");
+            throw new ApiException(ErrorCode.INSTRUCTOR_SPOT_ALREADY_EXISTS, "Instructor already teaches at this spot");
         }
 
         InstructorSpotEntity instructorSpot = InstructorSpotEntity.builder()

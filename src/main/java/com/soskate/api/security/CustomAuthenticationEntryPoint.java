@@ -1,6 +1,7 @@
 package com.soskate.api.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.soskate.api.exceptions.common.ErrorCode;
 import com.soskate.api.exceptions.common.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
-        ErrorResponse errorResponse = ErrorResponse.of(401, "UNAUTHORIZED", "Authentification requise");
+        ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.UNAUTHORIZED, "Authentification requise");
         String errorResponseJson = objectMapper.writeValueAsString(errorResponse);
         response.getWriter().write(errorResponseJson);
     }
