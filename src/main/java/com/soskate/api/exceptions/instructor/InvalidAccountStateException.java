@@ -1,5 +1,8 @@
 package com.soskate.api.exceptions.instructor;
 
+import com.soskate.api.exceptions.common.ApiException;
+import com.soskate.api.exceptions.common.ErrorCode;
+
 /**
  * Exception thrown when an operation cannot be performed due to
  * the current state of an instructor account.
@@ -13,9 +16,9 @@ package com.soskate.api.exceptions.instructor;
  *
  * <p>This exception results in HTTP 409 Conflict response.</p>
  */
-public class InvalidAccountStateException extends RuntimeException {
+public class InvalidAccountStateException extends ApiException {
 
     public InvalidAccountStateException(String message) {
-        super(message);
+        super(ErrorCode.INVALID_ACCOUNT_STATE, message);
     }
 }

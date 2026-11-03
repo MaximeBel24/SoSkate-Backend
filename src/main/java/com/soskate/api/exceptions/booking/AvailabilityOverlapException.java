@@ -1,8 +1,10 @@
 package com.soskate.api.exceptions.booking;
 
+import com.soskate.api.exceptions.common.ErrorCode;
+
 public class AvailabilityOverlapException extends BookingException {
 
     public AvailabilityOverlapException() {
-        super("Availability overlaps with an existing one");
+        super(ErrorCode.AVAILABILITY_OVERLAP, "Availability overlaps with an existing one");
     }
 }

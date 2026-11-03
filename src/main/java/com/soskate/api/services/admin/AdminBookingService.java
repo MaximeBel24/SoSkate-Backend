@@ -6,6 +6,8 @@ import com.soskate.api.entities.BookingEntity;
 import com.soskate.api.enums.BookingStatus;
 import com.soskate.api.exceptions.booking.BookingNotFoundException;
 import com.soskate.api.exceptions.booking.CancellationNotAllowedException;
+import com.soskate.api.exceptions.common.ApiException;
+import com.soskate.api.exceptions.common.ErrorCode;
 import com.soskate.api.mappers.BookingMapper;
 import com.soskate.api.repositories.BookingRepository;
 import lombok.RequiredArgsConstructor;
@@ -68,15 +70,15 @@ public class AdminBookingService {
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found for id: " + bookingId));
 
         if (booking.getStatus() == newStatus) {
-            throw new IllegalStateException("Le booking est déjà au statut " + newStatus);
+            throw new ApiException(ErrorCode.INVALID_STATUS_TRANSITION, "Le booking est déjà au statut " + newStatus);
         }
 
         if (booking.isCancelled() || booking.isCompleted()) {
-            throw new IllegalStateException("Impossible de modifier le statut d'un booking " + booking.getStatus().getDisplayName());
+            throw new ApiException(ErrorCode.INVALID_STATUS_TRANSITION, "Impossible de modifier le statut d'un booking " + booking.getStatus().getDisplayName());
         }
 
         if (booking.isConfirmed() && newStatus != BookingStatus.CANCELLED) {
-            throw new IllegalStateException("Un booking confirmé ne peut qu'être annulé");
+            throw new ApiException(ErrorCode.INVALID_STATUS_TRANSITION, "Un booking confirmé ne peut qu'être annulé");
         }
 
         booking.setStatus(newStatus);

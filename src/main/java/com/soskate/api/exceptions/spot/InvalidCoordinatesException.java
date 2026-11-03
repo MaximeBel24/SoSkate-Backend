@@ -1,18 +1,21 @@
 package com.soskate.api.exceptions.spot;
 
+import com.soskate.api.exceptions.common.ApiException;
+import com.soskate.api.exceptions.common.ErrorCode;
+
 /**
  * Exception thrown when GPS coordinates are invalid.
  * 
  * @author SoSkate Team
  * @version 1.0
  */
-public class InvalidCoordinatesException extends RuntimeException {
+public class InvalidCoordinatesException extends ApiException {
 
     public InvalidCoordinatesException(String message) {
-        super(message);
+        super(ErrorCode.INVALID_COORDINATES, message);
     }
 
     public InvalidCoordinatesException() {
-        super("Invalid GPS coordinates provided");
+        super(ErrorCode.INVALID_COORDINATES, "Invalid GPS coordinates provided");
     }
 }
