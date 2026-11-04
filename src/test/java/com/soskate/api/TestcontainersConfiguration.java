@@ -12,6 +12,6 @@ public class TestcontainersConfiguration {
     @Bean
     @ServiceConnection
     MySQLContainer<?> mySQLContainer() {
-        return new MySQLContainer<>(DockerImageName.parse("mysql:8.4"));
+        return new MySQLContainer<>(DockerImageName.parse("mysql:8.4")).withUrlParam("serverTimezone", "Europe/Paris");
     }
 }
