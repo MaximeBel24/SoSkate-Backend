@@ -43,7 +43,7 @@ public record AvailabilityChangePlan(
         remaining.removeAll(removedBlocks);
 
         List<AgendaRange> tooShort = AvailabilityGrid.toRanges(remaining).stream()
-                .filter(range -> range.minutes() < AvailabilityGrid.MINIMUM_RANGE_MINUTES)
+                .filter(range -> range.isShorterThan(AvailabilityGrid.MINIMUM_RANGE_MINUTES))
                 .toList();
 
         Set<LocalDateTime> blocksToDelete = existing.stream()
