@@ -17,4 +17,9 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @Import(TestcontainersConfiguration.class)
 public abstract class AbstractIntegrationTest {
+
+    static {
+        // Loads the application class first, as "java -jar" does, so that the time zone is set before any connection opens
+        new ApiApplication();
+    }
 }

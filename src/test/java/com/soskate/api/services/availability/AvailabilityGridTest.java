@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AvailabilityGridTest {
 
     private static final LocalDate DAY = LocalDate.of(2027, 3, 10);
+
+    @Test
+    void onlyQuarterHoursAreAligned() {
+        assertThat(AvailabilityGrid.isAligned(LocalTime.of(14, 45))).isTrue();
+        assertThat(AvailabilityGrid.isAligned(LocalTime.of(14, 10))).isFalse();
+        assertThat(AvailabilityGrid.isAligned(LocalTime.of(14, 15, 30))).isFalse();
+    }
 
     @Test
     void oneHourIsFourBlocksWithoutItsEnd() {

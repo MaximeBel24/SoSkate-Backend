@@ -1,6 +1,7 @@
 package com.soskate.api.services.availability;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +19,10 @@ public final class AvailabilityGrid {
     public static final int MINIMUM_RANGE_MINUTES = 60;
 
     private AvailabilityGrid() {
+    }
+
+    public static boolean isAligned(LocalTime time) {
+        return time.getMinute() % BLOCK_MINUTES == 0 && time.getSecond() == 0 && time.getNano() == 0;
     }
 
     /**
