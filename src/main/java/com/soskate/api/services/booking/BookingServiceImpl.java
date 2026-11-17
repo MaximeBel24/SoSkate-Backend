@@ -9,6 +9,7 @@ import com.soskate.api.enums.InvitedBy;
 import com.soskate.api.enums.ParticipantStatus;
 import com.soskate.api.exceptions.booking.BookingNotFoundException;
 import com.soskate.api.mappers.BookingMapper;
+import com.soskate.api.repositories.AvailabilityBlockRepository;
 import com.soskate.api.repositories.BookingParticipantRepository;
 import com.soskate.api.repositories.BookingRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final BookingParticipantRepository participantRepository;
+    private final AvailabilityBlockRepository blockRepository;
     private final BookingContextLoader contextLoader;
     private final BookingValidationService validationService;
     private final BookingMapper bookingMapper;
@@ -127,6 +129,7 @@ public class BookingServiceImpl implements BookingService {
 
         booking.setStatus(BookingStatus.CANCELLED);
         bookingRepository.save(booking);
+        blockRepository.releaseBooking(bookingId);
 
         // Refund all confirmed participants
         List<BookingParticipantEntity> participants = participantRepository.findByBookingId(bookingId);

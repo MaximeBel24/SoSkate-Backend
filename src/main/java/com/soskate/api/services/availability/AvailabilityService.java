@@ -1,45 +1,38 @@
 package com.soskate.api.services.availability;
 
-import com.soskate.api.dto.availability.AvailabilityCreateRequest;
-import com.soskate.api.dto.availability.AvailabilityResponse;
-import com.soskate.api.dto.availability.AvailabilityUpdateRequest;
-import com.soskate.api.dto.availability.AvailableSlotResponse;
+import com.soskate.api.dto.availability.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Service interface for instructor availability management.
+ * Manages instructor availabilities.
  */
 public interface AvailabilityService {
 
     /**
-     * Creates a new availability slot.
+     * An instructor's ranges over a period, both dates included.
+     * By default, from today to the end of the open period.
      */
-    AvailabilityResponse createAvailability(Long instructorId, AvailabilityCreateRequest request);
+    List<AvailabilityRangeResponse> getRanges(Long instructorId, LocalDate from, LocalDate to);
 
     /**
-     * Gets all availabilities for an instructor.
+     * Adds the same hours on one or several days. Only the missing blocks are created.
      */
-    List<AvailabilityResponse> getAvailabilityByInstructor(Long instructorId);
+    AvailabilityAddResponse add(Long instructorId, AvailabilityAddRequest request);
 
     /**
-     * Gets availabilities for an instructor within a date range.
+     * Repeats a week's schedule on the following weeks. Only the missing blocks are created.
      */
-    List<AvailabilityResponse> getAvailabilityByInstructorAndDateRange(Long instructorId, LocalDate startDate, LocalDate endDate);
+    AvailabilityAddResponse copyWeek(Long instructorId, AvailabilityCopyWeekRequest request);
 
     /**
-     * Updates an availability.
+     * Changes the hours of a range on one day.
      */
-    AvailabilityResponse updateAvailability(Long instructorId, Long id, AvailabilityUpdateRequest request);
+    AvailabilityChangeResponse update(Long instructorId, AvailabilityUpdateRequest request);
 
     /**
-     * Deletes (cancels) an availability.
+     * Removes the same hours on one or several days.
      */
-    void deleteAvailability(Long instructorId, Long id);
-
-    /**
-     * Gets planning slots (availabilities minus existing bookings).
-     */
-    List<AvailableSlotResponse> getAvailableSlots(Long instructorId, LocalDate startDate, LocalDate endDate);
+    AvailabilityChangeResponse remove(Long instructorId, AvailabilityRemovalRequest request);
 }

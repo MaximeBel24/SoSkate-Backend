@@ -1,21 +1,18 @@
 package com.soskate.api.controllers;
 
-import com.soskate.api.dto.availability.AvailabilityCreateRequest;
-import com.soskate.api.dto.availability.AvailabilityResponse;
-import com.soskate.api.dto.availability.AvailabilityUpdateRequest;
-import com.soskate.api.dto.availability.AvailableSlotResponse;
+import com.soskate.api.dto.availability.*;
 import com.soskate.api.dto.booking.AvailableSlotsResponse;
-import com.soskate.api.services.availability.SlotCalculationService;
 import com.soskate.api.services.availability.AvailabilityService;
+import com.soskate.api.services.availability.SlotCalculationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,83 +28,74 @@ public class AvailabilityController {
     private final SlotCalculationService slotCalculationService;
 
     @Operation(
-            summary = "Create an availability",
-            description = "Adds an availability slot for an instructor"
-    )
-    @PostMapping("/availabilities")
-    public ResponseEntity<AvailabilityResponse> createAvailability(
-            @PathVariable Long instructorId,
-            @Valid @RequestBody AvailabilityCreateRequest request
-    ) {
-        log.info("POST /api/instructors/{}/availabilities - Creating an availability", instructorId);
-        AvailabilityResponse response = availabilityService.createAvailability(instructorId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @Operation(
             summary = "List availabilities",
-            description = "Retrieves an instructor's availabilities (optional: date range)"
+            description = "Ranges over a period, booked ones included. By default, from today to the end of the open period"
     )
     @GetMapping("/availabilities")
-    public ResponseEntity<List<AvailabilityResponse>> getAvailabilityByInstructor(
+    public ResponseEntity<List<AvailabilityRangeResponse>> getAvailabilities(
             @PathVariable Long instructorId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
-        log.info("GET /api/instructors/{}/availabilities - Retrieving availabilities", instructorId);
-        List<AvailabilityResponse> response;
-
-        if (from != null && to != null) {
-            response = availabilityService.getAvailabilityByInstructorAndDateRange(instructorId, from, to);
-        } else {
-            response = availabilityService.getAvailabilityByInstructor(instructorId);
-        }
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(availabilityService.getRanges(instructorId, from, to));
     }
 
     @Operation(
-            summary = "Update an availability",
-            description = "Updates an existing availability"
+            summary = "Add availabilities",
+            description = "Adds the same hours on one or several days. Only the missing blocks are created"
     )
-    @PutMapping("/availabilities/{id}")
-    public ResponseEntity<AvailabilityResponse> updateAvailability(
+    @PostMapping("/availabilities")
+    @PreAuthorize("@userSecurity.isOwner(#instructorId) or @userSecurity.isAdmin()")
+    public ResponseEntity<AvailabilityAddResponse> addAvailabilities(
             @PathVariable Long instructorId,
-            @PathVariable Long id,
+            @Valid @RequestBody AvailabilityAddRequest request
+    ) {
+        log.info("POST /api/instructors/{}/availabilities - {} date(s)", instructorId, request.dates().size());
+        return ResponseEntity.ok(availabilityService.add(instructorId, request));
+    }
+
+    @Operation(
+            summary = "Repeat a week",
+            description = "Repeats a week's schedule on the following weeks. Only the missing blocks are created"
+    )
+    @PostMapping("/availabilities/copy-week")
+    @PreAuthorize("@userSecurity.isOwner(#instructorId) or @userSecurity.isAdmin()")
+    public ResponseEntity<AvailabilityAddResponse> copyWeek(
+            @PathVariable Long instructorId,
+            @Valid @RequestBody AvailabilityCopyWeekRequest request
+    ) {
+        log.info("POST /api/instructors/{}/availabilities/copy-week - {} on {} week(s)",
+                instructorId, request.weekStart(), request.weeks());
+        return ResponseEntity.ok(availabilityService.copyWeek(instructorId, request));
+    }
+
+    @Operation(
+            summary = "Change a range",
+            description = "Without confirmation, writes nothing if a lesson would be cancelled or a leftover erased"
+    )
+    @PutMapping("/availabilities")
+    @PreAuthorize("@userSecurity.isOwner(#instructorId) or @userSecurity.isAdmin()")
+    public ResponseEntity<AvailabilityChangeResponse> updateAvailability(
+            @PathVariable Long instructorId,
             @Valid @RequestBody AvailabilityUpdateRequest request
     ) {
-        log.info("PUT /api/instructors/{}/availabilities/{} - Updating", instructorId, id);
-        AvailabilityResponse response = availabilityService.updateAvailability(instructorId, id, request);
-        return ResponseEntity.ok(response);
+        log.info("PUT /api/instructors/{}/availabilities - {}", instructorId, request.date());
+        return ResponseEntity.ok(availabilityService.update(instructorId, request));
     }
 
     @Operation(
-            summary = "Delete an availability",
-            description = "Deletes an availability"
+            summary = "Remove availabilities",
+            description = "Removes the same hours on one or several days. Without confirmation, writes nothing "
+                    + "if a lesson would be cancelled or a leftover erased"
     )
-    @DeleteMapping("/availabilities/{id}")
-    public ResponseEntity<Void> deleteAvailability(
+    @PostMapping("/availabilities/removal")
+    @PreAuthorize("@userSecurity.isOwner(#instructorId) or @userSecurity.isAdmin()")
+    public ResponseEntity<AvailabilityChangeResponse> removeAvailabilities(
             @PathVariable Long instructorId,
-            @PathVariable Long id
+            @Valid @RequestBody AvailabilityRemovalRequest request
     ) {
-        log.info("DELETE /api/instructors/{}/availabilities/{} - Deleting", instructorId, id);
-        availabilityService.deleteAvailability(instructorId, id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Operation(
-            summary = "Retrieve available slots",
-            description = "Returns available slots over a period"
-    )
-    @GetMapping("/available")
-    public ResponseEntity<List<AvailableSlotResponse>> getAvailableSlots(
-            @PathVariable Long instructorId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
-    ) {
-        log.info("GET /api/instructors/{}/available - Available slots from {} to {}", instructorId, from, to);
-        List<AvailableSlotResponse> response = availabilityService.getAvailableSlots(instructorId, from, to);
-        return ResponseEntity.ok(response);
+        log.info("POST /api/instructors/{}/availabilities/removal - {} date(s)", instructorId, request.dates().size());
+        return ResponseEntity.ok(availabilityService.remove(instructorId, request));
     }
 
     @Operation(
