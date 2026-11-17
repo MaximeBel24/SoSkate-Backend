@@ -18,11 +18,26 @@ public final class AvailabilityGrid {
     /** The shortest lesson lasts one hour, so a shorter availability could never be booked. */
     public static final int MINIMUM_RANGE_MINUTES = 60;
 
+    /** Clients are offered a start on the hour or half past. */
+    public static final int LESSON_START_MINUTES = 30;
+
     private AvailabilityGrid() {
     }
 
     public static boolean isAligned(LocalTime time) {
         return time.getMinute() % BLOCK_MINUTES == 0 && time.getSecond() == 0 && time.getNano() == 0;
+    }
+
+    public static boolean isLessonStart(LocalTime time) {
+        return isAligned(time) && time.getMinute() % LESSON_START_MINUTES == 0;
+    }
+
+    /**
+     * The first time a lesson could start from this time, included.
+     */
+    public static LocalDateTime nextLessonStart(LocalDateTime time) {
+        int minutesPast = time.getMinute() % LESSON_START_MINUTES;
+        return minutesPast == 0 ? time : time.plusMinutes(LESSON_START_MINUTES - minutesPast);
     }
 
     /**

@@ -135,6 +135,26 @@ class AvailabilityBlockRepositoryIntegrationTest extends AbstractIntegrationTest
         );
     }
 
+    @Test
+    @Transactional
+    void takingBlocksLeavesThoseAlreadyTaken() {
+        InstructorEntity other = saveInstructor();
+        BookingEntity first = saveLesson();
+        BookingEntity second = saveLesson();
+        save(coach, at(14, 0), first);
+        save(coach, at(14, 15), null);
+        save(other, at(14, 15), null);
+
+        int taken = blockRepository.takeBlocks(second, coach.getId(), List.of(at(14, 0), at(14, 15)));
+
+        assertThat(taken).isEqualTo(1);
+        assertThat(blocksOf(coach)).containsExactly(
+                new AgendaBlock(at(14, 0), first.getId()),
+                new AgendaBlock(at(14, 15), second.getId())
+        );
+        assertThat(blocksOf(other)).containsExactly(new AgendaBlock(at(14, 15), null));
+    }
+
     private List<AgendaBlock> blocksOf(InstructorEntity instructor) {
         return blockRepository.findAgendaBlocks(instructor.getId(), DAY.atStartOfDay(), DAY.plusDays(1).atStartOfDay());
     }

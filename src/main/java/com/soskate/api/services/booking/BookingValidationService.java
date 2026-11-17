@@ -1,24 +1,19 @@
 package com.soskate.api.services.booking;
 
 import com.soskate.api.dto.booking.BookingCreateRequest;
-import com.soskate.api.entities.AvailabilityEntity;
-import com.soskate.api.entities.BookingEntity;
-import com.soskate.api.entities.SpotEntity;
 import com.soskate.api.enums.InstructorStatus;
 import com.soskate.api.exceptions.booking.*;
-import com.soskate.api.repositories.AvailabilityRepository;
-import com.soskate.api.repositories.BookingRepository;
 import com.soskate.api.repositories.InstructorSpotRepository;
-import com.soskate.api.services.availability.BufferCalculationService;
+import com.soskate.api.services.availability.AgendaRules;
+import com.soskate.api.services.availability.AvailabilityGrid;
+import com.soskate.api.services.availability.BookableDay;
+import com.soskate.api.services.availability.SlotCalculationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Validates all business rules for booking operations.
@@ -29,32 +24,20 @@ import java.util.Set;
 @Slf4j
 public class BookingValidationService {
 
-    private static final Set<Integer> VALID_DURATIONS = Set.of(60, 90, 120, 180, 240);
-
     private final InstructorSpotRepository instructorSpotRepository;
-    private final AvailabilityRepository availabilityRepository;
-    private final BookingRepository bookingRepository;
-    private final BufferCalculationService bufferCalculationService;
+    private final SlotCalculationService slotCalculationService;
+    private final AgendaRules rules;
 
     public void validateForCreation(BookingContext context, BookingCreateRequest request) {
         log.debug("Validating booking: instructor={}, spot={}, start={}",
                 context.instructor().getId(), context.spot().getId(), request.startTime());
-        validateDuration(request.durationMinutes());
+        rules.requireValidDuration(request.durationMinutes());
         validateInstructorActive(context);
         validateInstructorAtSpot(context);
-        validateBookingTime(context, request);
-        validateInstructorAvailability(context, request);
-        validateNoConflict(context, request);
+        validateLessonStart(request);
+        validateBookingDate(request);
+        validateSlot(context, request);
         validateParticipantCount(context, request);
-    }
-
-    public void validateDuration(Integer durationMinutes) {
-        if (durationMinutes == null || !VALID_DURATIONS.contains(durationMinutes)) {
-            log.warn("Invalid duration: {}", durationMinutes);
-            throw new BookingException(
-                    "Invalid duration. Allowed values: 60, 90, 120, 180, 240 minutes"
-            );
-        }
     }
 
     /**
@@ -83,66 +66,42 @@ public class BookingValidationService {
     }
 
     /**
-     * Validates that the booking is not too soon (minimum hours in advance).
+     * Validates that the lesson starts on the hour or half past.
      */
-    private void validateBookingTime(BookingContext context, BookingCreateRequest request) {
-        int minHoursInAdvance = context.settings().getMinBookingHoursInAdvance();
-        LocalDateTime minBookingTime = LocalDateTime.now().plusHours(minHoursInAdvance);
-
-        if (request.startTime().isBefore(minBookingTime)) {
-            log.warn("Booking too soon: requested={}, minimum={}", request.startTime(), minBookingTime);
-            throw new BookingTooSoonException(minHoursInAdvance);
+    private void validateLessonStart(BookingCreateRequest request) {
+        if (!AvailabilityGrid.isLessonStart(request.startTime().toLocalTime())) {
+            log.warn("Invalid lesson start: {}", request.startTime());
+            throw new BookingException("A lesson starts on the hour or half past");
         }
     }
 
     /**
-     * Validates that the instructor has availability for the requested time slot.
+     * Validates that the booking is not too soon (minimum calendar days in advance).
      */
-    private void validateInstructorAvailability(BookingContext context, BookingCreateRequest request) {
-        LocalDate date = request.startTime().toLocalDate();
-        LocalTime startTime = request.startTime().toLocalTime();
-        LocalTime endTime = startTime.plusMinutes(request.durationMinutes());
+    private void validateBookingDate(BookingCreateRequest request) {
+        LocalDate firstOpenDate = rules.firstOpenDate();
 
-        List<AvailabilityEntity> availabilities = availabilityRepository
-                .findAvailableByInstructorAndDate(context.instructor().getId(), date);
+        if (request.startTime().toLocalDate().isBefore(firstOpenDate)) {
+            log.warn("Booking too soon: requested={}, first open date={}", request.startTime(), firstOpenDate);
+            throw new BookingTooSoonException(firstOpenDate);
+        }
+    }
 
-        boolean isWithinAvailability = availabilities.stream()
-                .anyMatch(a -> !startTime.isBefore(a.getStartTime()) && !endTime.isAfter(a.getEndTime()));
+    /**
+     * Validates the slot with the calculation that lists the slots shown to clients.
+     */
+    private void validateSlot(BookingContext context, BookingCreateRequest request) {
+        LocalDateTime start = request.startTime();
+        BookableDay day = slotCalculationService.bookableDay(context.instructor(), context.spot(), start.toLocalDate());
 
-        if (!isWithinAvailability) {
-            log.warn("Instructor {} not available on {} from {} to {}", context.instructor().getId(), date, startTime, endTime);
+        if (!day.isOnOffer(start, request.durationMinutes())) {
+            log.warn("Instructor {} not available at {} for {}min", context.instructor().getId(), start, request.durationMinutes());
             throw new InstructorNotAvailableException();
         }
-    }
 
-    /**
-     * Validates that there are no conflicts with existing bookings.
-     * Takes into account buffer time between different spots.
-     */
-    private void validateNoConflict(BookingContext context, BookingCreateRequest request) {
-        LocalDate date = request.startTime().toLocalDate();
-        LocalTime startTime = request.startTime().toLocalTime();
-        LocalTime endTime = startTime.plusMinutes(request.durationMinutes());
-        SpotEntity requestedSpot = context.spot();
-
-        List<BookingEntity> existingBookings = bookingRepository
-                .findByInstructorAndDateNotCancelled(context.instructor().getId(), date);
-
-        for (BookingEntity existing : existingBookings) {
-            int buffer = bufferCalculationService.calculateBuffer(existing.getSpot(), requestedSpot);
-
-            LocalTime existingStart = existing.getStartTime().toLocalTime();
-            LocalTime existingEnd = existing.getEndTime().toLocalTime();
-
-            LocalTime blockedStart = existingStart.minusMinutes(buffer);
-            LocalTime blockedEnd = existingEnd.plusMinutes(buffer);
-
-            boolean overlaps = startTime.isBefore(blockedEnd) && endTime.isAfter(blockedStart);
-
-            if (overlaps) {
-                log.warn("Conflict with existing booking {} (buffer={}min)", existing.getId(), buffer);
-                throw new SlotNotAvailableException();
-            }
+        if (!day.canHost(start, request.durationMinutes())) {
+            log.warn("Slot taken for instructor {} at {} for {}min", context.instructor().getId(), start, request.durationMinutes());
+            throw new SlotNotAvailableException();
         }
     }
 

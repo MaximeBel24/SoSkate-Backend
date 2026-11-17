@@ -1,6 +1,7 @@
 package com.soskate.api.services.availability;
 
 import com.soskate.api.entities.PlatformSettingsEntity;
+import com.soskate.api.exceptions.booking.BookingException;
 import com.soskate.api.exceptions.common.ApiException;
 import com.soskate.api.exceptions.common.ErrorCode;
 import com.soskate.api.repositories.PlatformSettingsRepository;
@@ -11,6 +12,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Set;
 
 /**
  * The rules of the agenda, and the only place where it reads the current time.
@@ -18,6 +20,8 @@ import java.time.LocalTime;
 @Component
 @RequiredArgsConstructor
 public class AgendaRules {
+
+    private static final Set<Integer> LESSON_DURATIONS = Set.of(60, 90, 120, 180, 240);
 
     private final PlatformSettingsRepository settingsRepository;
     private final Clock clock;
@@ -66,6 +70,12 @@ public class AgendaRules {
                     ErrorCode.INVALID_AVAILABILITY,
                     "Lessons take place between " + settings.getOpeningTime() + " and " + settings.getClosingTime()
             );
+        }
+    }
+
+    public void requireValidDuration(int durationMinutes) {
+        if (!LESSON_DURATIONS.contains(durationMinutes)) {
+            throw new BookingException("Invalid duration. Allowed values: 60, 90, 120, 180, 240 minutes");
         }
     }
 

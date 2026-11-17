@@ -22,14 +22,18 @@ public class BookingContextLoader {
     private final InstructorRepository instructorRepository;
     private final SpotRepository spotRepository;
     private final ServiceRepository serviceRepository;
-    private final PlatformSettingsRepository settingsRepository;
 
+    /**
+     * Locks the instructor before any other read, so that two bookings with one instructor run one
+     * after the other: MySQL freezes what a transaction sees at its first read, so a read before the
+     * lock would miss the lesson the previous booking has just written.
+     */
     public BookingContext loadForCreation(BookingCreateRequest request) {
+        InstructorEntity instructor = instructorRepository.findByIdForUpdate(request.instructorId())
+                .orElseThrow(() -> new InstructorNotFoundException(request.instructorId()));
+
         CustomerEntity customer = customerRepository.findById(request.customerId())
                 .orElseThrow(() -> new CustomerNotFoundException(request.customerId()));
-
-        InstructorEntity instructor = instructorRepository.findById(request.instructorId())
-                .orElseThrow(() -> new InstructorNotFoundException(request.instructorId()));
 
         SpotEntity spot = spotRepository.findById(request.spotId())
                 .orElseThrow(() -> new SpotNotFoundException(request.spotId()));
@@ -37,12 +41,6 @@ public class BookingContextLoader {
         ServiceEntity service = serviceRepository.findById(request.serviceId())
                 .orElseThrow(() -> new ServiceNotFoundException(request.serviceId()));
 
-        PlatformSettingsEntity settings = settingsRepository.getSettings();
-
-        return new BookingContext(customer, instructor, spot, service, settings);
-    }
-
-    public PlatformSettingsEntity loadSettings() {
-        return settingsRepository.getSettings();
+        return new BookingContext(customer, instructor, spot, service);
     }
 }

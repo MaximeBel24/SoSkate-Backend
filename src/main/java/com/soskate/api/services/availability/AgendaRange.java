@@ -15,6 +15,10 @@ public record AgendaRange(
         return start.plusMinutes(minutes).isAfter(end);
     }
 
+    public boolean overlaps(AgendaRange other) {
+        return start.isBefore(other.end) && other.start.isBefore(end);
+    }
+
     public boolean contains(LocalDateTime time) {
         return !time.isBefore(start) && time.isBefore(end);
     }

@@ -20,10 +20,6 @@ public class PlatformSettingsEntity {
     @Id
     private Long id = 1L;
 
-    @Column(name = "min_booking_hours_in_advance", nullable = false)
-    @Builder.Default
-    private Integer minBookingHoursInAdvance = 72;
-
     @Column(name = "auto_refund_hours_limit", nullable = false)
     @Builder.Default
     private Integer autoRefundHoursLimit = 48;

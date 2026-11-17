@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,22 +26,6 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
      * @return list of all bookings
      */
     List<BookingEntity> findByInstructorId(Long instructorId);
-
-    /**
-     * Finds non-cancelled bookings for an instructor on a given date.
-     * Used for conflict validation when creating a booking.
-     *
-     * @param instructorId the instructor ID
-     * @param date the date to search
-     * @return list of non-cancelled bookings
-     */
-    @Query("SELECT b FROM BookingEntity b WHERE b.instructor.id = :instructorId " +
-            "AND DATE(b.startTime) = :date " +
-            "AND b.status != 'CANCELLED'")
-    List<BookingEntity> findByInstructorAndDateNotCancelled(
-            @Param("instructorId") Long instructorId,
-            @Param("date") LocalDate date
-    );
 
     /**
      * Finds upcoming bookings for an instructor.

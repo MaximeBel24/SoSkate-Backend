@@ -1,6 +1,7 @@
 package com.soskate.api.services.availability;
 
 import com.soskate.api.entities.PlatformSettingsEntity;
+import com.soskate.api.exceptions.booking.BookingException;
 import com.soskate.api.exceptions.common.ApiException;
 import com.soskate.api.exceptions.common.ErrorCode;
 import com.soskate.api.repositories.PlatformSettingsRepository;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -65,6 +67,16 @@ class AgendaRulesTest {
         assertThat(rules.isWithinOpeningHours(THURSDAY.atTime(19, 45))).isTrue();
         assertThat(rules.isWithinOpeningHours(THURSDAY.atTime(7, 45))).isFalse();
         assertThat(rules.isWithinOpeningHours(THURSDAY.atTime(20, 0))).isFalse();
+    }
+
+    @Test
+    void onlyTheLessonDurationsAreAllowed() {
+        for (int minutes : List.of(60, 90, 120, 180, 240)) {
+            assertThatCode(() -> rules.requireValidDuration(minutes)).doesNotThrowAnyException();
+        }
+        for (int minutes : List.of(0, 45, 150, 300)) {
+            assertThatThrownBy(() -> rules.requireValidDuration(minutes)).isInstanceOf(BookingException.class);
+        }
     }
 
     private static AgendaRules rulesAt(LocalDateTime now) {

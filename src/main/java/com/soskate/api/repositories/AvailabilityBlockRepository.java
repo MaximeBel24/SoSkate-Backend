@@ -1,6 +1,7 @@
 package com.soskate.api.repositories;
 
 import com.soskate.api.entities.AvailabilityBlockEntity;
+import com.soskate.api.entities.BookingEntity;
 import com.soskate.api.services.availability.AgendaBlock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -35,6 +36,23 @@ public interface AvailabilityBlockRepository extends JpaRepository<AvailabilityB
     @Modifying
     @Query("DELETE FROM AvailabilityBlockEntity b WHERE b.instructor.id = :instructorId AND b.startAt IN :startTimes")
     int deleteBlocks(
+            @Param("instructorId") Long instructorId,
+            @Param("startTimes") Collection<LocalDateTime> startTimes
+    );
+
+    /**
+     * Gives free blocks to a session. Blocks already taken are left alone, so the number returned
+     * tells whether the whole session fits.
+     */
+    @Modifying
+    @Query("""
+        UPDATE AvailabilityBlockEntity b SET b.booking = :booking
+        WHERE b.instructor.id = :instructorId
+        AND b.startAt IN :startTimes
+        AND b.booking IS NULL
+    """)
+    int takeBlocks(
+            @Param("booking") BookingEntity booking,
             @Param("instructorId") Long instructorId,
             @Param("startTimes") Collection<LocalDateTime> startTimes
     );
