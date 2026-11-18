@@ -9,6 +9,7 @@ import com.soskate.api.exceptions.booking.CancellationNotAllowedException;
 import com.soskate.api.exceptions.common.ApiException;
 import com.soskate.api.exceptions.common.ErrorCode;
 import com.soskate.api.mappers.BookingMapper;
+import com.soskate.api.repositories.AvailabilityBlockRepository;
 import com.soskate.api.repositories.BookingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class AdminBookingService {
 
     private final BookingRepository bookingRepository;
+    private final AvailabilityBlockRepository blockRepository;
     private final BookingMapper bookingMapper;
 
     public List<BookingResponse> getAllBookings() {
@@ -44,6 +46,7 @@ public class AdminBookingService {
 
         booking.setStatus(BookingStatus.CANCELLED);
         BookingEntity savedBooking = bookingRepository.save(booking);
+        blockRepository.releaseBooking(bookingId);
         return bookingMapper.toResponse(savedBooking);
 
     }
@@ -83,6 +86,9 @@ public class AdminBookingService {
 
         booking.setStatus(newStatus);
         BookingEntity savedBooking = bookingRepository.save(booking);
+        if (newStatus == BookingStatus.CANCELLED) {
+            blockRepository.releaseBooking(bookingId);
+        }
         return bookingMapper.toResponse(savedBooking);
     }
 

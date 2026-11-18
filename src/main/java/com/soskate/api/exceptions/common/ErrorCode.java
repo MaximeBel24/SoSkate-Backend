@@ -46,7 +46,7 @@ public enum ErrorCode {
 
     // Availabilities
     AVAILABILITY_NOT_FOUND(HttpStatus.NOT_FOUND),
-    AVAILABILITY_OVERLAP(HttpStatus.CONFLICT),
+    INVALID_AVAILABILITY(HttpStatus.BAD_REQUEST),
 
     // Bookings
     BOOKING_ERROR(HttpStatus.BAD_REQUEST),

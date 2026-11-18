@@ -10,8 +10,7 @@ public record BookingContext(
         CustomerEntity customer,
         InstructorEntity instructor,
         SpotEntity spot,
-        ServiceEntity service,
-        PlatformSettingsEntity settings
+        ServiceEntity service
 ) {
     /**
      * Calculates the price per participant based on service base price and duration.

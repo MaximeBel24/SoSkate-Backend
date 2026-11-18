@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AvailabilityGridTest {
 
     private static final LocalDate DAY = LocalDate.of(2027, 3, 10);
+
+    @Test
+    void lessonsStartOnTheHourOrHalfPast() {
+        assertThat(AvailabilityGrid.isLessonStart(LocalTime.of(14, 0))).isTrue();
+        assertThat(AvailabilityGrid.isLessonStart(LocalTime.of(14, 30))).isTrue();
+        assertThat(AvailabilityGrid.isLessonStart(LocalTime.of(14, 15))).isFalse();
+        assertThat(AvailabilityGrid.isLessonStart(LocalTime.of(14, 0, 30))).isFalse();
+    }
+
+    @Test
+    void theNextLessonStartIsTheNextHalfHour() {
+        LocalDateTime day = LocalDateTime.of(2027, 3, 10, 0, 0);
+
+        assertThat(AvailabilityGrid.nextLessonStart(day.withHour(14))).isEqualTo(day.withHour(14));
+        assertThat(AvailabilityGrid.nextLessonStart(day.withHour(14).withMinute(15))).isEqualTo(day.withHour(14).withMinute(30));
+        assertThat(AvailabilityGrid.nextLessonStart(day.withHour(14).withMinute(30))).isEqualTo(day.withHour(14).withMinute(30));
+        assertThat(AvailabilityGrid.nextLessonStart(day.withHour(14).withMinute(45))).isEqualTo(day.withHour(15));
+    }
+
+    @Test
+    void onlyQuarterHoursAreAligned() {
+        assertThat(AvailabilityGrid.isAligned(LocalTime.of(14, 45))).isTrue();
+        assertThat(AvailabilityGrid.isAligned(LocalTime.of(14, 10))).isFalse();
+        assertThat(AvailabilityGrid.isAligned(LocalTime.of(14, 15, 30))).isFalse();
+    }
 
     @Test
     void oneHourIsFourBlocksWithoutItsEnd() {

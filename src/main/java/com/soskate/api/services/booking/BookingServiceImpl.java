@@ -8,9 +8,12 @@ import com.soskate.api.enums.BookingStatus;
 import com.soskate.api.enums.InvitedBy;
 import com.soskate.api.enums.ParticipantStatus;
 import com.soskate.api.exceptions.booking.BookingNotFoundException;
+import com.soskate.api.exceptions.booking.SlotNotAvailableException;
 import com.soskate.api.mappers.BookingMapper;
+import com.soskate.api.repositories.AvailabilityBlockRepository;
 import com.soskate.api.repositories.BookingParticipantRepository;
 import com.soskate.api.repositories.BookingRepository;
+import com.soskate.api.services.availability.AvailabilityGrid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,7 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final BookingParticipantRepository participantRepository;
+    private final AvailabilityBlockRepository blockRepository;
     private final BookingContextLoader contextLoader;
     private final BookingValidationService validationService;
     private final BookingMapper bookingMapper;
@@ -39,7 +43,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingResponse createBooking(BookingCreateRequest request) {
         log.info("Creating booking for customer {} with instructor {}", request.customerId(), request.instructorId());
 
-        // 1. Load context (all required entities)
+        // 1. Lock the instructor and load context (all required entities)
         BookingContext context = contextLoader.loadForCreation(request);
 
         // 2. Validate all business rules
@@ -62,7 +66,10 @@ public class BookingServiceImpl implements BookingService {
 
         BookingEntity savedBooking = bookingRepository.save(booking);
 
-        // 5. Create participant
+        // 5. Take the blocks: if one is missing, the whole booking is undone
+        takeBlocks(savedBooking);
+
+        // 6. Create participant
         int amountCents = context.calculateTotalAmount(
                 request.durationMinutes(),
                 request.numberOfParticipants()
@@ -80,7 +87,7 @@ public class BookingServiceImpl implements BookingService {
 
         participantRepository.save(participant);
 
-        // 6. Update booking status if full
+        // 7. Update booking status if full
         updateBookingStatus(savedBooking);
 
         log.info("Booking created: id={}", savedBooking.getId());
@@ -127,6 +134,7 @@ public class BookingServiceImpl implements BookingService {
 
         booking.setStatus(BookingStatus.CANCELLED);
         bookingRepository.save(booking);
+        blockRepository.releaseBooking(bookingId);
 
         // Refund all confirmed participants
         List<BookingParticipantEntity> participants = participantRepository.findByBookingId(bookingId);
@@ -158,6 +166,17 @@ public class BookingServiceImpl implements BookingService {
         }
 
         return booking;
+    }
+
+    private void takeBlocks(BookingEntity booking) {
+        List<LocalDateTime> blocks = AvailabilityGrid.blocksBetween(booking.getStartTime(), booking.getEndTime());
+        int taken = blockRepository.takeBlocks(booking, booking.getInstructor().getId(), blocks);
+
+        if (taken != blocks.size()) {
+            log.warn("Only {} of {} blocks taken for instructor {} at {}",
+                    taken, blocks.size(), booking.getInstructor().getId(), booking.getStartTime());
+            throw new SlotNotAvailableException();
+        }
     }
 
     private void updateBookingStatus(BookingEntity booking) {

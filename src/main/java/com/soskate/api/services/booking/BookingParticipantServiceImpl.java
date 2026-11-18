@@ -25,6 +25,7 @@ public class BookingParticipantServiceImpl implements BookingParticipantService 
 
     private final BookingParticipantRepository participantRepository;
     private final BookingRepository bookingRepository;
+    private final AvailabilityBlockRepository blockRepository;
     private final CustomerRepository customerRepository;
     private final PlatformSettingsRepository settingsRepository;
     private final BookingParticipantMapper participantMapper;
@@ -78,6 +79,10 @@ public class BookingParticipantServiceImpl implements BookingParticipantService 
             booking.setStatus(BookingStatus.FULL);
         } else if (confirmedCount > 0) {
             booking.setStatus(BookingStatus.OPEN);
+        } else if (!booking.isCompleted()) {
+            // Nobody is left, so the lesson is off and its hours can be booked again
+            booking.setStatus(BookingStatus.CANCELLED);
+            blockRepository.releaseBooking(booking.getId());
         }
 
         bookingRepository.save(booking);

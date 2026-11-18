@@ -54,6 +54,27 @@ public record AvailabilityChangePlan(
         return new AvailabilityChangePlan(bookingsToCancel, blocksToDelete, tooShort);
     }
 
+    /**
+     * The blocks a change may touch: past blocks are kept, and a lesson that has started is never cancelled.
+     */
+    public static List<AgendaBlock> changeableBlocks(List<AgendaBlock> dayBlocks, LocalDateTime now) {
+        Set<Long> startedBookings = dayBlocks.stream()
+                .filter(block -> !block.isFree() && block.startAt().isBefore(now))
+                .map(AgendaBlock::bookingId)
+                .collect(Collectors.toSet());
+
+        return dayBlocks.stream()
+                .filter(block -> !block.startAt().isBefore(now) && !startedBookings.contains(block.bookingId()))
+                .toList();
+    }
+
+    /**
+     * Whether some of these blocks end up in a range too short to keep.
+     */
+    public boolean cutsShort(Collection<LocalDateTime> blocks) {
+        return alsoRemoved.stream().anyMatch(range -> blocks.stream().anyMatch(range::contains));
+    }
+
     public boolean needsConfirmation() {
         return !bookingsToCancel.isEmpty() || !alsoRemoved.isEmpty();
     }

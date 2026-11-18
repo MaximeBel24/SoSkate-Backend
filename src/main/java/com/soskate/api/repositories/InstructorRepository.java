@@ -3,7 +3,9 @@ package com.soskate.api.repositories;
 import com.soskate.api.entities.InstructorEntity;
 import com.soskate.api.enums.InstructorStatus;
 import com.soskate.api.enums.SkateSpecialty;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,6 +23,19 @@ import java.util.Optional;
  */
 @Repository
 public interface InstructorRepository extends JpaRepository<InstructorEntity, Long> {
+
+    // ==================== Locking ====================
+
+    /**
+     * Loads an instructor and keeps the row locked until the end of the transaction,
+     * so that two changes to one agenda run one after the other.
+     *
+     * @param id the instructor ID
+     * @return Optional containing the instructor if it exists
+     */
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT i FROM InstructorEntity i WHERE i.id = :id")
+    Optional<InstructorEntity> findByIdForUpdate(@Param("id") Long id);
 
     // ==================== Find by Unique Fields ====================
 

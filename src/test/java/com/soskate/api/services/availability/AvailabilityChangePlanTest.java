@@ -120,6 +120,62 @@ class AvailabilityChangePlanTest {
         assertThat(plan.blocksToDelete()).containsExactlyInAnyOrderElementsOf(blocks(at(14, 30), at(16, 0)));
     }
 
+    @Test
+    void aNewRangeOfLessThanOneHourIsCutShort() {
+        AvailabilityChangePlan plan = AvailabilityChangePlan.of(List.of(), List.of(), blocks(at(14, 0), at(14, 30)));
+
+        assertThat(plan.cutsShort(blocks(at(14, 0), at(14, 30)))).isTrue();
+    }
+
+    @Test
+    void aShortAdditionToAnExistingRangeIsNotCutShort() {
+        List<AgendaBlock> day = free(at(14, 0), at(15, 0));
+
+        AvailabilityChangePlan plan = AvailabilityChangePlan.of(day, List.of(), blocks(at(15, 0), at(15, 15)));
+
+        assertThat(plan.cutsShort(blocks(at(15, 0), at(15, 15)))).isFalse();
+    }
+
+    @Test
+    void aShortRangeElsewhereDoesNotCount() {
+        List<AgendaBlock> day = free(at(10, 0), at(10, 30));
+
+        AvailabilityChangePlan plan = AvailabilityChangePlan.of(day, List.of(), blocks(at(14, 0), at(16, 0)));
+
+        assertThat(plan.cutsShort(blocks(at(14, 0), at(16, 0)))).isFalse();
+    }
+
+    @Test
+    void pastBlocksCannotBeChanged() {
+        List<AgendaBlock> day = free(at(14, 0), at(15, 0));
+
+        assertThat(AvailabilityChangePlan.changeableBlocks(day, at(14, 30)))
+                .containsExactlyElementsOf(free(at(14, 30), at(15, 0)));
+    }
+
+    @Test
+    void aBlockStartingNowCanStillBeChanged() {
+        List<AgendaBlock> day = free(at(14, 0), at(14, 15));
+
+        assertThat(AvailabilityChangePlan.changeableBlocks(day, at(14, 0))).isEqualTo(day);
+    }
+
+    @Test
+    void aLessonThatHasStartedCannotBeChangedAtAll() {
+        List<AgendaBlock> day = new ArrayList<>(booked(at(14, 0), at(15, 0)));
+        day.addAll(free(at(15, 0), at(16, 0)));
+
+        assertThat(AvailabilityChangePlan.changeableBlocks(day, at(14, 30)))
+                .containsExactlyElementsOf(free(at(15, 0), at(16, 0)));
+    }
+
+    @Test
+    void aLessonThatHasNotStartedCanBeChanged() {
+        List<AgendaBlock> day = booked(at(15, 0), at(16, 0));
+
+        assertThat(AvailabilityChangePlan.changeableBlocks(day, at(14, 30))).isEqualTo(day);
+    }
+
     private static AvailabilityChangePlan remove(List<AgendaBlock> day, LocalDateTime from, LocalDateTime to) {
         return AvailabilityChangePlan.of(day, blocks(from, to), List.of());
     }

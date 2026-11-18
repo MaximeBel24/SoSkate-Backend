@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/spots", "/spots/active", "/spots/{id}", "/spots/city/{city}", "/spots/type", "/spots/nearby", "/spots/{spotId}/instructors").permitAll()
                         .requestMatchers(HttpMethod.GET, "/services", "/services/active", "/services/{id}", "/services/type/{type}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/photos/**").permitAll()
-                        .requestMatchers("/instructors/{instructorId}/availabilities/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/instructors/{instructorId}/availabilities").permitAll()
 
 
                         // Admin
