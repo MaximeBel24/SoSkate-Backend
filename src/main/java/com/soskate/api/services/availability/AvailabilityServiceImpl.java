@@ -81,7 +81,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     @Transactional
     public AvailabilityAddResponse copyWeek(Long instructorId, AvailabilityCopyWeekRequest request) {
         LocalDate weekStart = request.weekStart();
-        if (weekStart.getDayOfWeek() != DayOfWeek.MONDAY) {
+        if (!DayOfWeek.MONDAY.equals(weekStart.getDayOfWeek())) {
             throw new ApiException(ErrorCode.INVALID_AVAILABILITY, "A week starts on a Monday");
         }
         InstructorEntity instructor = lockActiveInstructor(instructorId);

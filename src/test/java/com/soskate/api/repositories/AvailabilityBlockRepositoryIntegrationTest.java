@@ -81,9 +81,10 @@ class AvailabilityBlockRepositoryIntegrationTest extends AbstractIntegrationTest
 
     @Test
     void anInstructorCannotHaveTheSameBlockTwice() {
-        save(coach, at(14, 0), null);
+        LocalDateTime takenStart = at(14, 0);
+        save(coach, takenStart, null);
 
-        assertThatThrownBy(() -> save(coach, at(14, 0), null))
+        assertThatThrownBy(() -> save(coach, takenStart, null))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 

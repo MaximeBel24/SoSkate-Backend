@@ -37,7 +37,7 @@ public final class AvailabilityGrid {
      */
     public static LocalDateTime nextLessonStart(LocalDateTime time) {
         int minutesPast = time.getMinute() % LESSON_START_MINUTES;
-        return minutesPast == 0 ? time : time.plusMinutes(LESSON_START_MINUTES - minutesPast);
+        return minutesPast == 0 ? time : time.plusMinutes(LESSON_START_MINUTES).minusMinutes(minutesPast);
     }
 
     /**
